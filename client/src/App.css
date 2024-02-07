@@ -1,38 +1,45 @@
 .App {
   text-align: center;
 }
+html,
+body {
+  height: 100%;
+}
+/* ........................................................................// */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* SignUp Form Css Starts */
+
+.regForm {
+  border: 1px solid red;
+  height: 100vh;
+  width: 90%;
+  margin: auto;
+  padding: 5px;
+}
+.fieldDiv {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+/* .fd2 label {
+  align-items: right;
+  float: left;
+} */
+.fd2 input {
+  align-items: left;
+ /* float: inline-end; */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.error {
+  color: red;
+}
+input {
+  border: 1px solid grey;
+  background-color: bisque;
+  text-align: center;
+  border-radius: 5px;
+  padding: 2px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* ........................................................................// */

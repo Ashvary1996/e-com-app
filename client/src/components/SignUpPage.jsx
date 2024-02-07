@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
+import validationSchema from "../validation/validationSchema";
 
 function SignUpPage() {
   let initialValues = {
@@ -7,34 +8,37 @@ function SignUpPage() {
     lastName: "",
     email: "",
     password: "",
-    varifyPassword: "",
     phoneNumber: "",
     checkbox: false,
   };
+
   let submitForm = (values) => {
     console.log("values", values);
   };
   return (
-    <>
-      <h1>Sign-Up Form</h1>
+    <div className="bg-slate-400 bg-contain  ">
+      <h1 className="h-10 font-bold text-xl ">Sign-Up Form</h1>
       <Formik
         initialValues={initialValues}
+        validationSchema={validationSchema}
         onSubmit={(values, { resetForm }) => {
           submitForm(values);
           //   resetForm({ values: "" });
         }}
       >
-        {({ values, handleChange, handleBlur, setFieldValue }) => (
-          <Form>
-            <div>
+        {({ values }) => (
+          <Form className="regForm flex-col">
+            <div className="fieldDiv">
               <label htmlFor="firstName">First Name : </label>
               <Field
                 id="firstName"
                 name="firstName"
                 type="text"
                 placeholder="firstName"
-              />
-
+              />{" "}
+              <ErrorMessage name="firstName">
+                {(emsg) => <div className="error ">{emsg}</div>}
+              </ErrorMessage>
               <label htmlFor="lastName">Last Name : </label>
               <Field
                 id="lastName"
@@ -42,41 +46,65 @@ function SignUpPage() {
                 type="text"
                 placeholder="lastName"
               />
+              <ErrorMessage name="lastName">
+                {(emsg) => <div className="error ">{emsg}</div>}
+              </ErrorMessage>
             </div>
-            <div>
-              <label htmlFor="email">E-mail : </label>
-              <Field
-                id="email"
-                name="email"
-                type="email"
-                placeholder="email address"
-              />
+            <div className="">
+              <div className="fieldDiv">
+                <label htmlFor="email">E-mail : </label>
+                <Field
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="email address"
+                />{" "}
+                <ErrorMessage name="email">
+                  {(emsg) => <div className="error ">{emsg}</div>}
+                </ErrorMessage>
+              </div>
+              <div className="fieldDiv">
+                <label htmlFor="phoneNumber">Phone Number : </label>
+                <Field
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  placeholder="mobile Number"
+                  maxLength="10"
+                />{" "}
+                <ErrorMessage name="phoneNumber">
+                  {(emsg) => <div className="error ">{emsg}</div>}
+                </ErrorMessage>
+              </div>
+              <div className="fieldDiv">
+                <label htmlFor="password">Password : </label>
+                <Field
+                  id="password"
+                  name="password"
+                  type="text"
+                  placeholder="password"
+                  maxLength="15"
+                />
+                <ErrorMessage name="password">
+                  {(emsg) => <div className="error ">{emsg}</div>}
+                </ErrorMessage>
+              </div>
             </div>
-            <div>
-              <label htmlFor="phoneNumber">Phone Number : </label>
-              <Field
-                id="phoneNumber"
-                name="phoneNumber"
-                type="text"
-                placeholder="mobile Number"
-                maxLength="10"
-              />
-            </div>
-            <div>
-              <label htmlFor="password">Password : </label>
-              <Field
-                id="password"
-                name="password"
-                type="text"
-                placeholder="password"
-                maxLength="15"
-              />
-            </div>
+            <div className="fieldDiv">
+              <label className="checkbox label" htmlFor="checkbox">
+                <Field
+                  name="checkbox"
+                  type="checkbox"
+                  className="checkbox"
+                  value={values.toggle}
+                />
+                I agree to share my details will be used by this website.
+              </label>
 
-            <label>
-              <Field type="checkbox" name="checkbox" value={values.toggle} />I
-              agree to share my details will be used by this website.
-            </label>
+              <ErrorMessage name="checkbox">
+                {(emsg) => <div className="error ">{emsg}</div>}
+              </ErrorMessage>
+            </div>
             <div>
               <button type="submit">Sign-Up </button>
               <p>
@@ -86,7 +114,7 @@ function SignUpPage() {
           </Form>
         )}
       </Formik>
-    </>
+    </div>
   );
 }
 
