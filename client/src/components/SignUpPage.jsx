@@ -16,7 +16,7 @@ function SignUpPage() {
     console.log("values", values);
   };
   return (
-    <div className="bg-slate-400 bg-contain  ">
+    <div className=" signUpFormDiv ">
       <h1 className="h-10 font-bold text-xl ">Sign-Up Form</h1>
       <Formik
         initialValues={initialValues}
@@ -91,11 +91,11 @@ function SignUpPage() {
               </div>
             </div>
             <div className="fieldDiv">
-              <label className="checkbox label" htmlFor="checkbox">
+              <label className="checkbox label " htmlFor="checkbox">
                 <Field
                   name="checkbox"
                   type="checkbox"
-                  className="checkbox"
+                  className="checkbox mr-2 "
                   value={values.toggle}
                 />
                 I agree to share my details will be used by this website.
@@ -106,10 +106,16 @@ function SignUpPage() {
               </ErrorMessage>
             </div>
             <div>
-              <button type="submit">Sign-Up </button>
-              <p>
-                Already a user? go to <a href="">Log-In</a>
-              </p>
+              <button
+                className="bg-teal-400 p-3 rounded-lg font-semibold "
+                type="submit"
+              >
+                Sign-Up 
+              </button>
+              <br />
+              <i>
+                Already a user? go to <a className="text-blue-600" href="">Log-In</a>
+              </i>
             </div>
           </Form>
         )}
