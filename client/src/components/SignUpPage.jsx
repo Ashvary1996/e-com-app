@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
 import validationSchema from "../validation/validationSchema";
+import axios from "axios";
 
 function SignUpPage() {
   let initialValues = {
@@ -12,8 +13,25 @@ function SignUpPage() {
     checkbox: false,
   };
 
-  let submitForm = (values) => {
-    console.log("values", values);
+  let submitForm = async (values) => {
+    const data = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+    };
+
+    await axios
+      .post("http://localhost:5000/user/signup", data) 
+      .then((response) => {
+        if (response.data.status === true) {
+          console.log("Succefully Registerd : ", response.data.user); 
+        } else {
+          console.log(response.data.detail);
+        }
+      })
+      .catch((err) => console.log("error in saving/sending data", err));
   };
   return (
     <div className=" signUpFormDiv ">
@@ -110,11 +128,14 @@ function SignUpPage() {
                 className="bg-teal-400 p-3 rounded-lg font-semibold "
                 type="submit"
               >
-                Sign-Up 
+                Sign-Up
               </button>
               <br />
               <i>
-                Already a user? go to <a className="text-blue-600" href="">Log-In</a>
+                Already a user? go to{" "}
+                <a className="text-blue-600" href="">
+                  Log-In
+                </a>
               </i>
             </div>
           </Form>
