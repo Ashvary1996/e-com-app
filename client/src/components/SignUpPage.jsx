@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
-import validationSchema from "../validation/validationSchema";
+import { Link } from "react-router-dom";
+import signUpValidation from "../validation/signUpValidationSchema";
 import axios from "axios";
 
 function SignUpPage() {
+  const [detail, setDetail] = useState("");
   let initialValues = {
     firstName: "",
     lastName: "",
@@ -13,7 +15,7 @@ function SignUpPage() {
     checkbox: false,
   };
 
-  let submitForm = async (values) => {
+  let submitForm = async (values, resetForm) => {
     const data = {
       firstName: values.firstName,
       lastName: values.lastName,
@@ -23,11 +25,14 @@ function SignUpPage() {
     };
 
     await axios
-      .post("http://localhost:5000/user/signup", data) 
+      .post("http://localhost:5000/user/signup", data)
       .then((response) => {
         if (response.data.status === true) {
-          console.log("Succefully Registerd : ", response.data.user); 
+          setDetail("");
+          console.log("Succefully Registerd : ", response.data.user);
+          resetForm({ values: "" });
         } else {
+          setDetail(response.data.detail);
           console.log(response.data.detail);
         }
       })
@@ -38,10 +43,9 @@ function SignUpPage() {
       <h1 className="h-10 font-bold text-xl ">Sign-Up Form</h1>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={signUpValidation}
         onSubmit={(values, { resetForm }) => {
-          submitForm(values);
-          //   resetForm({ values: "" });
+          submitForm(values, resetForm);
         }}
       >
         {({ values }) => (
@@ -124,6 +128,9 @@ function SignUpPage() {
               </ErrorMessage>
             </div>
             <div>
+              <p className="text-red-700 text-sm">{detail}</p>
+            </div>
+            <div>
               <button
                 className="bg-teal-400 p-3 rounded-lg font-semibold "
                 type="submit"
@@ -132,10 +139,10 @@ function SignUpPage() {
               </button>
               <br />
               <i>
-                Already a user? go to{" "}
-                <a className="text-blue-600" href="">
+                Already a user? go to
+                <Link className="text-blue-400 ml-1" to="/login">
                   Log-In
-                </a>
+                </Link>
               </i>
             </div>
           </Form>

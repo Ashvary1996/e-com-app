@@ -14,7 +14,7 @@ route.post("/signup", async (req, res) => {
       if (user) {
         res.send({
           status: false,
-          detail: "Already a User",
+          detail: "Already a User with this email",
           user: user,
         });
       }

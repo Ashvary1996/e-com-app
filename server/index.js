@@ -14,6 +14,7 @@ app.use(cors());
 
 app.use("/demo", (req, res) => res.send("Hello World"));
 app.use("/user", require("./routes/SignUpRoute"));
+app.use("/user", require("./routes/LogInRoute"));
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 

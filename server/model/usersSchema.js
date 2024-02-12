@@ -15,7 +15,6 @@ const User = new UserSchema({
     type: String,
   },
   email: {
-    default: Date.now(),
     type: String,
     unique: true,
   },
@@ -23,8 +22,8 @@ const User = new UserSchema({
     require: true,
     type: Number,
   },
-  Date: {
-    default: Date.now(),
+  sign_up_Date: {
+    default: Date(),
     type: String,
   },
 });
