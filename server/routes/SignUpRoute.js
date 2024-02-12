@@ -1,6 +1,8 @@
 const express = require("express");
 const route = express.Router();
 const Usermodel = require("../model/usersSchema");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 route.post("/signup", async (req, res) => {
   try {
@@ -16,22 +18,40 @@ route.post("/signup", async (req, res) => {
           status: false,
           detail: "Already a User with this email",
           user: user,
+          
         });
       }
+
+      const salt = await bcrypt.genSalt(Number(process.env.Round));
+      const hash = await bcrypt.hash(req.body.password, salt);
+      const secret = process.env.JWT_SECRET;
 
       const newUser = new Usermodel({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        password: req.body.password,
+        password: hash,
       });
 
-      newUser
+      newUser 
         .save()
-        .then((user) =>
-          res.send({ status: true, detail: "User Saved", user: user })
-        )
+        .then((user) => {
+          const payload = {
+            id: user._id,
+            firstName: req.body.firstName,
+          };
+
+          jwt.sign(payload, secret, { expiresIn: 783672 }, (err, token) => {
+            res.send({
+              status: true,
+              detail: "User Saved",
+              id: user._id,
+              user: user,
+              token: token,
+            });
+          });
+        })
         .catch((err) => console.log(err, "problem in saving to database"));
     }
   } catch (error) {

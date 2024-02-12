@@ -17,6 +17,8 @@ function LogInPage() {
       .then((response) => {
         if (response.data.status === true) {
           console.log("Succefully Log IN : ", response.data.user);
+          const token  = localStorage.setItem("jwt-token",response.data.token)
+          // console.log("jwt token saved",token);
           navigate("/home");
         } else {
           setDetail(response.data.detail);

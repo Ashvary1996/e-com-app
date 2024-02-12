@@ -1,9 +1,32 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 function HomePage() {
+  const [user, setUser] = useState("");
+  let jwttoken = localStorage.getItem("jwt-token");
+
+  useEffect(() => {
+    // console.log(jwttoken);
+    axios
+      .get("http://localhost:5000/user/home", {
+        headers: {
+          token: `Bearer ${jwttoken}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setUser(response.data[0].firstName);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <div>
-      Home Page
+      Home Page <br />
+      <b className="text-6xl">hi {user ? user : "Guest"}</b>
+      <br />
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
         quam quo excepturi quaerat animi? Voluptatibus, quasi? Non tenetur eius

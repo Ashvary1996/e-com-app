@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signUpValidation from "../validation/signUpValidationSchema";
 import axios from "axios";
 
 function SignUpPage() {
   const [detail, setDetail] = useState("");
+  const navigate = useNavigate ();
   let initialValues = {
     firstName: "",
     lastName: "",
@@ -31,6 +32,7 @@ function SignUpPage() {
           setDetail("");
           console.log("Succefully Registerd : ", response.data.user);
           resetForm({ values: "" });
+          navigate("/login")
         } else {
           setDetail(response.data.detail);
           console.log(response.data.detail);
