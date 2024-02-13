@@ -6,7 +6,6 @@ function HomePage() {
   let jwttoken = localStorage.getItem("jwt-token");
 
   useEffect(() => {
-    // console.log(jwttoken);
     axios
       .get("http://localhost:5000/user/home", {
         headers: {
@@ -16,8 +15,8 @@ function HomePage() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setUser(response.data[0].firstName);
+        // console.log(response.data.headers);
+        setUser(response.data.currentUser[0].firstName);
       })
       .catch((err) => console.log(err));
   }, []);

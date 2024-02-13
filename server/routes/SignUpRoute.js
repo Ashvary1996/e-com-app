@@ -18,41 +18,40 @@ route.post("/signup", async (req, res) => {
           status: false,
           detail: "Already a User with this email",
           user: user,
-          
         });
-      }
+      } else {
+        const salt = await bcrypt.genSalt(Number(process.env.Round));
+        const hash = await bcrypt.hash(req.body.password, salt);
+        const secret = process.env.JWT_SECRET;
 
-      const salt = await bcrypt.genSalt(Number(process.env.Round));
-      const hash = await bcrypt.hash(req.body.password, salt);
-      const secret = process.env.JWT_SECRET;
+        const newUser = new Usermodel({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          phoneNumber: req.body.phoneNumber,
+          password: hash,
+        });
 
-      const newUser = new Usermodel({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        phoneNumber: req.body.phoneNumber,
-        password: hash,
-      });
-
-      newUser 
-        .save()
-        .then((user) => {
-          const payload = {
-            id: user._id,
-            firstName: req.body.firstName,
-          };
-
-          jwt.sign(payload, secret, { expiresIn: 783672 }, (err, token) => {
-            res.send({
-              status: true,
-              detail: "User Saved",
+        newUser
+          .save()
+          .then((user) => {
+            const payload = {
               id: user._id,
-              user: user,
-              token: token,
+              firstName: req.body.firstName,
+            };
+
+            jwt.sign(payload, secret, { expiresIn: 783672 }, (err, token) => {
+              res.send({
+                status: true,
+                detail: "User Saved",
+                id: user._id,
+                user: user,
+                token: token,
+              });
             });
-          });
-        })
-        .catch((err) => console.log(err, "problem in saving to database"));
+          })
+          .catch((err) => console.log(err, "problem in saving to database"));
+      }
     }
   } catch (error) {
     res.send(error);

@@ -27,7 +27,9 @@ route.get("/home", async (req, res) => {
   //     __v: 0,
   //   });
   let currentUser = await Usermodel.find({ email: jwtUser.email });
-  res.send(currentUser);
+  // res.send(currentUser);
+  let j = req.headers;
+  res.json({headers:j,currentUser});
 });
 
 module.exports = route;

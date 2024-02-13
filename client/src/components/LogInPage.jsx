@@ -6,31 +6,38 @@ import axios from "axios";
 
 function LogInPage() {
   const [detail, setDetail] = useState("");
+  const [forgot, setForgot] = useState(false);
   const navigate = useNavigate();
   const initialValues = {
     email: "",
     password: "",
   };
+
+  console.log(forgot);
   const submitForm = async (values) => {
     await axios
       .post("http://localhost:5000/user/login", values)
       .then((response) => {
         if (response.data.status === true) {
-          console.log("Succefully Log IN : ", response.data.user);
-          const token  = localStorage.setItem("jwt-token",response.data.token)
+          // console.log("Succefully Log IN : ", response.data.user);
+          localStorage.setItem("jwt-token", response.data.token);
           // console.log("jwt token saved",token);
           navigate("/home");
         } else {
           setDetail(response.data.detail);
-          console.log(response.data.detail);
+          setForgot(true);
+          // console.log(response.data.detail);
         }
       })
       .catch((err) => console.log("error in   sending data", err));
+
+    setTimeout(() => {
+      setDetail("");
+    }, 5000);
   };
 
   return (
-    <div>
-      <h1>Log In </h1>
+    <div className="signUpFormDiv ">
       <Formik
         initialValues={initialValues}
         validationSchema={logInValidation}
@@ -40,16 +47,17 @@ function LogInPage() {
         }}
       >
         {() => (
-          <Form className="border border-red-700 p-10 ">
-            <div>
-              <label htmlFor="email">E-mail : </label>
+          <Form className="regForm ">
+            <h1 className="text-2xl">Log In </h1>
+            <div className="fieldDiv">
+              <label htmlFor="email">E-mail </label>
               <Field id="email" name="email" type="email" placeholder="email" />
               <ErrorMessage name="email">
                 {(emsg) => <div className="error ">{emsg}</div>}
               </ErrorMessage>
             </div>
-            <div>
-              <label htmlFor="password">Password : </label>
+            <div className="fieldDiv">
+              <label htmlFor="password">Password </label>
               <Field
                 id="password"
                 name="password"
@@ -61,16 +69,31 @@ function LogInPage() {
               </ErrorMessage>
             </div>
             <p className="text-red-700 text-sm">{detail}</p>
+            <p className="text-red-700 text-sm">
+              {forgot == true ? (
+                <Link to="/forgot">Forgot / Reset Password</Link>
+              ) : null}
+            </p>
+
             <div>
-              <button className="bg-gray-600 p-2 rounded mt-2" type="submit">
+              <button
+                className="bg-teal-600 text-white hover:bg-green-600  p-2 rounded mt-2"
+                type="submit"
+              >
                 Log in{" "}
               </button>
-              <p className="text-sm">
-                Dont have an account?{" "}
-                <Link to="/signup" className="text-blue-400 italic">
-                  Sign Up now
+
+              <i>
+                <p className="inline-block text-white text-sm mt-1">
+                  Dont have an account?{" "}
+                </p>
+                <Link
+                  className="text-blue-500 ml-1 hover:underline hover:text-lg"
+                  to="/signup"
+                >
+                  register here
                 </Link>
-              </p>
+              </i>
             </div>
           </Form>
         )}

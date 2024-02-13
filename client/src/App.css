@@ -1,44 +1,117 @@
 .App {
   text-align: center;
 }
+
+/* General body styling */
 html,
 body {
   height: 100%;
-}
-/* ........................................................................// */
-
-/* SignUp Form Css Starts */
- 
-.regForm {
-  border: 1px solid red;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-  height: 100vh;
-  width: 90%;
-  margin: auto;
-  padding: 5px;
-}
-.fieldDiv {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-/* .fd2 label {
-  align-items: right;
-  float: left;
-} */
-.fd2 input {
-  align-items: left;
-  /* float: inline-end; */
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f4f7f6;
+  box-sizing: border-box;
 }
 
-.error {
-  color: red;
-}
-input {
-  border: 1px solid grey;
+/* SignUp Form Container */
+
+.signUpFormDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
   background-color: bisque;
-  text-align: center;
-  border-radius: 5px;
-  padding: 2px;
+  background-image: url("https://source.unsplash.com/random?food");
+  background-size: cover;
 }
+
+/* Form Styling */
+.regForm {
+  background: #202123e5;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.regForm h1 {
+  color: rgb(255, 228, 196);
+}
+
+.fieldDiv {
+  margin-bottom: 20px;
+}
+
+.fieldDiv label {
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  color: whitesmoke;
+  font-family: cursive;
+}
+
+.fieldDiv input[type="text"],
+.fieldDiv input[type="email"],
+.fieldDiv input[type="password"] {
+  width: 80%;
+  padding: 3px;
+  border: 1px solid #ccd6dd;
+  border-radius: 4px;
+  text-align: center;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.fieldDiv input::selection {
+  color: teal;
+  /* background: rgba(111, 111, 106, 0.255); */
+}
+
+.fieldDiv .error {
+  color: #ff3860;
+  margin-top: 5px;
+}
+
+.checkbox.label {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+/* Button Styling */
+button {
+  width: 100%;
+  background-color: #4a67e4;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: chocolate;
+}
+
+.text-red-700 {
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .regForm {
+    padding: 20px;
+  }
+  .regForm h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+/* ........................................................................// */
 
 /* ........................................................................// */

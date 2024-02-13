@@ -6,7 +6,7 @@ import axios from "axios";
 
 function SignUpPage() {
   const [detail, setDetail] = useState("");
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
   let initialValues = {
     firstName: "",
     lastName: "",
@@ -32,7 +32,7 @@ function SignUpPage() {
           setDetail("");
           console.log("Succefully Registerd : ", response.data.user);
           resetForm({ values: "" });
-          navigate("/login")
+          navigate("/login");
         } else {
           setDetail(response.data.detail);
           console.log(response.data.detail);
@@ -41,8 +41,7 @@ function SignUpPage() {
       .catch((err) => console.log("error in saving/sending data", err));
   };
   return (
-    <div className=" signUpFormDiv ">
-      <h1 className="h-10 font-bold text-xl ">Sign-Up Form</h1>
+    <div className="signUpFormDiv ">
       <Formik
         initialValues={initialValues}
         validationSchema={signUpValidation}
@@ -52,8 +51,9 @@ function SignUpPage() {
       >
         {({ values }) => (
           <Form className="regForm flex-col">
+            <h1 className="h-10 font-bold text-2xl  ">Create A new account</h1>
             <div className="fieldDiv">
-              <label htmlFor="firstName">First Name : </label>
+              <label htmlFor="firstName">First Name </label>
               <Field
                 id="firstName"
                 name="firstName"
@@ -63,7 +63,7 @@ function SignUpPage() {
               <ErrorMessage name="firstName">
                 {(emsg) => <div className="error ">{emsg}</div>}
               </ErrorMessage>
-              <label htmlFor="lastName">Last Name : </label>
+              <label htmlFor="lastName">Last Name </label>
               <Field
                 id="lastName"
                 name="lastName"
@@ -76,7 +76,7 @@ function SignUpPage() {
             </div>
             <div className="">
               <div className="fieldDiv">
-                <label htmlFor="email">E-mail : </label>
+                <label htmlFor="email">E-mail </label>
                 <Field
                   id="email"
                   name="email"
@@ -88,7 +88,7 @@ function SignUpPage() {
                 </ErrorMessage>
               </div>
               <div className="fieldDiv">
-                <label htmlFor="phoneNumber">Phone Number : </label>
+                <label htmlFor="phoneNumber">Phone Number </label>
                 <Field
                   id="phoneNumber"
                   name="phoneNumber"
@@ -101,11 +101,11 @@ function SignUpPage() {
                 </ErrorMessage>
               </div>
               <div className="fieldDiv">
-                <label htmlFor="password">Password : </label>
+                <label htmlFor="password">Password </label>
                 <Field
                   id="password"
                   name="password"
-                  type="text"
+                  type="password"
                   placeholder="password"
                   maxLength="15"
                 />
@@ -119,10 +119,10 @@ function SignUpPage() {
                 <Field
                   name="checkbox"
                   type="checkbox"
-                  className="checkbox mr-2 "
+                  className="checkbox ml-10    "
                   value={values.toggle}
                 />
-                I agree to share my details will be used by this website.
+                I agree to share my details.
               </label>
 
               <ErrorMessage name="checkbox">
@@ -141,8 +141,13 @@ function SignUpPage() {
               </button>
               <br />
               <i>
-                Already a user? go to
-                <Link className="text-blue-400 ml-1" to="/login">
+                <p className="inline-block text-white text-sm mt-1">
+                  Already a user? go to
+                </p>
+                <Link
+                  className="text-blue-600 ml-1 hover:underline hover:text-lg"
+                  to="/login"
+                >
                   Log-In
                 </Link>
               </i>
