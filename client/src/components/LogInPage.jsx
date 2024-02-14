@@ -8,15 +8,15 @@ function LogInPage() {
   const [detail, setDetail] = useState("");
   const [forgot, setForgot] = useState(false);
   const navigate = useNavigate();
+
   const initialValues = {
     email: "",
     password: "",
   };
 
-  console.log(forgot);
   const submitForm = async (values) => {
     await axios
-      .post("http://localhost:5000/user/login", values)
+      .post(" /user/login", values)
       .then((response) => {
         if (response.data.status === true) {
           // console.log("Succefully Log IN : ", response.data.user);
@@ -46,7 +46,7 @@ function LogInPage() {
           //   resetForm({ values: "" });
         }}
       >
-        {() => (
+        {(values) => (
           <Form className="regForm ">
             <h1 className="text-2xl">Log In </h1>
             <div className="fieldDiv">
@@ -69,9 +69,11 @@ function LogInPage() {
               </ErrorMessage>
             </div>
             <p className="text-red-700 text-sm">{detail}</p>
-            <p className="text-red-700 text-sm">
+            <p className="text-red-700 text-sm  hover:underline">
               {forgot == true ? (
-                <Link to="/forgot">Forgot / Reset Password</Link>
+                <Link to={`/forgot/${email.value}`}>
+                  Forgot / Reset Password
+                </Link>
               ) : null}
             </p>
 

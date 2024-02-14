@@ -26,7 +26,7 @@ function SignUpPage() {
     };
 
     await axios
-      .post("http://localhost:5000/user/signup", data)
+      .post("/user/signup", data)
       .then((response) => {
         if (response.data.status === true) {
           setDetail("");

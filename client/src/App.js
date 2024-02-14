@@ -19,7 +19,7 @@ function App() {
           <Route path="/home" element={<HomePage />}>
             LogIn
           </Route>
-          <Route path="/forgot" element={<Forgotpass />}>
+          <Route path="/forgot/:email" element={<Forgotpass />}>
             LogIn
           </Route>
           <Route path="*" element={<SignUpPage />}>

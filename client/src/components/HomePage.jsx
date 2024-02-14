@@ -7,7 +7,7 @@ function HomePage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/user/home", {
+      .get("/user/home", {
         headers: {
           token: `Bearer ${jwttoken}`,
           Accept: "application/json",
