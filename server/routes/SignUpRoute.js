@@ -4,6 +4,8 @@ const Usermodel = require("../model/usersSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const sendEmail = require("../mail/Nodemailer");
+
 route.post("/signup", async (req, res) => {
   try {
     if (!req.body.firstName) res.send("firstName Required");
@@ -20,7 +22,7 @@ route.post("/signup", async (req, res) => {
           user: user,
         });
       } else {
-        const salt = await bcrypt.genSalt(Number(process.env.Round));
+        const salt = await bcrypt.genSalt(Number(process.env.ROUND));
         const hash = await bcrypt.hash(req.body.password, salt);
         const secret = process.env.JWT_SECRET;
 
@@ -49,6 +51,25 @@ route.post("/signup", async (req, res) => {
                 token: token,
               });
             });
+          })
+          .then(() => {
+            const email = req.body.email;
+            const subject = `Welcome ${newUser.firstName} to e-com website.`;
+            const htmlContent = `<div>
+            <h1>Hi Welcome to our Website</h1>
+              <h1>${Date()}</h1>
+            <p>this is system generated email please do not respond</p>
+          </div>`;
+
+            sendEmail(email, subject, htmlContent)
+              .then((mailResponse) => {
+                if (mailResponse.success) {
+                  console.log("Email sent successfully");
+                } else {
+                  console.log("Failed to send email");
+                }
+              })
+              .catch((error) => console.log("Error sending email: ", error));
           })
           .catch((err) => console.log(err, "problem in saving to database"));
       }

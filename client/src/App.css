@@ -113,5 +113,14 @@ button:hover {
 }
 
 /* ........................................................................// */
+/* home css */
+.homeNav>div{
+  border: 2px solid red;
+  padding: 2px;
+}
+.pdesc{
+  border: 2px solid teal;
+  scroll-behavior: smooth;
+}
 
 /* ........................................................................// */
