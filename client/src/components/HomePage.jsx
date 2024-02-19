@@ -1,80 +1,213 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
+import logo from "../items/logo.png";
 function HomePage() {
-  const [user, setUser] = useState("");
-  const [data, setData] = useState([]);
-  let jwttoken = localStorage.getItem("jwt-token");
-  console.log(data);
+  const [user, setUser] = useState();
+  const [items, setItems] = useState([]);
+  const [displayItems, setDisplayItems] = useState([]);
+  const [sortBy, setSortBy] = useState("");
+  const [filterBy, setFilterBy] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
-    axios
-      .get("/user/home", {
-        headers: {
-          token: `Bearer ${jwttoken}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        // console.log(response.data.headers);
-        setUser(response.data.currentUser[0].firstName);
-      })
-      .catch((err) => console.log(err));
+    const jwttoken = localStorage.getItem("jwt-token");
+    if (jwttoken) {
+      axios
+        .get("/user/home", {
+          headers: {
+            token: `Bearer ${jwttoken}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          setUser(response.data.currentUser[0].firstName);
+        })
+        .catch((err) => console.log(err));
+    }
+    fetchProducts();
   }, []);
 
-  let search = () => {
+  const fetchProducts = () => {
     axios
-      .get("https://dummyjson.com/products")
-      .then((response) => setData(response.data.products))
+      .get(`https://dummyjson.com/products?limit=100`)
+      .then((response) => {
+        setItems(response.data.products);
+        setDisplayItems(response.data.products);
+      })
       .catch((err) => console.log(err));
-
-    console.log("clicked");
   };
 
+  const logoutFn = () => {
+    setUser("");
+    localStorage.clear("jwt-token");
+  };
+
+  useEffect(() => {
+    let updatedItems = [...items];
+
+    if (sortBy) {
+      updatedItems.sort((a, b) => {
+        if (sortBy === "price_LtH") return a.price - b.price;
+        if (sortBy === "price_HtL") return b.price - a.price;
+        if (sortBy === "rating_LtH") return a.rating - b.rating;
+        if (sortBy === "rating_HtL") return b.rating - a.rating;
+      });
+    }
+
+    if (filterBy) {
+      updatedItems = updatedItems.filter((item) => item.brand === filterBy);
+    }
+    ///////////////////////////////////////
+
+    // Filtering items based on search query
+    if (searchQuery) {
+      updatedItems = updatedItems.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.brand.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    ///////////////////////////////////////
+
+    const endIndex = currentPage * itemsPerPage;
+    const startIndex = endIndex - itemsPerPage;
+    const currentItems = updatedItems.slice(startIndex, endIndex);
+
+    setDisplayItems(currentItems);
+    ///////////////////////////////////////
+  }, [items, sortBy, filterBy, currentPage, itemsPerPage, searchQuery]);
+
+  const resetFilter = () => {
+    setFilterBy("");
+    setSortBy("");
+    setDisplayItems(items);
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+    // console.log("searchQuery", searchQuery);
+  };
   return (
     <>
-      <nav className="homeNav flex bg-teal-500  justify-between p-2">
-        <div>
-          <img src="/ " alt="logo" />
+      <nav className="homeNav sticky top-1  z-100   flex bg-teal-500    justify-between p-2">
+        <div className="w-[80px]">
+          <img className="rounded-full" src={logo} alt="logo" />
         </div>
+        {/* search bar */}
         <div className="w-[40%] flex m-auto align-middle justify-center ">
           <input
             className="w-[80%]"
             type="text"
             placeholder="Search for Products"
             autoComplete="on"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            // Handle changes in search query
           />
 
-          <button onClick={search} className="w-[20%]">
+          <button onClick={handleSearchChange} className="w-[20%]">
             Search
           </button>
         </div>
         <div className="w-[20%] ">
           <div className="flex justify-around mt-1 m-auto">
-            <select name="" className="p-3" id="">
-              <option value="">{user ? user : "Guest"}</option>
-              <option value="">Log out</option>
-            </select>
-            <p className="p-3 bg-white"> Cart</p>
+            <div className="dropdown">
+              <button className="dropbtn">{user ? user : "Guest"}</button>
+              <div className="dropdown-content">
+                {!user ? (
+                  <p>
+                    <Link to="/login">Sign in</Link>
+                    <Link to="/login">Sign in</Link>
+                  </p>
+                ) : (
+                  <>
+                    <p onClick={logoutFn}> Log-out</p>
+                    <p>Help</p>
+                  </>
+                )}
+              </div>
+            </div>
+            {user ? <p className="p-3 bg-white"> Cart</p> : null}
           </div>
         </div>
       </nav>
-
+      {/* /////////////////////Sort and Filter with Reset filter option//////////////////////// */}
+      <div>
+        {/* ///////////////////////////////////////////// */}
+        <div className="border-2 border-red-400  flex justify-end">
+          {/* Sort dropdown */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          >
+            <option value="">Sort By</option>
+            <option value="price_LtH">Price : Low to High</option>
+            <option value="price_HtL">Price : High to Low</option>
+            <option value="rating_LtH">Rating : Low to High</option>
+            <option value="rating_HtL">Rating : High to Low</option>
+            {/* Add more sorting options */}
+          </select>
+          {/* Filter dropdown */}
+          <select
+            value={filterBy}
+            onChange={(e) => setFilterBy(e.target.value)}
+            className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          >
+            <option value="">Filter By</option>
+            <option value="Apple">Apple</option>
+            <option value="Samsung">Samsung </option>
+            <option value="OPPO">Oppo</option>
+            <option value="Huawei">Huawei</option>
+            <option value="HP Pavilion">HP Pavilion</option>
+            <option value="Infinix">Infinix</option>
+          </select>
+        </div>
+        {/* Button to reset filter */}
+        {filterBy && (
+          <button
+            onClick={resetFilter}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-300"
+          >
+            Reset Filter
+          </button>
+        )}
+      </div>
+      {/* ////////////////////  Main Div /////////////////// */}
       <main className="productsDisplay  border-2 border-red-700">
-        <div className=" border-2 border-green-700   flex flex-wrap gap-5 mt-5 p-1 ">
-          {data.map((elem, i) => (
-            <div className="sProduct relative border-2 border-red-700 h-[400px] w-[300px] p-1 m-auto">
+        <div className="   flex flex-wrap gap-5 mt-5   ">
+          {displayItems.map((elem, i) => (
+            <div key={i} className="sProduct relative   m-auto">
+              {/* <h1>{i + 1}</h1> */}
               <img
-                className="w-[100%] h-[30vh] m-auto"
+                className="w-[100%] h-[45%] m-auto"
                 src={elem.thumbnail}
                 alt="img"
               />
-              <div className="mt-2 ">
-                <h1>{elem.title}</h1>
-                <h1>{elem.brand}</h1>
-                <p>₹ {Math.ceil(elem.price * 83.01)}</p>
-                <p className="pdesc">{elem.description}</p>
-                <p>{elem.rating}</p>
+              <div className="sp2 mt-2 ">
+                <p
+                  className={`font-semibold ${
+                    elem.title.length > 25 ? "text-sm " : ""
+                  } `}
+                >
+                  {elem.title}
+                </p>
+                <p className="font-mono">{elem.brand}</p>
+                <p className="font-sans">₹ {Math.ceil(elem.price * 83.01)}</p>
+                <p className="font-thin pdesc">{elem.description}</p>
+                <p>Rating : {Number(elem.rating)}</p>
                 <button className=" absolute bottom-0 right-0">
                   Add to Cart
                 </button>
@@ -84,6 +217,38 @@ function HomePage() {
           ))}
         </div>
       </main>
+      {/* /////////////////// Footer  //////////////////// */}
+
+      <footer>
+        <div className="paginationDiv flex justify-center space-x-4">
+          <p
+            onClick={() => {
+              if (currentPage > 1) handlePrevPage();
+            }}
+            className={`cursor-pointer ${
+              currentPage === 1
+                ? "text-gray-400 cursor-not-allowed  :"
+                : "text-white"
+            }`}
+          >
+            {"<"} Previous
+          </p>
+          <p>{currentPage}</p>
+          <p
+            onClick={() => {
+              if (currentPage * itemsPerPage < items.length) handleNextPage();
+            }}
+            className={`cursor-pointer ${
+              currentPage * itemsPerPage >= items.length
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-white"
+            }`}
+          >
+            Next {">"}
+          </p>
+        </div>
+      </footer>
+      {/* ///////////////////////////////////////////// */}
     </>
   );
 }

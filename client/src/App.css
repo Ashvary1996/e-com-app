@@ -11,8 +11,12 @@ body {
   font-family: "Arial", sans-serif;
   background-color: #f4f7f6;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
-
+body::-webkit-scrollbar {
+  /* overflow: hidden; */
+  /* width: 0px; */
+}
 /* SignUp Form Container */
 
 .signUpFormDiv {
@@ -114,13 +118,84 @@ button:hover {
 
 /* ........................................................................// */
 /* home css */
-.homeNav>div{
+.homeNav > div {
   border: 2px solid red;
   padding: 2px;
 }
-.pdesc{
-  border: 2px solid teal;
-  scroll-behavior: smooth;
+.sProduct {
+  height: 420px;
+  width: 300px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 1.5px;
 }
+
+.pdesc {
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+  overflow-y: scroll;
+  height: 55px;
+  font-size: 15px;
+}
+.pdesc::-webkit-scrollbar {
+  background-color: transparent;
+  width: 3px;
+}
+.pdesc::-webkit-scrollbar-thumb {
+  background-color: teal;
+  border-radius: 20px;
+}
+/* Footer  */
+.paginationDiv {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  background-color: gray;
+  /* cursor: pointer; */
+  margin-top: 10px;
+}
+
+/* /////////////////////////// */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropbtn {
+  background-color: #04aa6d;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content p {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content p:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+/* /////////////////////////// */
 
 /* ........................................................................// */
