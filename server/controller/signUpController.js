@@ -1,12 +1,9 @@
-const express = require("express");
-const route = express.Router();
 const Usermodel = require("../model/usersSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendEmail = require("../middleware/Nodemailer");
 
-const sendEmail = require("../mail/Nodemailer");
-
-route.post("/signup", async (req, res) => {
+exports.signUpFn = async (req, res) => {
   try {
     if (!req.body.firstName) res.send("firstName Required");
     else if (!req.body.lastName) res.send("lastName Required");
@@ -56,10 +53,10 @@ route.post("/signup", async (req, res) => {
             const email = req.body.email;
             const subject = `Welcome ${newUser.firstName} to e-com website.`;
             const htmlContent = `<div>
-            <h1>Hi Welcome to our Website</h1>
-              <h1>${Date()}</h1>
-            <p>this is system generated email please do not respond</p>
-          </div>`;
+              <h1>Hi Welcome to our Website</h1>
+                <h1>${Date()}</h1>
+              <p>this is system generated email please do not respond</p>
+            </div>`;
 
             sendEmail(email, subject, htmlContent)
               .then((mailResponse) => {
@@ -77,6 +74,4 @@ route.post("/signup", async (req, res) => {
   } catch (error) {
     res.send(error);
   }
-});
-
-module.exports = route;
+};

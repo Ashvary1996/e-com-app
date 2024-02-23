@@ -1,67 +1,53 @@
 .App {
   text-align: center;
 }
-
-/* General body styling */
-html,
-body {
-  height: 100%;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
   margin: 0;
-  padding: 0;
-  font-family: "Arial", sans-serif;
-  background-color: #f4f7f6;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
 }
-body::-webkit-scrollbar {
-  /* overflow: hidden; */
-  /* width: 0px; */
-}
-/* SignUp Form Container */
-
+/* /////////// /   Sign up Page css Starts  //////////////////// */
 .signUpFormDiv {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 20px;
   background-color: bisque;
   background-image: url("https://source.unsplash.com/random?food");
   background-size: cover;
 }
 
-/* Form Styling */
-.regForm {
+.regForm,
+.loginForm {
+  border: 2px solid red;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
   background: #202123e5;
-  padding: 40px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
+  width: 450px;
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
-.regForm h1 {
+.heading {
   color: rgb(255, 228, 196);
-}
-
-.fieldDiv {
-  margin-bottom: 20px;
+  font-size: x-large;
+  font-weight: bold;
 }
 
 .fieldDiv label {
   display: block;
-  margin-bottom: 5px;
-  margin-top: 5px;
+  padding: 5px;
   color: whitesmoke;
   font-family: cursive;
 }
 
 .fieldDiv input[type="text"],
 .fieldDiv input[type="email"],
+.fieldDiv input[type="Number"],
 .fieldDiv input[type="password"] {
-  width: 80%;
-  padding: 3px;
+  width: 70%;
+  padding: 5px;
   border: 1px solid #ccd6dd;
   border-radius: 4px;
   text-align: center;
@@ -69,42 +55,13 @@ body::-webkit-scrollbar {
 }
 .fieldDiv input::selection {
   color: teal;
-  /* background: rgba(111, 111, 106, 0.255); */
 }
 
-.fieldDiv .error {
+.error {
   color: #ff3860;
-  margin-top: 5px;
 }
 
-.checkbox.label {
-  display: flex;
-  align-items: center;
-}
-
-.checkbox {
-  margin-right: 10px;
-}
-
-/* Button Styling */
-button {
-  width: 100%;
-  background-color: #4a67e4;
-  color: white;
-  padding: 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: chocolate;
-}
-
-.text-red-700 {
-  color: #dc2626;
-}
+/* /////////// /   Sign up Page css end  //////////////////// */
 
 @media (max-width: 768px) {
   .regForm {
@@ -117,16 +74,19 @@ button:hover {
 }
 
 /* ........................................................................// */
-/* home css */
-.homeNav > div {
-  border: 2px solid red;
-  padding: 2px;
+/* /////////// /  HOME Page css Starts  //////////////////// */
+/*  */
+
+.homeHeader > div {
+  /* border: 2px solid red; */
 }
+/* .productsDisplay{border: 2px solid red;} */
 .sProduct {
   height: 420px;
   width: 300px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 1.5px;
+  
 }
 
 .pdesc {
@@ -143,27 +103,16 @@ button:hover {
   background-color: teal;
   border-radius: 20px;
 }
-/* Footer  */
-.paginationDiv {
-  width: 30%;
-  margin: auto;
-  display: flex;
-  justify-content: space-around;
-  background-color: gray;
-  /* cursor: pointer; */
-  margin-top: 10px;
-}
+/* ////////////////////////////////// */
 
-/* /////////////////////////// */
-
-.dropdown {
+/* .dropdown {
   position: relative;
   display: inline-block;
-}
+} */
 .dropbtn {
   background-color: #04aa6d;
   color: white;
-  padding: 16px;
+  padding: 12px;
   font-size: 16px;
   border: none;
 }
@@ -196,6 +145,17 @@ button:hover {
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
 }
-/* /////////////////////////// */
+/* Footer  */
+.paginationDiv {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid gray;
+  margin-top: 10px;
+}
 
+/* /////////////////////////// */
+/* /////////////////////////// */
+/* /////////// /  HOME Page css end  //////////////////// */
 /* ........................................................................// */

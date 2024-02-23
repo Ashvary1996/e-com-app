@@ -1,11 +1,8 @@
-const express = require("express");
-const route = express.Router();
 const Usermodel = require("../model/usersSchema");
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-route.post("/login", async (req, res) => {
+exports.logInFn = async (req, res) => {
   try {
     if (!req.body.email) res.send("email Required");
     else if (!req.body.password) res.send("Password Required");
@@ -17,7 +14,6 @@ route.post("/login", async (req, res) => {
         let isMatch = await bcrypt.compare(req.body.password, user.password);
 
         if (isMatch) {
-          
           let payload = {
             id: user._id,
             email: req.body.email,
@@ -25,7 +21,7 @@ route.post("/login", async (req, res) => {
           const secret = process.env.JWT_SECRET;
           const token = await jwt.sign(payload, secret, {
             expiresIn: 31556926,
-          });
+          }); 
           res.send({
             status: true,
             detail: "Logged In Success",
@@ -48,6 +44,4 @@ route.post("/login", async (req, res) => {
   } catch (error) {
     res.send(error);
   }
-});
-
-module.exports = route;
+};

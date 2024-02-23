@@ -50,8 +50,8 @@ function SignUpPage() {
         }}
       >
         {({ values }) => (
-          <Form className="regForm flex-col">
-            <h1 className="h-10 font-bold text-2xl  ">Create A new account</h1>
+          <Form className="regForm ">
+            <h1 className="heading">Create A new account</h1>
             <div className="fieldDiv">
               <label htmlFor="firstName">First Name </label>
               <Field
@@ -59,6 +59,7 @@ function SignUpPage() {
                 name="firstName"
                 type="text"
                 placeholder="firstName"
+                autoFocus
               />{" "}
               <ErrorMessage name="firstName">
                 {(emsg) => <div className="error ">{emsg}</div>}
@@ -74,52 +75,52 @@ function SignUpPage() {
                 {(emsg) => <div className="error ">{emsg}</div>}
               </ErrorMessage>
             </div>
-            <div className="">
-              <div className="fieldDiv">
-                <label htmlFor="email">E-mail </label>
-                <Field
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="email address"
-                />{" "}
-                <ErrorMessage name="email">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
-              </div>
-              <div className="fieldDiv">
-                <label htmlFor="phoneNumber">Phone Number </label>
-                <Field
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  type="text"
-                  placeholder="mobile Number"
-                  maxLength="10"
-                />{" "}
-                <ErrorMessage name="phoneNumber">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
-              </div>
-              <div className="fieldDiv">
-                <label htmlFor="password">Password </label>
-                <Field
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="password"
-                  maxLength="15"
-                />
-                <ErrorMessage name="password">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
-              </div>
+
+            <div className="fieldDiv">
+              <label htmlFor="email">E-mail </label>
+              <Field
+                id="email"
+                name="email"
+                type="email"
+                placeholder="email address"
+              />{" "}
+              <ErrorMessage name="email">
+                {(emsg) => <div className="error ">{emsg}</div>}
+              </ErrorMessage>
             </div>
+            <div className="fieldDiv">
+              <label htmlFor="phoneNumber">Phone Number </label>
+              <Field
+                id="phoneNumber"
+                name="phoneNumber"
+                type="Number"
+                placeholder="mobile Number"
+                maxLength="10"
+              />
+              <ErrorMessage name="phoneNumber">
+                {(emsg) => <div className="error ">{emsg}</div>}
+              </ErrorMessage>
+            </div>
+            <div className="fieldDiv">
+              <label htmlFor="password">Password </label>
+              <Field
+                id="password"
+                name="password"
+                type="password"
+                placeholder="password"
+                maxLength="15"
+              />
+              <ErrorMessage name="password">
+                {(emsg) => <div className="error ">{emsg}</div>}
+              </ErrorMessage>
+            </div>
+
             <div className="fieldDiv">
               <label className="checkbox label " htmlFor="checkbox">
                 <Field
                   name="checkbox"
                   type="checkbox"
-                  className="checkbox ml-10    "
+                  className="checkbox mr-2    "
                   value={values.toggle}
                 />
                 I agree to share my details.
@@ -134,7 +135,7 @@ function SignUpPage() {
             </div>
             <div>
               <button
-                className="bg-teal-400 p-3 rounded-lg font-semibold "
+                className="bg-teal-400 p-2 rounded-lg font-semibold text-xl w-[90%] hover:bg-amber-600"
                 type="submit"
               >
                 Sign-Up

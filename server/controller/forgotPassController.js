@@ -1,11 +1,9 @@
-const express = require("express");
-const route = express.Router();
 const Usermodel = require("../model/usersSchema");
-
 const jwt = require("jsonwebtoken");
-const sendEmail = require("../mail/Nodemailer");
+const sendEmail = require("../middleware/Nodemailer");
+const bcrypt = require("bcrypt");
 
-route.post("/forgotPass", async (req, res) => {
+exports.forgotPassFn = async (req, res) => {
   try {
     if (!req.body.email) res.send("email Required");
     else {
@@ -30,9 +28,9 @@ route.post("/forgotPass", async (req, res) => {
         const email = req.body.email;
         const subject = `Reset Password mail from e-com website.`;
         const htmlContent = `Click here to reset your password: <a href="${resetLink}">${resetLink}</a>
-          <br />
-            Remember it validate only fo 1min. 
-            Current time : ${Date()} `;
+            <br />
+              Remember it validate only fo 1min. 
+              Current time : ${Date()} `;
         sendEmail(email, subject, htmlContent)
           .then((mailResponse) => {
             if (mailResponse.success) {
@@ -55,7 +53,42 @@ route.post("/forgotPass", async (req, res) => {
   } catch (error) {
     res.send(error);
   }
-});
-// Function to reset the password
+};
 
-module.exports = route;
+exports.resetPassFn = async (req, res) => {
+  const { token, newPassword } = req.body;
+  try {
+    const jwtuser = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await Usermodel.findById(jwtuser.id);
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    // Hash the new password
+    const salt = await bcrypt.genSalt(Number(process.env.ROUND));
+    const hash = await bcrypt.hash(newPassword, salt);
+    user.password = hash;
+    await user.save();
+
+    let email = user.email;
+    let subject = "Password reset successfully";
+    let htmlContent = `<h1>Hi you have successfully reset your password</h1>
+    <p>if this not done by you then please change the password asap.</p>
+    <p>plese visit website to change it. </p> ;`;
+
+    sendEmail(email, subject, htmlContent)
+      .then((mailResponse) => {
+        if (mailResponse.success) {
+          console.log("Email sent successfully");
+        } else {
+          console.log("Failed to send email");
+        }
+      })
+      .catch((err) => console.log("Error sending email: ", err));
+
+    res.send("Password has been updated.");
+  } catch (error) {
+    res.status(500).send("Invalid or expired token.");
+  }
+};
+ 

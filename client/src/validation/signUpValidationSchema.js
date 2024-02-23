@@ -16,7 +16,6 @@ const validationSchema = Yup.object({
     .required("Password Required !"),
   phoneNumber: Yup.number()
     // .min(10, "Phone Number should be 10 characters")
-    // .max(10, "Phone Number should be 10 characters")
     .required("Phone Number Required !"),
   checkbox: Yup.boolean().oneOf(
     [true],

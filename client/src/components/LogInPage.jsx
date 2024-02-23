@@ -19,17 +19,14 @@ function LogInPage() {
       .post(" /user/login", values)
       .then((response) => {
         if (response.data.status === true) {
-          // console.log("Succefully Log IN : ", response.data.user);
           localStorage.setItem("jwt-token", response.data.token);
-          // console.log("jwt token saved",token);
           navigate("/home");
         } else {
           setDetail(response.data.detail);
           setForgot(true);
-          // console.log(response.data.detail);
         }
       })
-      .catch((err) => console.log("error in   sending data", err));
+      .catch((err) => console.log("error in sending data", err));
 
     setTimeout(() => {
       setDetail("");
@@ -43,62 +40,73 @@ function LogInPage() {
         validationSchema={logInValidation}
         onSubmit={(values, { resetForm }) => {
           submitForm(values);
-          //   resetForm({ values: "" });
+          //   resetForm({ values: "" })
         }}
       >
-        {(values) => (
-          <Form className="regForm ">
-            <h1 className="text-2xl">Log In </h1>
-            <div className="fieldDiv">
-              <label htmlFor="email">E-mail </label>
-              <Field id="email" name="email" type="email" placeholder="email" />
-              <ErrorMessage name="email">
-                {(emsg) => <div className="error ">{emsg}</div>}
-              </ErrorMessage>
-            </div>
-            <div className="fieldDiv">
-              <label htmlFor="password">Password </label>
-              <Field
-                id="password"
-                name="password"
-                type="password"
-                placeholder="password"
-              />
-              <ErrorMessage name="password">
-                {(emsg) => <div className="error ">{emsg}</div>}
-              </ErrorMessage>
-            </div>
-            <p className="text-red-700 text-sm">{detail}</p>
-            <p className="text-red-700 text-sm  hover:underline">
-              {forgot == true ? (
-                <Link to={`/forgot/${email.value}`}>
-                  Forgot / Reset Password
-                </Link>
-              ) : null}
-            </p>
+        {(formikProps) => {
+          const { values } = formikProps;
+          // console.log(values);
 
-            <div>
-              <button
-                className="bg-teal-600 text-white hover:bg-green-600  p-2 rounded mt-2"
-                type="submit"
-              >
-                Log in{" "}
-              </button>
+          return (
+            <Form className="loginForm ">
+              <h1 className="heading text-2xl">Log In </h1>
+              <div className="fieldDiv">
+                <label htmlFor="email">E-mail </label>
+                <Field
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="email"
+                />
+                <ErrorMessage name="email">
+                  {(emsg) => <div className="error ">{emsg}</div>}
+                </ErrorMessage>
+              </div>
+              <div className="fieldDiv">
+                <label htmlFor="password">Password </label>
+                <Field
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="password"
+                />
+                <ErrorMessage name="password">
+                  {(emsg) => <div className="error ">{emsg}</div>}
+                </ErrorMessage>
+              </div>
+              <p className="text-red-700 text-sm">{detail}</p>
 
-              <i>
-                <p className="inline-block text-white text-sm mt-1">
-                  Dont have an account?{" "}
-                </p>
-                <Link
-                  className="text-blue-500 ml-1 hover:underline hover:text-lg"
-                  to="/signup"
+              <p className="text-red-700 text-sm  hover:underline">
+                {forgot == true ? (
+                  <Link to={`/forgot/${values.email}`}>
+                    Forgot / Reset Password
+                  </Link>
+                ) : null}
+              </p>
+
+              <div className="">
+                <button
+                  className="bg-teal-600 text-white hover:bg-green-600  p-1 rounded mt-2 w-[60%] text-xxl font-semibold"
+                  type="submit"
                 >
-                  register here
-                </Link>
-              </i>
-            </div>
-          </Form>
-        )}
+                  Log in
+                </button>
+                <br />
+                <i>
+                  <p className="inline-block text-white text-sm mt-1">
+                    Dont have an account?{" "}
+                  </p>
+                  <Link
+                    className="text-blue-500 ml-1 hover:underline hover:text-lg"
+                    to="/signup"
+                  >
+                    register here
+                  </Link>
+                </i>
+              </div>
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   );

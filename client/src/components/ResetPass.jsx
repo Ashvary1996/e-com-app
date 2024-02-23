@@ -26,7 +26,6 @@ function ResetPass() {
         token: token.token,
       })
       .then((response) => {
-        // console.log(response.data);
         setMessage(response.data + " Redirecting to login");
         setTimeout(() => {
           navigate("/login");
@@ -51,10 +50,10 @@ function ResetPass() {
     >
       {() => (
         <Form className="border-2 border-red-900 p-2 mt-20 w-[50%] m-auto">
-          <h1>Reset Password</h1>
+          <h1 className="font-semibold">Reset Password</h1>
 
           <Field
-            className="border-w border-red-900"
+            className="border-2 border-gray-500 text-center rounded-lg"
             type="text"
             id="password"
             name="password"
@@ -64,7 +63,7 @@ function ResetPass() {
             {(emsg) => <div className="error text-red-600 ">{emsg}</div>}
           </ErrorMessage>
           <h1>{message}</h1>
-          <button className="bg-slate-600" type="submit">
+          <button className="bg-slate-500 text-white p-2 mt-2 rounded-sm hover:bg-slate-600" type="submit">
             Update Password
           </button>
         </Form>

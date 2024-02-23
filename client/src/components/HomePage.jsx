@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import logo from "../items/logo.png";
 function HomePage() {
   const [user, setUser] = useState();
+  const [userID, setUserId] = useState();
+  const [productId, setProductId] = useState();
   const [items, setItems] = useState([]);
   const [displayItems, setDisplayItems] = useState([]);
   const [sortBy, setSortBy] = useState("");
@@ -25,6 +27,8 @@ function HomePage() {
         })
         .then((response) => {
           setUser(response.data.currentUser[0].firstName);
+          // console.log(response.data.currentUser[0]._id);
+          setUserId(response.data.currentUser[0]._id);
         })
         .catch((err) => console.log(err));
     }
@@ -72,7 +76,7 @@ function HomePage() {
       );
     }
 
-    ///////////////////////////////////////
+    /////////////// for pagination ////////////////////////
 
     const endIndex = currentPage * itemsPerPage;
     const startIndex = endIndex - itemsPerPage;
@@ -99,16 +103,45 @@ function HomePage() {
     setSearchQuery(event.target.value);
     // console.log("searchQuery", searchQuery);
   };
+  const addToCart = (title, brand, description, price, thumbnail) => {
+    const data = {
+      title: title,
+      brand: brand,
+      description: description,
+      price: price,
+      imageUrl: thumbnail,
+    };
+    // console.log("addToCartClicked:",data);
+    axios
+      .post("/user/product", data)
+      .then((response) => {
+        // console.log(response.data);
+        setProductId(response.data._id);
+      })
+      .catch((err) => console.log(err));
+    const detail = {
+      userId: userID,
+      userName: user,
+      productId: productId,
+    };
+    axios
+      .post("/user/cart", detail)
+      .then((response) => {
+        console.log(userID); 
+        console.log(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <>
-      <nav className="homeNav sticky top-1  z-100   flex bg-teal-500    justify-between p-2">
+      <header className="homeHeader p-1  flex bg-teal-500    justify-between ">
         <div className="w-[80px]">
           <img className="rounded-full" src={logo} alt="logo" />
         </div>
         {/* search bar */}
         <div className="w-[40%] flex m-auto align-middle justify-center ">
           <input
-            className="w-[80%]"
+            className="w-[80%] h-10 text-center rounded-s-2xl"
             type="text"
             placeholder="Search for Products"
             autoComplete="on"
@@ -117,18 +150,20 @@ function HomePage() {
             // Handle changes in search query
           />
 
-          <button onClick={handleSearchChange} className="w-[20%]">
-            Search
+          <button
+            onClick={handleSearchChange}
+            className="w-[20%] bg-slate-500 hover:bg-slate-400 rounded-e-2xl"
+          >
+            SearchIcon
           </button>
         </div>
         <div className="w-[20%] ">
           <div className="flex justify-around mt-1 m-auto">
-            <div className="dropdown">
+            <div className="dropdown relative inline-block ">
               <button className="dropbtn">{user ? user : "Guest"}</button>
               <div className="dropdown-content">
                 {!user ? (
                   <p>
-                    <Link to="/login">Sign in</Link>
                     <Link to="/login">Sign in</Link>
                   </p>
                 ) : (
@@ -139,14 +174,18 @@ function HomePage() {
                 )}
               </div>
             </div>
-            {user ? <p className="p-3 bg-white"> Cart</p> : null}
+            {user ? (
+              <Link to="/cart" className="p-3 bg-white">
+                {" "}
+                Cart
+              </Link>
+            ) : null}
           </div>
         </div>
-      </nav>
+      </header>
       {/* /////////////////////Sort and Filter with Reset filter option//////////////////////// */}
       <div>
-        {/* ///////////////////////////////////////////// */}
-        <div className="border-2 border-red-400  flex justify-end">
+        <div className="   flex justify-end">
           {/* Sort dropdown */}
           <select
             value={sortBy}
@@ -186,8 +225,8 @@ function HomePage() {
         )}
       </div>
       {/* ////////////////////  Main Div /////////////////// */}
-      <main className="productsDisplay  border-2 border-red-700">
-        <div className="   flex flex-wrap gap-5 mt-5   ">
+      <main className="productsDisplay   ">
+        <div className="flex flex-wrap gap-5 mt-5   ">
           {displayItems.map((elem, i) => (
             <div key={i} className="sProduct relative   m-auto">
               {/* <h1>{i + 1}</h1> */}
@@ -208,11 +247,21 @@ function HomePage() {
                 <p className="font-sans">₹ {Math.ceil(elem.price * 83.01)}</p>
                 <p className="font-thin pdesc">{elem.description}</p>
                 <p>Rating : {Number(elem.rating)}</p>
-                <button className=" absolute bottom-0 right-0">
+                <button
+                  onClick={() =>
+                    addToCart(
+                      elem.title,
+                      elem.brand,
+                      elem.description,
+                      elem.price,
+                      elem.thumbnail
+                    )
+                  }
+                  className="absolute bottom-1   align-middle justify-center  bg-green-400 text-black hover:bg-green-500 p-1 text-sm rounded  "
+                >
                   Add to Cart
                 </button>
               </div>
-              <div></div>
             </div>
           ))}
         </div>
@@ -228,7 +277,7 @@ function HomePage() {
             className={`cursor-pointer ${
               currentPage === 1
                 ? "text-gray-400 cursor-not-allowed  :"
-                : "text-white"
+                : "text-black"
             }`}
           >
             {"<"} Previous
@@ -241,7 +290,7 @@ function HomePage() {
             className={`cursor-pointer ${
               currentPage * itemsPerPage >= items.length
                 ? "text-gray-400 cursor-not-allowed"
-                : "text-white"
+                : "text-black"
             }`}
           >
             Next {">"}

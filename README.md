@@ -4,3 +4,6 @@ Full Stack Project Ecom Project.
 1.  Creating SignUp Page.
 2.  Backend to Frontend Integrated Successfull with validation.
 3.  Log in validation added with token with password encrypted.
+4 . Home Page Added with search/sort/filter/navigation functionality
+
+# Folder Structure Update + Product [get+add+addFromApi]
