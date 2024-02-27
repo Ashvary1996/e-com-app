@@ -31,6 +31,7 @@ function App() {
             LogIn
           </Route>
           <Route path="/" element={<HomePage />}></Route>
+          <Route path="*" element={<HomePage />}></Route>
         </Routes>
       </Router>
     </div>
