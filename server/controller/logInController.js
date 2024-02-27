@@ -21,7 +21,7 @@ exports.logInFn = async (req, res) => {
           const secret = process.env.JWT_SECRET;
           const token = await jwt.sign(payload, secret, {
             expiresIn: 31556926,
-          }); 
+          });
           res.send({
             status: true,
             detail: "Logged In Success",

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import logInValidation from "../validation/logInValidationSchema";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { setToken, setUserID } from "../config/authTokenUser";
 
 function LogInPage() {
   const [detail, setDetail] = useState("");
@@ -16,10 +17,11 @@ function LogInPage() {
 
   const submitForm = async (values) => {
     await axios
-      .post(" /user/login", values)
+      .post("/user/login", values)
       .then((response) => {
         if (response.data.status === true) {
-          localStorage.setItem("jwt-token", response.data.token);
+          setToken(response.data.token);
+          setUserID(response.data.user._id);
           navigate("/home");
         } else {
           setDetail(response.data.detail);

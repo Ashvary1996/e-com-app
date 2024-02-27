@@ -26,6 +26,11 @@ const User = new UserSchema({
     default: Date(),
     type: String,
   },
+  userType: {
+    type: String,
+    default: "user"
+    
+  },
 });
 
 const Usermodel = mongoose.model("Users", User);

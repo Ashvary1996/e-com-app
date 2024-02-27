@@ -22,7 +22,7 @@ exports.homeFn = async (req, res) => {
   //     password: 0,
   //     Date: 0,
   //     __v: 0,
-  //   });
+  //   }); 
   let currentUser = await Usermodel.find({ email: jwtUser.email });
   // res.send(currentUser);
   let j = req.headers;

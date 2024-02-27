@@ -2,10 +2,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../items/logo.png";
+import {
+  getToken,
+  getUserID,
+  removeToken,
+  removeUserID,
+} from "../config/authTokenUser";
+
 function HomePage() {
   const [user, setUser] = useState();
-  const [userID, setUserId] = useState();
-  const [productId, setProductId] = useState();
+  const userID = getUserID();
   const [items, setItems] = useState([]);
   const [displayItems, setDisplayItems] = useState([]);
   const [sortBy, setSortBy] = useState("");
@@ -13,9 +19,9 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [cartNumber, setCartNumber] = useState("");
   useEffect(() => {
-    const jwttoken = localStorage.getItem("jwt-token");
+    const jwttoken = getToken();
     if (jwttoken) {
       axios
         .get("/user/home", {
@@ -27,27 +33,28 @@ function HomePage() {
         })
         .then((response) => {
           setUser(response.data.currentUser[0].firstName);
-          // console.log(response.data.currentUser[0]._id);
-          setUserId(response.data.currentUser[0]._id);
+          // setUserId(response.data.currentUser[0]._id);
         })
         .catch((err) => console.log(err));
     }
     fetchProducts();
+    fetchCartItems();
   }, []);
 
   const fetchProducts = () => {
     axios
-      .get(`https://dummyjson.com/products?limit=100`)
+      .get(`user/allProducts`)
       .then((response) => {
-        setItems(response.data.products);
-        setDisplayItems(response.data.products);
+        setItems(response.data.items);
+        setDisplayItems(response.data.items);
       })
       .catch((err) => console.log(err));
   };
 
   const logoutFn = () => {
     setUser("");
-    localStorage.clear("jwt-token");
+    removeToken();
+    removeUserID();
   };
 
   useEffect(() => {
@@ -84,7 +91,15 @@ function HomePage() {
 
     setDisplayItems(currentItems);
     ///////////////////////////////////////
-  }, [items, sortBy, filterBy, currentPage, itemsPerPage, searchQuery]);
+  }, [
+    items,
+    sortBy,
+    filterBy,
+    currentPage,
+    itemsPerPage,
+    searchQuery,
+    cartNumber,
+  ]);
 
   const resetFilter = () => {
     setFilterBy("");
@@ -103,34 +118,29 @@ function HomePage() {
     setSearchQuery(event.target.value);
     // console.log("searchQuery", searchQuery);
   };
-  const addToCart = (title, brand, description, price, thumbnail) => {
-    const data = {
-      title: title,
-      brand: brand,
-      description: description,
-      price: price,
-      imageUrl: thumbnail,
-    };
-    // console.log("addToCartClicked:",data);
+
+  const addToCart = (item_id) => {
     axios
-      .post("/user/product", data)
-      .then((response) => {
-        // console.log(response.data);
-        setProductId(response.data._id);
+      .post("/user/cart", {
+        userId: userID,
+        userName: user,
+        productId: item_id,
       })
-      .catch((err) => console.log(err));
-    const detail = {
-      userId: userID,
-      userName: user,
-      productId: productId,
-    };
-    axios
-      .post("/user/cart", detail)
       .then((response) => {
-        console.log(userID); 
         console.log(response.data);
+        fetchCartItems();
       })
       .catch((err) => console.log(err));
+  };
+  const fetchCartItems = () => {
+    axios
+      .post("/user/getCartItems", { userId: userID })
+      .then((response) => {
+        setCartNumber(response.data.totalItems);
+      })
+      .catch((error) => {
+        console.error("Error fetching cart items:", error);
+      });
   };
   return (
     <>
@@ -175,9 +185,11 @@ function HomePage() {
               </div>
             </div>
             {user ? (
-              <Link to="/cart" className="p-3 bg-white">
-                {" "}
-                Cart
+              <Link
+                to={{ pathname: "/cart", state: { userId: userID } }}
+                className="p-3 bg-white"
+              >
+                Cart <i>{cartNumber}</i>
               </Link>
             ) : null}
           </div>
@@ -248,15 +260,7 @@ function HomePage() {
                 <p className="font-thin pdesc">{elem.description}</p>
                 <p>Rating : {Number(elem.rating)}</p>
                 <button
-                  onClick={() =>
-                    addToCart(
-                      elem.title,
-                      elem.brand,
-                      elem.description,
-                      elem.price,
-                      elem.thumbnail
-                    )
-                  }
+                  onClick={() => addToCart(elem._id)}
                   className="absolute bottom-1   align-middle justify-center  bg-green-400 text-black hover:bg-green-500 p-1 text-sm rounded  "
                 >
                   Add to Cart
