@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../items/logo.png";
 import {
@@ -20,26 +20,6 @@ function HomePage() {
   const itemsPerPage = 10;
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState("");
-  useEffect(() => {
-    const jwttoken = getToken();
-    if (jwttoken) {
-      axios
-        .get("/user/home", {
-          headers: {
-            token: `Bearer ${jwttoken}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          setUser(response.data.currentUser[0].firstName);
-          // setUserId(response.data.currentUser[0]._id);
-        })
-        .catch((err) => console.log(err));
-    }
-    fetchProducts();
-    fetchCartItems();
-  }, []);
 
   const fetchProducts = () => {
     axios
@@ -66,6 +46,7 @@ function HomePage() {
         if (sortBy === "price_HtL") return b.price - a.price;
         if (sortBy === "rating_LtH") return a.rating - b.rating;
         if (sortBy === "rating_HtL") return b.rating - a.rating;
+        return 0;
       });
     }
 
@@ -132,7 +113,7 @@ function HomePage() {
       })
       .catch((err) => console.log(err));
   };
-  const fetchCartItems = () => {
+  const fetchCartItems = useCallback(() => {
     axios
       .post("/user/getCartItems", { userId: userID })
       .then((response) => {
@@ -141,7 +122,30 @@ function HomePage() {
       .catch((error) => {
         console.error("Error fetching cart items:", error);
       });
-  };
+  }, [userID]);
+
+  useEffect(() => {
+    const jwttoken = getToken();
+    if (jwttoken) {
+      axios
+        .get("/user/home", {
+          headers: {
+            token: `Bearer ${jwttoken}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          setUser(response.data.currentUser[0].firstName);
+          // setUserId(response.data.currentUser[0]._id);
+        })
+        .catch((err) => console.log(err));
+    }
+    fetchProducts();
+    fetchCartItems();
+  }, [fetchCartItems]);
+
+
   return (
     <>
       <header className="homeHeader p-1  flex bg-teal-500    justify-between ">

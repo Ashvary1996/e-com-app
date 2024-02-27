@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 function Forgotpass() {
   let { email } = useParams();
-  let [edit, setEdit] = useState(email);
-  let [message, setMessage] = useState("");
+  let [edit, setEdit] = useState(email); 
+  let [message, setMessage] = useState(""); 
   let [emailSent, setEmailSent] = useState(false);
 
   // console.log(" emailSent", emailSent);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { getUserID } from "../config/authTokenUser";
 
@@ -12,13 +12,8 @@ function Cart() {
   const [total, setTotal] = useState(0);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const userID = getUserID();
-  useEffect(() => {
-    fetchCartItems();
 
-    // updateItems();
-  }, [userID]);
-
-  const fetchCartItems = () => {
+  const fetchCartItems = useCallback(() => {
     axios
       .post("/user/getCartItems", { userId: userID })
       .then((response) => {
@@ -29,7 +24,12 @@ function Cart() {
       .catch((error) => {
         console.error("Error fetching cart items:", error);
       });
-  };
+  }, [userID]);  
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [fetchCartItems]); // Now `fetchCartItems` is stable and can be included as a dependency
+
   const calculateTotal = (cartItems) => {
     let totalAmount = 0;
     cartItems.forEach((item) => {
@@ -112,7 +112,7 @@ function Cart() {
               className="border-2 border-red-900 flex justify-around"
             >
               <div className="border-2 border-red-900 w-[30%]">
-                <img src="" alt="image" />
+                <img src="" alt="product_img" />
               </div>
               <div className="border-2 border-red-900 w-[45%]">
                 <h2>{elem.title}</h2>

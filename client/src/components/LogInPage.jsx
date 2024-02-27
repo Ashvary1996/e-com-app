@@ -79,7 +79,7 @@ function LogInPage() {
               <p className="text-red-700 text-sm">{detail}</p>
 
               <p className="text-red-700 text-sm  hover:underline">
-                {forgot == true ? (
+                {forgot === true ? (
                   <Link to={`/forgot/${values.email}`}>
                     Forgot / Reset Password
                   </Link>

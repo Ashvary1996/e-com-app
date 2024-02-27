@@ -8,3 +8,5 @@ Full Stack Project Ecom Project.
 5.  Cart Functionality added with inc+dec+remove from database as well
 
 # Cart Functionaly done with Working
+
+*fix filter (redirect filter/sort to page 1 when using)  

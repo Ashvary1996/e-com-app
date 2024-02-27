@@ -6,19 +6,8 @@ import HomePage from "./components/HomePage";
 import Forgotpass from "./components/Forgotpass";
 import ResetPass from "./components/ResetPass";
 import Cart from "./components/Cart";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "./redux/userSlice";
-import { useEffect } from "react";
 
 function App() {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const token = localStorage.getItem("jwt-token");
-  //   if (token) {
-  //     dispatch(loginSuccess());
-  //   }
-  // }, [dispatch]);
-
   return (
     <div className="App">
       <Router>
