@@ -23,7 +23,7 @@ function HomePage() {
 
   const fetchProducts = () => {
     axios
-      .get(`user/allProducts`)
+      .get(`/user/allProducts`)
       .then((response) => {
         setItems(response.data.items);
         setDisplayItems(response.data.items);
