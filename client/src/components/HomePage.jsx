@@ -8,6 +8,7 @@ import {
   removeToken,
   removeUserID,
 } from "../config/authTokenUser";
+import Loader from "./Loader";
 
 function HomePage() {
   const [user, setUser] = useState();
@@ -20,13 +21,16 @@ function HomePage() {
   const itemsPerPage = 10;
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState("");
+  const [laoding, setLoading] = useState(true);
 
+  console.log("displayItems", displayItems.length, laoding);
   const fetchProducts = () => {
     axios
       .get(`/user/allProducts`)
       .then((response) => {
         setItems(response.data.items);
         setDisplayItems(response.data.items);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   };
@@ -145,7 +149,6 @@ function HomePage() {
     fetchCartItems();
   }, [fetchCartItems]);
 
-
   return (
     <>
       <header className="homeHeader p-1  flex bg-teal-500    justify-between ">
@@ -241,6 +244,7 @@ function HomePage() {
         )}
       </div>
       {/* ////////////////////  Main Div /////////////////// */}
+      {laoding ? <Loader /> : null}
       <main className="productsDisplay   ">
         <div className="flex flex-wrap gap-5 mt-5   ">
           {displayItems.map((elem, i) => (

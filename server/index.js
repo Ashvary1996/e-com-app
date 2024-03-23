@@ -14,19 +14,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // .................................................................
 
-
 app.use("/demo", (req, res) => res.send("Hello World"));
 app.use("/user", require("./routes/UserRoute"));
 app.use("/user", require("./routes/HomeRoute"));
 app.use("/user", require("./routes/ProductRoute"));
 app.use("/user", require("./routes/CartRoute"));
 
-
 // .................................................................
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 mongoose
-  .connect(mongo_URI)
+  .connect(mongo_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to Database Successfully");
   })

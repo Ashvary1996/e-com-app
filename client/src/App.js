@@ -6,6 +6,7 @@ import HomePage from "./components/HomePage";
 import Forgotpass from "./components/Forgotpass";
 import ResetPass from "./components/ResetPass";
 import Cart from "./components/Cart";
+import BuyPage from "./components/BuyPage";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
           <Route path="/home" element={<HomePage />}>
             home
           </Route>
+          <Route path="/forgot/" element={<Forgotpass />}>
+            LogIn
+          </Route>
           <Route path="/forgot/:email" element={<Forgotpass />}>
             LogIn
           </Route>
@@ -29,6 +33,9 @@ function App() {
           </Route>
           <Route path="/cart" element={<Cart />}>
             LogIn
+          </Route>
+          <Route path="/paymentGateway" element={<BuyPage />}>
+            FinalBuyPage
           </Route>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="*" element={<HomePage />}></Route>

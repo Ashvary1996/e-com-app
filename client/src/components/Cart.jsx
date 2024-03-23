@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { getUserID } from "../config/authTokenUser";
 
@@ -24,7 +25,7 @@ function Cart() {
       .catch((error) => {
         console.error("Error fetching cart items:", error);
       });
-  }, [userID]);  
+  }, [userID]);
 
   useEffect(() => {
     fetchCartItems();
@@ -99,50 +100,71 @@ function Cart() {
   };
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
       <div>
-        <h3>Your Cart have "{totalItemsCount}" items</h3>
+        <h3 className="text-lg font-semibold text-gray-800">
+          Your Cart has "{totalItemsCount}" items
+        </h3>
       </div>
       <div>
-        <h1>Your Items</h1>
-        {data.items.map((elem, i) => {
-          return (
-            <div
-              key={i}
-              className="border-2 border-red-900 flex justify-around"
-            >
-              <div className="border-2 border-red-900 w-[30%]">
-                <img src="" alt="product_img" />
-              </div>
-              <div className="border-2 border-red-900 w-[45%]">
-                <h2>{elem.title}</h2>
-              </div>
-              <div className="border-2 border-red-900 w-[15%]">
-                <p>₹ {Math.ceil(elem.price * 83.01)}</p>
-              </div>
-              <div className="border-2 border-red-900 w-[15%] flex justify-around cursor-pointer">
-                <p className=" hover:bg-red-600 w-10" onClick={() => dec(elem)}>
-                  {"-"}
-                </p>
-                <p>{elem.quantity}</p>
-                <p
-                  className=" hover:bg-green-600 w-10"
-                  onClick={() => inc(elem)}
-                >
-                  {"+"}
-                </p>
-              </div>
-              <div className="border-2 border-red-900 w-[15%]">
-                <p>{`₹ ${Math.ceil(elem.price * 83.01) * elem.quantity}`}</p>
-              </div>
-              <div className="border-2 border-red-900 w-[15%] hover:bg-red-600">
-                <button onClick={() => removeCartItem(elem)}> Remove</button>
-              </div>
+        <h1 className="text-2xl font-bold text-gray-900 my-4">Your Items</h1>
+        {data.items.map((elem, i) => (
+          <div
+            key={i}
+            className="flex justify-between items-center border-b-2 border-gray-200 p-4"
+          >
+            <div className="w-1/5">
+              <img
+                src={elem.thumbnail}
+                alt="product_img"
+                className="w-full h-auto object-cover"
+              />
             </div>
-          );
-        })}
-        <div>
-          <h1>Total Amount : {total}</h1>
+            <div className="w-2/5 pl-4">
+              <h2 className="text-xl text-gray-700">{elem.title}</h2>
+            </div>
+            <p className="w-1/5 text-lg text-gray-600">
+              ₹ {Math.ceil(elem.price * 83.01)}
+            </p>
+            <div className="w-1/5 flex items-center justify-between">
+              <button
+                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 transition-colors"
+                onClick={() => dec(elem)}
+              >
+                -
+              </button>
+              <p>{elem.quantity}</p>
+              <button
+                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-700 transition-colors"
+                onClick={() => inc(elem)}
+              >
+                +
+              </button>
+            </div>
+            <div className="w-1/5 text-right">
+              <p className="text-lg text-gray-600">
+                ₹ {Math.ceil(elem.price * 83.01) * elem.quantity}
+              </p>
+            </div>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={() => removeCartItem(elem)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <div className="mt-6">
+          <h1 className="text-xl font-bold text-gray-900">
+            Total Amount: ₹{total}
+          </h1>
+          <Link
+            to="/paymentGateway"
+            state={{ finalAmount: total }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105"
+          >
+            Proceed to buy
+          </Link>
         </div>
       </div>
     </div>

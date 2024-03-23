@@ -1,31 +1,59 @@
 .App {
   text-align: center;
 }
+.loader {
+  margin: auto;
+  height: 200px;
+  width: 200px;
+  border: 3px solid red;
+  border-radius: 50%;
+  border-top-color: orange;
+  animation: loader 1s infinite; /*liner*/
+}
+@keyframes loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 /* /////////// /   Sign up Page css Starts  //////////////////// */
+.mainSignUpDiv > * {
+  /* Target direct children */
+  transition: transform 1.5s,  ;
+}
+
+@media (max-width: 768px) {
+  .mainSignUpDiv > * {
+    transform: scale(0.95);
+    /* opacity: 0.7; */
+  }
+}
 .signUpFormDiv {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: bisque;
-  background-image: url("https://source.unsplash.com/random?food");
-  background-size: cover;
+  background-image: url("https://source.unsplash.com/random?commerce");
+  transition: all 1.5s ease;
+}
+.welcomeDiv {
+  transition: all 1.5s ease;
 }
 
 .regForm,
 .loginForm {
-  border: 2px solid red;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
+  /* border: 2px solid red; */
+  /* margin-top: 10px; */
+  /* display: flex; */
+  /* flex-direction: column; */
   background: #202123e5;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 450px;
+  width: 100%;
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
@@ -59,34 +87,33 @@ input::-webkit-inner-spin-button {
 
 .error {
   color: #ff3860;
+  font-size: smaller;
 }
 
 /* /////////// /   Sign up Page css end  //////////////////// */
-
-@media (max-width: 768px) {
-  .regForm {
-    padding: 20px;
-  }
-  .regForm h1 {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-}
+/* 
+  
 
 /* ........................................................................// */
 /* /////////// /  HOME Page css Starts  //////////////////// */
 /*  */
 
-.homeHeader > div {
+/* .homeHeader > div { */
   /* border: 2px solid red; */
-}
+/* } */
 /* .productsDisplay{border: 2px solid red;} */
 .sProduct {
   height: 420px;
   width: 300px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 1.5px;
-  
+}
+.sProduct > img {
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+.sProduct > img:hover {
+  transform: scale(1.1);
 }
 
 .pdesc {
