@@ -3,72 +3,111 @@ import React, { useState } from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 function ResetPass() {
   const validatePassword = Yup.object({
     password: Yup.string()
-      .min(7, "at least min 7 characters")
-      .max(20, " password allowed only upto 20 characters")
-      .required("Password Required !"),
+      .min(7, "At least 7 characters")
+      .max(20, "Password allowed only up to 20 characters")
+      .required("Password required!"),
   });
   let initialValues = {
     password: "",
   };
 
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState(null);
   const token = useParams();
   const navigate = useNavigate();
 
   const resetPw = async (values) => {
-    await axios
-      .post(`/user/reset `, {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`/user/reset`, {
         newPassword: values.password,
         token: token.token,
-      })
-      .then((response) => {
-        setMessage(response.data + " Redirecting to login");
-        setTimeout(() => {
-          navigate("/login");
-        }, 3333);
-      })
-      .catch((err) => {
-        setMessage(err.response.data);
-        console.log("error in sending data", err);
-        setTimeout(() => {
-          setMessage("");
-        }, 5000);
       });
+      setStatus(true);
+      let countdown = 10;
+      const countdownInterval = setInterval(() => {
+        setMessage(`Re-directing to login in ..${countdown}`);
+        countdown--;
+        if (countdown === 0) {
+          clearInterval(countdownInterval);
+          navigate("/login");
+        }
+      }, 1000);
+    } catch (err) {
+      setStatus(false);
+      setMessage(err.response?.data || "An error occurred");
+      setTimeout(() => {
+        setMessage("");
+      }, 10000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validatePassword}
-      onSubmit={(values) => {
-        resetPw(values);
-      }}
-    >
-      {() => (
-        <Form className="border-2 border-red-900 p-2 mt-20 w-[50%] m-auto">
-          <h1 className="font-semibold">Reset Password</h1>
+    <div className="flex items-center justify-center min-h-screen  bg-gradient-to-b from-blue-500 to-teal-500">
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validatePassword}
+        onSubmit={(values) => {
+          resetPw(values);
+        }}
+      >
+        {() => (
+          <Form className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+            <h1 className="text-2xl font-bold text-center mb-4">
+              Reset Password
+            </h1>
+            <Field
+              className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="New password"
+            />
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="text-red-600 text-sm mb-4"
+            />
 
-          <Field
-            className="border-2 border-gray-500 text-center rounded-lg"
-            type="text"
-            id="password"
-            name="password"
-            placeholder="new password"
-          />
-          <ErrorMessage name="password">
-            {(emsg) => <div className="error text-red-600 ">{emsg}</div>}
-          </ErrorMessage>
-          <h1>{message}</h1>
-          <button className="bg-slate-500 text-white p-2 mt-2 rounded-sm hover:bg-slate-600" type="submit">
-            Update Password
-          </button>
-        </Form>
-      )}
-    </Formik>
+            <p
+              className={`text-center text-sm  mb-4" ${
+                status == true ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {status && <p className="font-bold">PASSWORD UPDATED</p>}
+              {message}
+            </p>
+            <div>
+              {status == false ? (
+                <>
+                  <Link
+                    to="/forgot"
+                    className="text-sm font-medium text-orange-600"
+                  >
+                    Generate New Token
+                  </Link>
+                </>
+              ) : null}
+            </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 rounded-lg transition duration-300 ease-in-out"
+            >
+              {isLoading ? "Updating..." : "Update Password"}
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }
 

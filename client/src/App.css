@@ -1,6 +1,9 @@
 .App {
   text-align: center;
 }
+/* -------------------------- */
+
+/* -------------------------- */
 .loader {
   margin: auto;
   height: 200px;
@@ -27,7 +30,7 @@ input::-webkit-inner-spin-button {
 /* /////////// /   Sign up Page css Starts  //////////////////// */
 .mainSignUpDiv > * {
   /* Target direct children */
-  transition: transform 1.5s,  ;
+  transition: transform 1.5s;
 }
 
 @media (max-width: 768px) {
@@ -39,6 +42,7 @@ input::-webkit-inner-spin-button {
 .signUpFormDiv {
   background-image: url("https://source.unsplash.com/random?commerce");
   transition: all 1.5s ease;
+  height: 100vh; /* //This need to fix */
 }
 .welcomeDiv {
   transition: all 1.5s ease;
@@ -46,14 +50,9 @@ input::-webkit-inner-spin-button {
 
 .regForm,
 .loginForm {
-  /* border: 2px solid red; */
-  /* margin-top: 10px; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  background: #202123e5;
+  background: #202123dc;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
@@ -99,9 +98,19 @@ input::-webkit-inner-spin-button {
 /*  */
 
 /* .homeHeader > div { */
-  /* border: 2px solid red; */
+/* border: 2px solid red; */
 /* } */
 /* .productsDisplay{border: 2px solid red;} */
+.homePage {
+}
+/* .homePage::-webkit-scrollbar {
+  background-color: transparent;
+  width: 3px;
+}
+.homePage::-webkit-scrollbar-thumb {
+  background-color: teal;
+  border-radius: 20px;
+} */
 .sProduct {
   height: 420px;
   width: 300px;
@@ -185,4 +194,9 @@ input::-webkit-inner-spin-button {
 /* /////////////////////////// */
 /* /////////////////////////// */
 /* /////////// /  HOME Page css end  //////////////////// */
+
+/* ........................................................................// */
+
+/* Modal css for Single Item Details Div */
+
 /* ........................................................................// */

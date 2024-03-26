@@ -1,55 +1,64 @@
-import axios from "axios";
 import React, { useState } from "react";
-
+import axios from "axios";
 import { useParams } from "react-router-dom";
-function Forgotpass() {
-  let { email } = useParams();
-  let [edit, setEdit] = useState(email); 
-  let [message, setMessage] = useState(""); 
-  let [emailSent, setEmailSent] = useState(false);
 
-  // console.log(" emailSent", emailSent);
+function Forgotpass() {
+  const { email } = useParams();
+  const [edit, setEdit] = useState(email);
+  const [message, setMessage] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const sendMail = async () => {
-    await axios
-      .post("/user/forgotPass", { email: edit })
-      .then((response) => {
-        if (response.data.status === true) {
-          setMessage(response.data.detail);
-          setEmailSent(true);
-          // console.log(" response", response.data.token);
-        } else {
-          // console.log(" noresponse", response.data.status);
-          setMessage(response.data.detail);
-          setEmailSent(false);
-        }
-      })
-      .catch((err) => console.log("error in   sending data", err));
+    setLoading(true);
+    try {
+      const response = await axios.post("/user/forgotPass", { email: edit });
+      if (response.data.status === true) {
+        setMessage(response.data.detail);
+        setEmailSent(true);
+      } else {
+        setMessage(response.data.detail);
+        setEmailSent(false);
+      }
+    } catch (error) {
+      console.log("Error in sending data", error);
+    }
+    setLoading(false);
   };
 
   return (
-    <div className="bg-cyan-950  rounded-s-lg p-2  m-auto mt-10 w-[50%]">
-      <h1 className="text-xl font-medium ">Forgot password </h1>
-      <p className="mt-1 text-slate-200 mb-1">
-        Please enter your email to reset password
-      </p>
-      <input
-        type="email"
-        placeholder="email address"
-        className=" text-center p-2 text-xl  inline border w-[80%]"
-        value={edit}
-        onChange={(e) => setEdit(e.target.value)}
-      />
-
-      <br />
-      <p
-        className={`${emailSent === true ? "text-teal-500 " : "text-red-500 "}`}
-      >
-        {message}
-      </p>
-      <br />
-      <button  onClick={sendMail} className="bg-stone-700 rounded-lg w-[40%] p-2 mt-3  hover:bg-green-200 hover:border-2 hover:border-black">
-        Send-email
-      </button>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-teal-500 to-blue-500">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full opacity-95">
+        <h1 className="text-3xl font-bold mb-4 text-center">Forgot Password</h1>
+        <p className="text-gray-600 mb-6 text-center">
+          Please enter your email to reset your password.
+        </p>
+        <input
+          type="email"
+          placeholder="Email Address"
+          className="w-full px-4 py-2 mb-4 text-gray-800 border rounded-lg focus:outline-none focus:border-teal-500 text-center"
+          value={edit}
+          onChange={(e) => setEdit(e.target.value)}
+          // autoComplete="on"
+          autoComplete={"on"}
+        />
+        <p
+          className={`${
+            emailSent ? "text-green-500" : "text-red-500"
+          } text-sm mb-6 text-center`}
+        >
+          {message}
+        </p>
+        <button
+          onClick={sendMail}
+          className={`w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 rounded-lg transition duration-300 ease-in-out ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={loading}
+        >
+          {loading ? "Sending..." : "Send Email"}
+        </button>
+      </div>
     </div>
   );
 }

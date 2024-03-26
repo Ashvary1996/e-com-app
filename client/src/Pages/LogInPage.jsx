@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logInValidation from "../validation/logInValidationSchema";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,13 +8,18 @@ import { setToken, setUserID } from "../config/authTokenUser";
 function LogInPage() {
   const [detail, setDetail] = useState("");
   const [forgot, setForgot] = useState(false);
+  const signUpFormRef = useRef(null);
   const navigate = useNavigate();
 
   const initialValues = {
     email: "",
     password: "",
   };
-
+  useEffect(() => {
+    if (window.innerWidth < 768 && signUpFormRef.current) {
+      signUpFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
   const submitForm = async (values) => {
     await axios
       .post("/user/login", values)
@@ -36,7 +41,7 @@ function LogInPage() {
   };
 
   return (
-    <div className="signUpFormDiv ">
+    <div ref={signUpFormRef} className="signUpFormDiv p-10">
       <Formik
         initialValues={initialValues}
         validationSchema={logInValidation}
@@ -50,7 +55,7 @@ function LogInPage() {
           // console.log(values);
 
           return (
-            <Form className="loginForm ">
+            <Form className="loginForm p-10 w-[60%] m-auto">
               <h1 className="heading text-2xl">Log In </h1>
               <div className="fieldDiv">
                 <label htmlFor="email">E-mail </label>
@@ -78,7 +83,7 @@ function LogInPage() {
               </div>
               <p className="text-red-700 text-sm">{detail}</p>
 
-              <p className="text-red-700 text-sm  hover:underline">
+              <p className="text-red-700 text-sm  hover:underline mt-1">
                 {forgot === true ? (
                   <Link to={`/forgot/${values.email}`}>
                     Forgot / Reset Password
@@ -88,23 +93,24 @@ function LogInPage() {
 
               <div className="">
                 <button
-                  className="bg-teal-600 text-white hover:bg-green-600  p-1 rounded mt-2 w-[60%] text-xxl font-semibold"
+                  className="bg-teal-600 text-white hover:bg-green-600  p-1 rounded mt-2 w-[35%] text-xxl font-semibold"
                   type="submit"
                 >
-                  Log in
+                  Log-In
                 </button>
                 <br />
-                <i>
-                  <p className="inline-block text-white text-sm mt-1">
-                    Dont have an account?{" "}
+
+                <div className=" mt-3 flex justify-center  text-sm overflow-hidden lg:overflow-visible">
+                  <p className="inline-block text-white text-sm mt-1 mr-1.5">
+                    Don't have an account? 
                   </p>
                   <Link
-                    className="text-blue-500 ml-1 hover:underline hover:text-lg"
                     to="/signup"
+                    className="text-amber-500 hover:underline transform hover:scale-125 transition-transform duration-100 p-1 ease-in-out  "
                   >
-                    register here
+                    Register here
                   </Link>
-                </i>
+                </div>
               </div>
             </Form>
           );

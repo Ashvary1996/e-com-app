@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import logo from "../items/logo.png";
 import {
   getToken,
@@ -8,17 +8,19 @@ import {
   removeToken,
   removeUserID,
 } from "../config/authTokenUser";
-import Loader from "./Loader";
+import Loader from "../components/Loader";
+import addToCart from "../config/addToCartFn";
+import Header from "../components/Header";
 
 function HomePage() {
-  const [user, setUser] = useState();
   const userID = getUserID();
+  const [user, setUser] = useState();
   const [items, setItems] = useState([]);
   const [displayItems, setDisplayItems] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const [filterBy, setFilterBy] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 11;
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState("");
   const [laoding, setLoading] = useState(true);
@@ -75,6 +77,7 @@ function HomePage() {
     const currentItems = updatedItems.slice(startIndex, endIndex);
 
     setDisplayItems(currentItems);
+
     ///////////////////////////////////////
   }, [
     items,
@@ -101,22 +104,10 @@ function HomePage() {
   };
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+    setCurrentPage(1);
     // console.log("searchQuery", searchQuery);
   };
 
-  const addToCart = (item_id) => {
-    axios
-      .post("/user/cart", {
-        userId: userID,
-        userName: user,
-        productId: item_id,
-      })
-      .then((response) => {
-        console.log(response.data);
-        fetchCartItems();
-      })
-      .catch((err) => console.log(err));
-  };
   const fetchCartItems = useCallback(() => {
     axios
       .post("/user/getCartItems", { userId: userID })
@@ -149,59 +140,20 @@ function HomePage() {
     fetchCartItems();
   }, [fetchCartItems]);
 
-  return (
-    <>
-      <header className="homeHeader p-1  flex bg-teal-500    justify-between ">
-        <div className="w-[80px]">
-          <img className="rounded-full" src={logo} alt="logo" />
-        </div>
-        {/* search bar */}
-        <div className="w-[40%] flex m-auto align-middle justify-center ">
-          <input
-            className="w-[80%] h-10 text-center rounded-s-2xl"
-            type="text"
-            placeholder="Search for Products"
-            autoComplete="on"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            // Handle changes in search query
-          />
+  const [isHovered, setIsHovered] = useState(false);
+  const toggleHover = () => setIsHovered(!isHovered);
 
-          <button
-            onClick={handleSearchChange}
-            className="w-[20%] bg-slate-500 hover:bg-slate-400 rounded-e-2xl"
-          >
-            SearchIcon
-          </button>
-        </div>
-        <div className="w-[20%] ">
-          <div className="flex justify-around mt-1 m-auto">
-            <div className="dropdown relative inline-block ">
-              <button className="dropbtn">{user ? user : "Guest"}</button>
-              <div className="dropdown-content">
-                {!user ? (
-                  <p>
-                    <Link to="/login">Sign in</Link>
-                  </p>
-                ) : (
-                  <>
-                    <p onClick={logoutFn}> Log-out</p>
-                    <p>Help</p>
-                  </>
-                )}
-              </div>
-            </div>
-            {user ? (
-              <Link
-                to={{ pathname: "/cart", state: { userId: userID } }}
-                className="p-3 bg-white"
-              >
-                Cart <i>{cartNumber}</i>
-              </Link>
-            ) : null}
-          </div>
-        </div>
-      </header>
+  return (
+    <div className="homePage">
+      {/* Header  */}
+      <Header
+        user={user}
+        cartNumber={cartNumber}
+        logoutFn={logoutFn}
+        handleSearchChange={handleSearchChange}
+        searchQuery={searchQuery}
+      />
+
       {/* /////////////////////Sort and Filter with Reset filter option//////////////////////// */}
       <div>
         <div className="   flex justify-end">
@@ -233,43 +185,61 @@ function HomePage() {
             <option value="Infinix">Infinix</option>
           </select>
         </div>
+
         {/* Button to reset filter */}
         {filterBy && (
-          <button
-            onClick={resetFilter}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-300"
-          >
-            Reset Filter
-          </button>
+          <>
+            <p className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300">
+              Display Items : {displayItems.length}
+            </p>
+            <button
+              onClick={resetFilter}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-300"
+            >
+              Reset Filter
+            </button>
+          </>
         )}
       </div>
       {/* ////////////////////  Main Div /////////////////// */}
       {laoding ? <Loader /> : null}
-      <main className="productsDisplay   ">
-        <div className="flex flex-wrap gap-5 mt-5   ">
+
+      <main className="productsDisplay">
+        <div className="flex flex-wrap gap-5 mt-5 justify-center">
           {displayItems.map((elem, i) => (
-            <div key={i} className="sProduct relative   m-auto">
-              {/* <h1>{i + 1}</h1> */}
-              <img
-                className="w-[100%] h-[45%] m-auto"
-                src={elem.thumbnail}
-                alt="img"
-              />
-              <div className="sp2 mt-2 ">
-                <p
-                  className={`font-semibold ${
-                    elem.title.length > 25 ? "text-sm " : ""
-                  } `}
-                >
-                  {elem.title}
+            <div
+              key={i}
+              className="sProduct relative flex flex-col items-center"
+            >
+              <Link
+                to={{
+                  pathname: `/item/${elem._id}`,
+                  state: { item: elem },
+                }}
+              >
+                <img
+                  className="w-full h-48 object-cover rounded-lg mb-3"
+                  src={elem.thumbnail}
+                  alt="Product Image"
+                />
+              </Link>
+              <div className="sp2 text-center">
+                <p className="font-semibold text-lg mb-1">{elem.title}</p>
+                <p className="font-mono text-sm mb-1">{elem.brand}</p>
+                <p className="font-sans text-lg">
+                  ₹ {Math.ceil(elem.price * 83.01)}
                 </p>
-                <p className="font-mono">{elem.brand}</p>
-                <p className="font-sans">₹ {Math.ceil(elem.price * 83.01)}</p>
-                <p className="font-thin pdesc">{elem.description}</p>
-                <p>Rating : {Number(elem.rating)}</p>
+
+                <div className="description-container h-16 overflow-hidden mb-2">
+                  <p className="font-thin pdesc text-sm">{elem.description}</p>
+                </div>
+                <p className="text-sm">Rating: {Number(elem.rating)}</p>
                 <button
-                  onClick={() => addToCart(elem._id)}
-                  className="absolute bottom-1   align-middle justify-center  bg-green-400 text-black hover:bg-green-500 p-1 text-sm rounded  "
+                  onClick={() => {
+                    addToCart(elem._id, userID, user, fetchCartItems);
+                    console.log("Items Details: ", elem);
+                  }}
+                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm transition duration-300 ease-in-out"
                 >
                   Add to Cart
                 </button>
@@ -278,39 +248,49 @@ function HomePage() {
           ))}
         </div>
       </main>
+
       {/* /////////////////// Footer  //////////////////// */}
 
-      <footer>
-        <div className="paginationDiv flex justify-center space-x-4">
+      <footer
+        onMouseEnter={toggleHover}
+        onMouseLeave={toggleHover}
+        className={`transition-all duration-300 ${
+          isHovered ? "fixed inset-x-0 bottom-0" : "relative"
+        } bg-white shadow-md`}
+      >
+        <div className="paginationDiv flex justify-center space-x-4 py-1  ">
           <p
             onClick={() => {
               if (currentPage > 1) handlePrevPage();
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className={`cursor-pointer ${
               currentPage === 1
-                ? "text-gray-400 cursor-not-allowed  :"
-                : "text-black"
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-black hover:text-teal-600"
             }`}
           >
             {"<"} Previous
           </p>
-          <p>{currentPage}</p>
+          <p className="text-black font-medium">{currentPage}</p>
           <p
             onClick={() => {
               if (currentPage * itemsPerPage < items.length) handleNextPage();
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className={`cursor-pointer ${
               currentPage * itemsPerPage >= items.length
                 ? "text-gray-400 cursor-not-allowed"
-                : "text-black"
+                : "text-black hover:text-teal-600"
             }`}
           >
             Next {">"}
           </p>
         </div>
       </footer>
+
       {/* ///////////////////////////////////////////// */}
-    </>
+    </div>
   );
 }
 

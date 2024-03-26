@@ -68,4 +68,10 @@ const getAllProducts = async (req, res) => {
   let items = await Product.find({});
   res.json({ totalItems: items.length, items: items });
 };
-module.exports = { addProduct, apiProducts, getAllProducts };
+const getSingleProduct = async (req, res) => {
+  let item = await Product.find({
+    _id: req.body.itemId,
+  });
+  res.json({ item: item });
+};
+module.exports = { addProduct, apiProducts, getAllProducts, getSingleProduct };

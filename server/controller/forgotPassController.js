@@ -21,16 +21,22 @@ exports.forgotPassFn = async (req, res) => {
 
         const secret = process.env.JWT_SECRET;
         const token = await jwt.sign(payload, secret, {
-          expiresIn: "1m",
+          expiresIn: "5m",
         });
 
         const resetLink = `http://localhost:3000/reset/${token}`;
+        const currentDate = new Date().toISOString();
+
         const email = req.body.email;
-        const subject = `Reset Password mail from e-com website.`;
-        const htmlContent = `Click here to reset your password: <a href="${resetLink}">${resetLink}</a>
-            <br />
-              Remember it validate only fo 1min. 
-              Current time : ${Date()} `;
+        const subject = `Action Required: Reset Your Password.`;
+        const htmlContent = `
+        <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+          <p>Click the link below to reset your password. Please note that the link is valid for only 5 minutes.</p>
+          <p><a href="${resetLink}" style="color: #0652DD; text-decoration: none;">Reset your password</a></p>
+          <p><strong>Current time:</strong> ${currentDate}</p>
+          <p>If you did not request a password reset, please ignore this email or contact support if you believe this is an error.</p>
+        </div>
+        `;
         sendEmail(email, subject, htmlContent)
           .then((mailResponse) => {
             if (mailResponse.success) {
@@ -70,11 +76,17 @@ exports.resetPassFn = async (req, res) => {
     user.password = hash;
     await user.save();
 
+    const currentDate = new Date().toISOString();
     let email = user.email;
     let subject = "Password reset successfully";
-    let htmlContent = `<h1>Hi you have successfully reset your password</h1>
-    <p>if this not done by you then please change the password asap.</p>
-    <p>plese visit website to change it. </p> ;`;
+    let htmlContent = `
+    <h1>Password Reset Successfully</h1>
+    <h4> On : ${currentDate}</h3>
+    <p>You have successfully reset your password. If you did not initiate this change, please secure your account immediately.</p>
+    <p>Visit <a href="http://localhost:3000/home/" target="_blank">our website</a> to log in or change your password again if necessary.</p>
+    <p>If you encounter any issues or did not request a password reset, please contact our support team immediately at <a href="mailto:legion.ugc.lt@gmail.com">legion.ugc.lt@gmail.com</a>.</p>
+    <p>Thank you for ensuring the security of your account!</p>
+    `;
 
     sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
@@ -86,9 +98,8 @@ exports.resetPassFn = async (req, res) => {
       })
       .catch((err) => console.log("Error sending email: ", err));
 
-    res.send("Password has been updated.");
+    res.status(200).send("Password has been updated.");
   } catch (error) {
-    res.status(500).send("Invalid or expired token.");
+    res.status(500).send("Invalid or expired token. Generate New One.");
   }
 };
- 

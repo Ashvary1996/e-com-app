@@ -1,12 +1,13 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignUpPage from "./components/SignUpPage";
-import LogInPage from "./components/LogInPage";
-import HomePage from "./components/HomePage";
+import SignUpPage from "./Pages/SignUpPage";
+import LogInPage from "./Pages/LogInPage";
+import HomePage from "./Pages/HomePage";
 import Forgotpass from "./components/Forgotpass";
 import ResetPass from "./components/ResetPass";
 import Cart from "./components/Cart";
 import BuyPage from "./components/BuyPage";
+import ItemDescription from "./components/ItemDescription";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           </Route>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="*" element={<HomePage />}></Route>
+          <Route path="/item/:itemId" element={<ItemDescription />} />
         </Routes>
       </Router>
     </div>

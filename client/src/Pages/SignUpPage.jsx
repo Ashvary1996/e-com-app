@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signUpValidation from "../validation/signUpValidationSchema";
 import axios from "axios";
 import logo from "../items/logo.png";
@@ -79,7 +79,7 @@ function SignUpPage() {
           }}
         >
           {({ values }) => (
-            <Form className="regForm bg-white p-8 shadow-lg rounded-lgw-full max-w-lg  rounded-lg">
+            <Form className="regForm w-[100%]  bg-white p-8 shadow-lg rounded-lgw-full max-w-lg  rounded-lg">
               <h1 className="heading  text-xl font-semibold mb-6">
                 Create A new account
               </h1>
@@ -175,12 +175,12 @@ function SignUpPage() {
 
                 <div className="mt-4 flex justify-between items-center text-sm overflow-hidden lg:overflow-visible">
                   <p className="text-gray-300 ">Already a user?</p>
-                  <a
-                    href="/login"
+                  <Link
+                    to="/login"
                     className="text-amber-500 hover:underline transform hover:scale-150 transition-transform duration-200 mr-10 p-1"
                   >
                     Log-In
-                  </a>
+                  </Link>
                 </div>
               </div>
             </Form>
