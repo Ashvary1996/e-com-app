@@ -16,3 +16,5 @@ Todos-
 *add the modern alert feature.
 *add icons 
 *add : back to previous page feature not hard redirect.
+
+*Fix the proxy Thing.

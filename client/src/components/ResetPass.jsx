@@ -25,7 +25,7 @@ function ResetPass() {
   const resetPw = async (values) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`/user/reset`, {
+      await axios.post(`/user/reset`, {
         newPassword: values.password,
         token: token.token,
       });
@@ -79,14 +79,14 @@ function ResetPass() {
 
             <p
               className={`text-center text-sm  mb-4" ${
-                status == true ? "text-green-600" : "text-red-600"
+                status === true ? "text-green-600" : "text-red-600"
               }`}
             >
               {status && <p className="font-bold">PASSWORD UPDATED</p>}
               {message}
             </p>
             <div>
-              {status == false ? (
+              {status === false ? (
                 <>
                   <Link
                     to="/forgot"

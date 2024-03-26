@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import logo from "../items/logo.png";
+import { Link } from "react-router-dom";
 import {
   getToken,
   getUserID,
@@ -220,7 +219,7 @@ function HomePage() {
                 <img
                   className="w-full h-48 object-cover rounded-lg mb-3"
                   src={elem.thumbnail}
-                  alt="Product Image"
+                  alt="Product imge"
                 />
               </Link>
               <div className="sp2 text-center">
