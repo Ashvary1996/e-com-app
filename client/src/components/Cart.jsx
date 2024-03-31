@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getUserID } from "../config/authTokenUser";
+import { ToastContainer, toast } from "react-toastify";
 
 function Cart() {
   const [data, setData] = useState({
@@ -84,6 +85,7 @@ function Cart() {
       })
       .then((response) => {
         console.log(response.data);
+        toast.warn(`${elem.title + " : Removed"}`);
       })
       .catch((error) => {
         console.error("Error fetching cart items:", error);
@@ -101,6 +103,7 @@ function Cart() {
   const navigate = useNavigate();
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+      <ToastContainer stacked closeOnClick />
       <div className="flex justify-between">
         <p onClick={() => navigate("/home")} className="cursor-pointer">
           Go To Home
@@ -163,7 +166,6 @@ function Cart() {
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
                 onClick={() => {
                   removeCartItem(elem);
-                  alert("Item Removed");
                 }}
               >
                 Remove
@@ -176,13 +178,22 @@ function Cart() {
         <h1 className="text-xl font-bold text-gray-900">
           Total Amount: ₹ {total}
         </h1>
-        <Link
-          to="/paymentGateway"
-          state={{ finalAmount: total }}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105"
-        >
-          Proceed to buy
-        </Link>
+        {totalItemsCount > 0 ? (
+          <Link
+            to="/paymentGateway"
+            state={{ finalAmount: total }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105"
+          >
+            Proceed to buy
+          </Link>
+        ) : (
+          <button
+            className="bg-blue-500 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105 opacity-50 cursor-not-allowed"
+            disabled={true}
+          >
+            Proceed to buy
+          </button>
+        )}
       </div>
     </div>
   );

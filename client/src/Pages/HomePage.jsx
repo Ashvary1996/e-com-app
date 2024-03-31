@@ -10,6 +10,7 @@ import {
 import Loader from "../components/Loader";
 import addToCart from "../config/addToCartFn";
 import Header from "../components/Header";
+import { toast } from "react-toastify";
 
 function HomePage() {
   const userID = getUserID();
@@ -19,7 +20,7 @@ function HomePage() {
   const [sortBy, setSortBy] = useState("");
   const [filterBy, setFilterBy] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 11;
+  const itemsPerPage = 28;
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState("");
   const [laoding, setLoading] = useState(true);
@@ -112,6 +113,7 @@ function HomePage() {
       .post("/user/getCartItems", { userId: userID })
       .then((response) => {
         setCartNumber(response.data.totalItems);
+        console.log("responseCart", response.data.totalItems);
       })
       .catch((error) => {
         console.error("Error fetching cart items:", error);
@@ -160,14 +162,14 @@ function HomePage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+            className="px-2 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
           >
-            <option value="">Sort By</option>
+            <option value="">Sort By </option>
             <option value="price_LtH">Price : Low to High</option>
             <option value="price_HtL">Price : High to Low</option>
             <option value="rating_LtH">Rating : Low to High</option>
             <option value="rating_HtL">Rating : High to Low</option>
-            {/* Add more sorting options */}
+            {/* Will Add more sorting options */}
           </select>
           {/* Filter dropdown */}
           <select
@@ -213,19 +215,21 @@ function HomePage() {
               <Link
                 to={{
                   pathname: `/item/${elem._id}`,
-                  state: { item: elem },
+                  state: { cartNumber },
                 }}
               >
                 <img
-                  className="w-full h-48 object-cover rounded-lg mb-3"
+                  className="w-full h-48 rounded-lg mb-3 scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
                   src={elem.thumbnail}
-                  alt="Product imge"
+                  alt="Product img"
                 />
               </Link>
               <div className="sp2 text-center">
-                <p className="font-semibold text-lg mb-1">{elem.title}</p>
-                <p className="font-mono text-sm mb-1">{elem.brand}</p>
-                <p className="font-sans text-lg">
+                <p className={`font-semibold text-lg`}>
+                  {elem.title.slice(0, 30)}
+                </p>
+                <p className="font-mono text-sm  ">{elem.brand}</p>
+                <p className="font-sans text-lg font-medium">
                   ₹ {Math.ceil(elem.price * 83.01)}
                 </p>
 
@@ -236,6 +240,8 @@ function HomePage() {
                 <button
                   onClick={() => {
                     addToCart(elem._id, userID, user, fetchCartItems);
+                    toast.info(`${elem.title} : Added to Cart `);
+
                     console.log("Items Details: ", elem);
                   }}
                   className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm transition duration-300 ease-in-out"

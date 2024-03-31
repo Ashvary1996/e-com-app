@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import addToCart from "../config/addToCartFn";
 import { getUserID } from "../config/authTokenUser";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { FiShoppingCart } from "react-icons/fi";
 
 function ItemDescription() {
   const { itemId } = useParams();
@@ -13,7 +15,7 @@ function ItemDescription() {
   const userID = getUserID();
   const navigate = useNavigate();
 
-  console.log(userID);
+  // console.log(userID);
 
   useEffect(() => {
     axios
@@ -50,8 +52,15 @@ function ItemDescription() {
   return (
     <div className="bg-gray-100 p-5">
       <div className="flex justify-between ">
-        <button onClick={() => navigate("/home")}>Back to Home</button>
-        <button onClick={() => navigate("/cart")}>goToCart</button>
+        <button onClick={() => navigate("/home")}>
+          <IoIosArrowRoundBack />
+        </button>
+        <button onClick={() => navigate("/cart")}>
+          <FiShoppingCart
+            className=" mr-1sm:w-[40px] bg-white rounded-e-2xl  "
+            size={"23px"}
+          />
+        </button>
       </div>
       <div className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden md:flex">
         <div className="md:flex-shrink-0">

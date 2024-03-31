@@ -1,35 +1,46 @@
 const mongoose = require("mongoose");
 const UserSchema = mongoose.Schema;
+const validator = require("validator");
 
 const User = new UserSchema({
   firstName: {
-    require: true,
     type: String,
+    require: true,
   },
   lastName: {
-    require: true,
     type: String,
+    required: [true, "Please Enter Your Last Name "],
   },
   password: {
-    require: true,
     type: String,
+    require: true,
+    select: false,
   },
   email: {
     type: String,
+    required: true,
     unique: true,
+    lowercase: true,
+    validate: {
+      validator: validator.isEmail,
+      message: "Not a valid email address",
+    },
   },
   phoneNumber: {
-    require: true,
     type: Number,
+    require: true,
+  },
+  role: {
+    type: String,
+    default: "user",
+  },
+  avatar: {
+    public_id: { type: String },
+    url: { type: String },
   },
   sign_up_Date: {
+    type: String,
     default: Date(),
-    type: String,
-  },
-  userType: {
-    type: String,
-    default: "user"
-    
   },
 });
 

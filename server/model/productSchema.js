@@ -3,43 +3,74 @@ const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
   title: {
-    required: true,
     type: String,
+    required: [true, "Please Enter Your Product Title/Name "],
+    unique: [true, "Tile already exists , Please Enter Different Title/Name"],
   },
 
   description: {
-    required: true,
     type: String,
+    required: [true, "Please Enter Your Product Description "],
   },
   price: {
-    required: true,
     type: Number,
+    required: [true, "Please Enter Your Product Price "],
   },
+  category: {
+    type: String,
+    required: [true, "Please Enter Your Product Category "],
+  },
+  brand: {
+    type: String,
+    required: [true, "Please Enter Your Brand Name "],
+  },
+  thumbnail: {
+    type: String,
+    required: [true, "Please Enter Your Product Thumbnail "],
+  },
+  images: {
+    type: [String],
+  },
+  stock: {
+    type: String,
+    required: [true, "Please Enter Your Product Stock "],
+    maxLength: [
+      4,
+      "Stock cannot exceeds 4 characters/ 9999 limit for listing ",
+    ],
+    default: 1,
+  },
+
+  reviews: [
+    {
+      name: {
+        type: String,
+        // require: true,
+      },
+      rating: {
+        type: Number,
+        // require: true,
+        default: 0,
+      },
+      comment: {
+        type: String,
+        // require: true,
+      },
+    },
+  ],
   discountPercentage: {
     type: Number,
     default: 0,
   },
 
-  rating: {
-    type: Number,
-  },
-  brand: {
-    required: true,
-    type: String,
-  },
-  category: {
-    required: true,
-    type: String,
-  },
-  thumbnail: {
-    type: String,
-  },
-  images: {
-    type: [String],
-  },
-  addedDate: {
-    default: Date.now,
+  createdAt: {
     type: Date,
+    default: Date.now,
+  },
+  createdBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Users",
+    required: true,
   },
 });
 

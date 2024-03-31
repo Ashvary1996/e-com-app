@@ -8,10 +8,12 @@ import ResetPass from "./components/ResetPass";
 import Cart from "./components/Cart";
 import BuyPage from "./components/BuyPage";
 import ItemDescription from "./components/ItemDescription";
-
+import { ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <div className="App">
+      <ToastContainer closeOnClick id="myContainer" />
       <Router>
         <Routes>
           <Route path="/signup" element={<SignUpPage />}>

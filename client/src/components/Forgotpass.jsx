@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Forgotpass() {
   const { email } = useParams();
@@ -16,7 +17,9 @@ function Forgotpass() {
       if (response.data.status === true) {
         setMessage(response.data.detail);
         setEmailSent(true);
+        toast.info("E-mail Sended : Check E-mail");
       } else {
+        toast.error("Wrong-Email");
         setMessage(response.data.detail);
         setEmailSent(false);
       }
@@ -54,7 +57,8 @@ function Forgotpass() {
           className={`w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 rounded-lg transition duration-300 ease-in-out ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          disabled={loading}
+          disabled={loading || edit === ""}
+          style={{ cursor: loading || edit === "" ? "not-allowed" : "pointer" }}
         >
           {loading ? "Sending..." : "Send Email"}
         </button>

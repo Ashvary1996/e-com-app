@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import signUpValidation from "../validation/signUpValidationSchema";
 import axios from "axios";
 import logo from "../items/logo.png";
+import { toast } from "react-toastify";
 
 function SignUpPage() {
   const [detail, setDetail] = useState("");
@@ -33,7 +34,8 @@ function SignUpPage() {
         if (response.data.status === true) {
           setDetail("");
           console.log("Succefully Registerd : ", response.data.user);
-          resetForm({ values: "" });
+          // resetForm({ values: "" });
+          toast.success("Sign Up Successfully");
           navigate("/login");
         } else {
           setDetail(response.data.detail);
@@ -50,7 +52,7 @@ function SignUpPage() {
   return (
     <div className="mainSignUpDiv flex flex-wrap min-h-screen bg-gradient-to-r from-teal-300 to-blue-500">
       <div className="welcomeDiv w-full lg:w-1/3 p-5 lg:p-10 bg-white shadow-lg rounded-lg m-auto">
-        <h1 className="text-2xl font-bold mb-4"> 
+        <h1 className="text-2xl font-bold mb-4">
           Welcome to Your Next Shopping Adventure!
         </h1>
         <img className="mx-auto my-4" src={logo} alt="Logo" />

@@ -2,24 +2,49 @@ const express = require("express");
 const route = express.Router();
 
 const {
-  apiProducts,
-  addProduct,
+  createProduct,
   getAllProducts,
+  updateProduct,
+  apiProducts,
   getSingleProduct,
+  deleteProduct,
 } = require("../controller/productController");
+const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
 
 // Route to add all Products from api
-route.post("/addProductFromApi", apiProducts);
+route.put("/addProductFromApi", apiProducts);
 
 // Route to add a new Single product
-route.post("/addProduct", addProduct);
+route.put(
+  "/addProduct",
+  isAuthenticatedUser,
+  authorizedRole("admin"),
+  createProduct
+);
 
 // Route to get all products
-route.get("/allProducts", getAllProducts);
+route.get("/getallProducts", getAllProducts);
+// route.get("/getallProducts",  getAllProducts);
 
-// .................................
+// Route to update a single Products
+route.put(
+  "/updateProduct/:id",
+  isAuthenticatedUser,
+  authorizedRole("admin"),
+  updateProduct
+);
+
+// Route to delete a Product.
+route.delete(
+  "/deleteProduct/:id",
+  isAuthenticatedUser,
+  authorizedRole("admin"),
+  deleteProduct
+);
+
+// ................................ .
 // Route to get Single products Details
-route.post("/singleProduct", getSingleProduct);
+route.get("/singleProduct", getSingleProduct);
 
 // .................................
 

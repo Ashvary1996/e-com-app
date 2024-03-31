@@ -4,7 +4,7 @@ import logInValidation from "../validation/logInValidationSchema";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setToken, setUserID } from "../config/authTokenUser";
-
+import {toast } from "react-toastify";
 function LogInPage() {
   const [detail, setDetail] = useState("");
   const [forgot, setForgot] = useState(false);
@@ -31,6 +31,7 @@ function LogInPage() {
         } else {
           setDetail(response.data.detail);
           setForgot(true);
+          toast.warn("Wrong Credentials")
         }
       })
       .catch((err) => console.log("error in sending data", err));

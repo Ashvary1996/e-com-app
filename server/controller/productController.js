@@ -1,9 +1,10 @@
 const axios = require("axios");
 const Product = require("../model/productSchema");
 
-const addProduct = async (req, res) => {
+const createProduct = async (req, res) => {
   try {
     const { title, brand, category, price } = req.body;
+
     const existingProduct = await Product.find({
       title,
       brand,
@@ -11,28 +12,90 @@ const addProduct = async (req, res) => {
       price,
     });
     if (existingProduct.length > 0) {
-      res.send({ msg: "Same product already exists." });
-    } else {
-      const product = new Product({
-        title: req.body.title,
-        description: req.body.description,
-        price: req.body.price,
-        discountPercentage: req.body.discountPercentage,
-        rating: req.body.rating,
-        brand: req.body.brand,
-        category: req.body.category,
-        thumbnail: req.body.thumbnail,
-        images: req.body.images,
+      res.json({
+        status: "failed",
+        message:
+          "Same product already exist's with same title,brand,category and price. Kindly use different One",
       });
+    } else {
+      const userId = req.userId;
+      // req.body.user = req.user.id;
+      const product = await Product.create({ createdBy: userId, ...req.body });
       const newProduct = await product.save();
+
       console.log("Product saved:", newProduct);
-      res.json({ newProduct: newProduct });
+      res.status(201).json({ success: true, Product: newProduct });
     }
   } catch (error) {
-    console.error("Error fetching data:", error);
-    res.status(500).json({ error: "Failed to fetch products", err: error });
+    console.error("Failed to Create product:", error);
+    res.status(500).json({ status: "Failed to Create product", err: error });
   }
 };
+
+const getAllProducts = async (req, res) => {
+  try {
+    let items = await Product.find({});
+    res.json({ totalItems: items.length, items: items });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+const getSingleProduct = async (req, res) => {
+  try {
+    let item = await Product.findOne({
+      _id: req.body.itemId,
+    });
+
+    if (!item) {
+      return res.json({ message: "Item not found" });
+    }
+
+    res.json({ item: item });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+const updateProduct = async (req, res, next) => {
+  try {
+    let items = await Product.findById(req.params.id);
+    if (!items) {
+      return res.json({ status: "fail", message: "Product not Found" });
+    }
+
+    items = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+    res.json({ success: true, updated_Product: items });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const deleteProduct = async (req, res, next) => {
+  try {
+    let items = await Product.findById(req.params.id);
+    if (!items) {
+      return res.json({ message: "Product not found" });
+    }
+
+    await items.deleteOne();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Product Deleted Successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error", error: error });
+  }
+};
+
 const apiProducts = async (req, res) => {
   try {
     const response = await axios.get(
@@ -45,12 +108,12 @@ const apiProducts = async (req, res) => {
       const product = new Product({
         title: elem.title,
         description: elem.description,
+        category: elem.category,
+        brand: elem.brand,
+        thumbnail: elem.thumbnail,
         price: elem.price,
         discountPercentage: elem.discountPercentage,
-        rating: elem.rating,
-        brand: elem.brand,
-        category: elem.category,
-        thumbnail: elem.thumbnail,
+        // rating: elem.reviews.rating,
         images: elem.images,
       });
 
@@ -58,20 +121,18 @@ const apiProducts = async (req, res) => {
       allProduct.push(savedProduct);
     }
 
-    res.json({ status: "products fetched successfully", array: allProduct });
+    res.json({ status: "products added Successfully", array: allProduct });
   } catch (error) {
     console.error("Error fetching data:", error);
-    res.status(500).json({ error: "Failed to fetch products", err: error });
+    res.status(500).json({ error: "Failed to Add products", err: error });
   }
 };
-const getAllProducts = async (req, res) => {
-  let items = await Product.find({});
-  res.json({ totalItems: items.length, items: items });
+
+module.exports = {
+  createProduct,
+  apiProducts,
+  getAllProducts,
+  getSingleProduct,
+  updateProduct,
+  deleteProduct,
 };
-const getSingleProduct = async (req, res) => {
-  let item = await Product.find({
-    _id: req.body.itemId,
-  });
-  res.json({ item: item });
-};
-module.exports = { addProduct, apiProducts, getAllProducts, getSingleProduct };

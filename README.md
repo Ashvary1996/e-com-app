@@ -8,13 +8,21 @@ Full Stack Project Ecom Project.
 5.  Cart Functionality added with inc+dec+remove from database as well
 6.  Item Description Page added
 
-#   Item Description + UI Updated + Responsivness
-#  Working on home+description 
- 
+# Item Description + UI Updated + Responsivness
+
+Frontend :
 Todos-
 *fix => filter/sort/search to page 1 when using.  
 *add the modern alert feature.
-*add icons 
+*add icons
 *add : back to previous page feature not hard redirect.
 
-*Fix the proxy Thing.
+\*Fix the proxy Thing.
+
+---
+
+backend:
+
+<!-- 3.41 t-->
+
+# Re-structuring Back-end

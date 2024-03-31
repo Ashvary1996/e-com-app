@@ -4,6 +4,7 @@ import { Form, Field, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ResetPass() {
   const validatePassword = Yup.object({
@@ -30,6 +31,7 @@ function ResetPass() {
         token: token.token,
       });
       setStatus(true);
+      toast.success("Password Successfully Changed");
       let countdown = 10;
       const countdownInterval = setInterval(() => {
         setMessage(`Re-directing to login in ..${countdown}`);
@@ -40,6 +42,7 @@ function ResetPass() {
         }
       }, 1000);
     } catch (err) {
+      toast.warn("Password-Reset Time Expired.");
       setStatus(false);
       setMessage(err.response?.data || "An error occurred");
       setTimeout(() => {
