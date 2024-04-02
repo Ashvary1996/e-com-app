@@ -128,6 +128,113 @@ const apiProducts = async (req, res) => {
   }
 };
 
+const productReview = async (req, res) => {
+  const { rating, comment, productId } = req.body;
+
+  const review = {
+    userID: req.userId,
+    name: req.user.firstName,
+    rating: Number(rating),
+    comment,
+  };
+
+  const product = await Product.findById(productId);
+  const isReview = product.reviews.find(
+    (review) => review.userID.toString() === req.userId.toString()
+  );
+
+  if (isReview) {
+    isReview.rating = rating;
+    isReview.comment = comment;
+  } else {
+    product.reviews.push(review);
+    product.numOfReviews = product.reviews.length;
+  }
+
+  let sumOfRatings = 0;
+  product.reviews.forEach((elem) => {
+    sumOfRatings += elem.rating;
+  });
+  product.ratings = sumOfRatings / product.reviews.length;
+
+  await product.save({ validateBeforeSave: false });
+
+  res.status(200).json({ success: true });
+};
+// get all reviews of a single product
+const getProductReviews = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ success: false, msg: "Product not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      reviews: product.reviews,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+      errMsg: error.message,
+    });
+  }
+};
+// remove a review from a  product
+const removeProductReview = async (req, res) => {
+  try {
+    const productId = req.body.productId;
+    const reviewId = req.body.reviewId;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ success: false, msg: "Product not found" });
+    }
+
+    const removedReview = product.reviews.find(
+      (review) => review._id.toString() === reviewId
+    );
+    if (!removedReview) {
+      return res.status(404).json({ success: false, msg: "Review not found" });
+    }
+
+    product.reviews = product.reviews.filter(
+      (review) => review._id.toString() !== reviewId
+    );
+
+    if (product.reviews.length > 0) {
+      let sumOfRatings = 0;
+      product.reviews.forEach((review) => {
+        sumOfRatings += review.rating;
+      });
+      product.ratings = sumOfRatings / product.reviews.length;
+    } else {
+      product.ratings = 0;
+    }
+    product.numOfReviews = product.reviews.length;
+
+    await product.save({ validateBeforeSave: false });
+
+    return res.status(200).json({
+      success: true,
+      msg: "Review removed successfully",
+      reviews: product.reviews,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+      errMsg: error.message,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   apiProducts,
@@ -135,4 +242,7 @@ module.exports = {
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  productReview,
+  getProductReviews,
+  removeProductReview,
 };

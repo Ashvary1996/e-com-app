@@ -8,6 +8,9 @@ const {
   apiProducts,
   getSingleProduct,
   deleteProduct,
+  productReview,
+  getProductReviews,
+  removeProductReview,
 } = require("../controller/productController");
 const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
 
@@ -24,7 +27,9 @@ route.put(
 
 // Route to get all products
 route.get("/getallProducts", getAllProducts);
-// route.get("/getallProducts",  getAllProducts);
+
+// Route to get Single products Details
+route.get("/singleProduct", getSingleProduct);
 
 // Route to update a single Products
 route.put(
@@ -41,11 +46,17 @@ route.delete(
   authorizedRole("admin"),
   deleteProduct
 );
+// Route to update Review products
+route.put("/review", isAuthenticatedUser, productReview);
 
-// ................................ .
-// Route to get Single products Details
-route.get("/singleProduct", getSingleProduct);
-
+route.get(
+  "/admin/getProductReviews/:productId",
+  isAuthenticatedUser,
+  authorizedRole("admin"),
+  getProductReviews
+);
+// Route to remove a Product Review.
+route.delete("/removeProductReview", isAuthenticatedUser, removeProductReview);
 // .................................
 
 module.exports = route;

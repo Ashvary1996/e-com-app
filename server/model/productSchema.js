@@ -26,7 +26,7 @@ const ProductSchema = new Schema({
   },
   thumbnail: {
     type: String,
-    required: [true, "Please Enter Your Product Thumbnail "],
+    // required: [true, "Please Enter Your Product Thumbnail "],
   },
   images: {
     type: [String],
@@ -40,24 +40,36 @@ const ProductSchema = new Schema({
     ],
     default: 1,
   },
-
+  ratings: {
+    type: Number,
+    default: 0,
+  },
   reviews: [
     {
+      userID: {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+        required: true,
+      },
       name: {
         type: String,
-        // require: true,
+        require: true,
       },
       rating: {
         type: Number,
-        // require: true,
+        require: true,
         default: 0,
       },
       comment: {
         type: String,
-        // require: true,
+        require: true,
       },
     },
   ],
+  numOfReviews: {
+    type: Number,
+    default: 0,
+  },
   discountPercentage: {
     type: Number,
     default: 0,

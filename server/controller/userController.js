@@ -41,22 +41,6 @@ const signUpFn = async (req, res) => {
 
     sendToken(user, res, "User Saved");
 
-    /////////////////
-    // const payload = {
-    //   id: newUser._id,
-    //   firstName: req.body.firstName,
-    // };
-
-    // const token = jwt.sign(payload, secret, { expiresIn: 783672 });
-
-    // res.send({
-    //   status: true,
-    //   detail: "User Saved",
-    //   id: newUser._id,
-    //   user: newUser,
-    //   token: token,
-    // });
-
     const email = req.body.email;
     const subject = `Welcome ${user.firstName} to e-com website.`;
     const htmlContent = `<div>
@@ -97,24 +81,8 @@ const logInFn = async (req, res) => {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
 
     if (isMatch) {
-      // const payload = {
-      //   id: user._id,
-      //   email: user.email,
-      // };
-      // const secret = process.env.JWT_SECRET;
-      // const token = await jwt.sign(payload, secret, { expiresIn: 31556926 });
-
       delete user.password; // this will not return password in response
       sendToken(user, res, "Log In Success");
-
-      // sendToken(user,200,res)
-
-      // return res.json({
-      //   status: true,
-      //   detail: "Logged In Success",
-      //   user,
-      //   token,
-      // });
     } else {
       return res.json({
         status: false,
@@ -137,6 +105,7 @@ const logOutFn = async (req, res, next) => {
     msg: "Logged Out Successfully",
   });
 };
+// /////////////////////////////////
 
 const getallUsers = async (req, res) => {
   try {
@@ -164,7 +133,10 @@ const getallUsers = async (req, res) => {
 const getSingleUser = async (req, res) => {
   try {
     const findUserId = req.body.findUserId;
-    const user = await Usermodel.findByIdAndUpdate({ _id: findUserId },req.body);
+    const user = await Usermodel.findByIdAndUpdate(
+      { _id: findUserId },
+      req.body
+    );
 
     return res.json({
       status: true,
@@ -175,7 +147,7 @@ const getSingleUser = async (req, res) => {
     return res.json({ message: "Internal Server Error", error: error.message });
   }
 };
-
+// /////////////////////////////////
 const forgotPassFn = async (req, res) => {
   try {
     if (!req.body.email) res.send("email Required");
@@ -231,54 +203,6 @@ const forgotPassFn = async (req, res) => {
     }
   } catch (error) {
     res.json({ message: "Internal Server Error", error: error.message });
-  }
-};
-
-const updatePassFn = async (req, res) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) return res.json({ msg: "user need to logged IN " });
-
-    const { oldPassword, newPassword, confirmPassword } = req.body;
-
-    const jwtUser = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await Usermodel.findById(jwtUser.id)
-      .select("+password")
-      .lean();
-
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) {
-      return res
-        .status(400)
-        .json({ status: false, msg: "Old Password entered wrong" });
-    }
-
-    if (newPassword !== confirmPassword) {
-      return res
-        .status(400)
-        .json({ status: false, msg: "Passwords do not match" });
-    }
-
-    if (!newPassword || newPassword.length < 7) {
-      return res.status(400).json({
-        status: false,
-        msg: "Password must be at least 7 characters long",
-      });
-    }
-
-    const salt = await bcrypt.genSalt(Number(process.env.ROUND));
-    const hash = await bcrypt.hash(newPassword, salt);
-
-    await Usermodel.findByIdAndUpdate(user._id, { password: hash });
-
-    sendToken(user, res, "Password has been Changed");
-  } catch (error) {
-    console.error("Error updating password:", error);
-    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -341,6 +265,55 @@ const resetPassFn = async (req, res) => {
       .send("Internal Error: Invalid or expired token. Generate New One.");
   }
 };
+
+const updatePassFn = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.json({ msg: "user need to logged IN " });
+
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    const jwtUser = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await Usermodel.findById(jwtUser.id)
+      .select("+password")
+      .lean();
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ status: false, msg: "Old Password entered wrong" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ status: false, msg: "Passwords do not match" });
+    }
+
+    if (!newPassword || newPassword.length < 7) {
+      return res.status(400).json({
+        status: false,
+        msg: "Password must be at least 7 characters long",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(Number(process.env.ROUND));
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    await Usermodel.findByIdAndUpdate(user._id, { password: hash });
+
+    sendToken(user, res, "Password has been Changed");
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+// /////////////////////////////////
 const updateProfile = async (req, res) => {
   try {
     const updateUserData = {
@@ -369,6 +342,33 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await Usermodel.findById(userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: `User with id ${userId} deleted successfully`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      errMsg: error.message,
+    });
+  }
+};
+
 module.exports = {
   signUpFn,
   logInFn,
@@ -378,5 +378,6 @@ module.exports = {
   logOutFn,
   updatePassFn,
   updateProfile,
-  getSingleUser
+  getSingleUser,
+  deleteUser,
 };

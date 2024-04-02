@@ -5,7 +5,7 @@ const validator = require("validator");
 const User = new UserSchema({
   firstName: {
     type: String,
-    require: true,
+    required: [true, "Please Enter Your First Name "],
   },
   lastName: {
     type: String,
@@ -13,12 +13,12 @@ const User = new UserSchema({
   },
   password: {
     type: String,
-    require: true,
+    required: [true, "Please Enter Password"],
     select: false,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Please Enter Your E-mail"],
     unique: true,
     lowercase: true,
     validate: {
@@ -28,7 +28,7 @@ const User = new UserSchema({
   },
   phoneNumber: {
     type: Number,
-    require: true,
+    required: [true, "Please Enter Your Phone-Number"],
   },
   role: {
     type: String,

@@ -11,7 +11,9 @@ const {
   updatePassFn,
   updateProfile,
   getSingleUser,
+  deleteUser,
 } = require("../controller/userController");
+
 const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
 
 route.post("/signup", signUpFn);
@@ -21,6 +23,7 @@ route.post("/logout", logOutFn);
 route.post("/forgotPass", forgotPassFn);
 route.post("/reset", resetPassFn);
 route.post("/updatePassword", updatePassFn);
+
 route.put("/updateProfile", isAuthenticatedUser, updateProfile);
 
 route.get(
@@ -34,6 +37,12 @@ route.put(
   isAuthenticatedUser,
   authorizedRole("admin"),
   getSingleUser
+);
+route.delete(
+  "/admin/deleteUser/:userId",
+  isAuthenticatedUser,
+  authorizedRole("admin"),
+  deleteUser
 );
 
 module.exports = route;
