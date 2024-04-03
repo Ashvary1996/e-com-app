@@ -1,0 +1,202 @@
+.App {
+  text-align: center;
+}
+/* -------------------------- */
+
+/* -------------------------- */
+.loader {
+  margin: auto;
+  height: 200px;
+  width: 200px;
+  border: 3px solid red;
+  border-radius: 50%;
+  border-top-color: orange;
+  animation: loader 1s infinite; /*liner*/
+}
+@keyframes loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* /////////// /   Sign up Page css Starts  //////////////////// */
+.mainSignUpDiv > * {
+  /* Target direct children */
+  transition: transform 1.5s;
+}
+
+@media (max-width: 768px) {
+  .mainSignUpDiv > * {
+    transform: scale(0.95);
+    /* opacity: 0.7; */
+  }
+}
+.signUpFormDiv {
+  background-image: url("https://source.unsplash.com/random?commerce");
+  transition: all 1.5s ease;
+  height: 100vh; /* //This need to fix */
+}
+.welcomeDiv {
+  transition: all 1.5s ease;
+}
+
+.regForm,
+.loginForm {
+  background: #202123dc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.heading {
+  color: rgb(255, 228, 196);
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.fieldDiv label {
+  display: block;
+  padding: 5px;
+  color: whitesmoke;
+  font-family: cursive;
+}
+
+.fieldDiv input[type="text"],
+.fieldDiv input[type="email"],
+.fieldDiv input[type="Number"],
+.fieldDiv input[type="password"] {
+  width: 70%;
+  padding: 5px;
+  border: 1px solid #ccd6dd;
+  border-radius: 4px;
+  text-align: center;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.fieldDiv input::selection {
+  color: teal;
+}
+
+.error {
+  color: #ff3860;
+  font-size: smaller;
+}
+
+/* /////////// /   Sign up Page css end  //////////////////// */
+/* 
+  
+
+/* ........................................................................// */
+/* /////////// /  HOME Page css Starts  //////////////////// */
+/*  */
+
+/* .homeHeader > div { */
+/* border: 2px solid red; */
+/* } */
+/* .productsDisplay{border: 2px solid red;} */
+.homePage {
+}
+/* .homePage::-webkit-scrollbar {
+  background-color: transparent;
+  width: 3px;
+}
+.homePage::-webkit-scrollbar-thumb {
+  background-color: teal;
+  border-radius: 20px;
+} */
+.sProduct {
+  height: 420px;
+  width: 300px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 1.5px;
+}
+.sProduct > img {
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+.sProduct > img:hover {
+  transform: scale(1.1);
+}
+
+.pdesc {
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+  overflow-y: scroll;
+  height: 55px;
+  font-size: 15px;
+}
+.pdesc::-webkit-scrollbar {
+  background-color: transparent;
+  width: 3px;
+}
+.pdesc::-webkit-scrollbar-thumb {
+  background-color: teal;
+  border-radius: 20px;
+}
+/* ////////////////////////////////// */
+
+/* .dropdown {
+  position: relative;
+  display: inline-block;
+} */
+.dropbtn {
+  background-color: #04aa6d;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content p {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content p:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+/* Footer  */
+.paginationDiv {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid gray;
+  margin-top: 10px;
+}
+
+/* /////////////////////////// */
+/* /////////////////////////// */
+/* /////////// /  HOME Page css end  //////////////////// */
+
+/* ........................................................................// */
+
+/* Modal css for Single Item Details Div */
+
+/* ........................................................................// */
