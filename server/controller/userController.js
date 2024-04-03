@@ -6,13 +6,15 @@ const { sendToken } = require("../utils/jwtToken");
 
 const signUpFn = async (req, res) => {
   try {
-    if (!req.body.firstName) return res.send("firstName Required");
-    else if (!req.body.lastName) return res.send("lastName Required");
-    else if (!req.body.email) return res.send("email Required");
-    else if (!req.body.phoneNumber) return res.send("phoneNumber Required");
-    else if (!req.body.password) return res.send("Password Required");
+    const { firstName, lastName, email, phoneNumber, password } = req.body;
 
-    let existingUser = await Usermodel.findOne({ email: req.body.email });
+    if (!firstName) return res.send("firstName Required");
+    else if (!lastName) return res.send("lastName Required");
+    else if (!email) return res.send("email Required");
+    else if (!phoneNumber) return res.send("phoneNumber Required");
+    else if (!password) return res.send("Password Required");
+
+    let existingUser = await Usermodel.findOne({ email: email });
     if (existingUser) {
       return res.send({
         status: false,
@@ -25,11 +27,11 @@ const signUpFn = async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, salt);
 
     const user = new Usermodel({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      firstName,
+      lastName,
       password: hash,
-      email: req.body.email,
-      phoneNumber: req.body.phoneNumber,
+      email: email,
+      phoneNumber,
       avatar: {
         public_id: "demoID",
         url: "demoUrl",
@@ -41,7 +43,6 @@ const signUpFn = async (req, res) => {
 
     sendToken(user, res, "User Saved");
 
-    const email = req.body.email;
     const subject = `Welcome ${user.firstName} to e-com website.`;
     const htmlContent = `<div>
         <h1>Hi Welcome to our Website</h1>
@@ -130,12 +131,13 @@ const getallUsers = async (req, res) => {
     return res.json({ message: "Internal Server Error", error: error.message });
   }
 };
-const getSingleUser = async (req, res) => {
+const updateUserRole = async (req, res) => {
   try {
     const findUserId = req.body.findUserId;
     const user = await Usermodel.findByIdAndUpdate(
-      { _id: findUserId },
-      req.body
+      findUserId,
+      { role: req.body.updateRole },
+      { new: true }
     );
 
     return res.json({
@@ -378,6 +380,6 @@ module.exports = {
   logOutFn,
   updatePassFn,
   updateProfile,
-  getSingleUser,
+  updateUserRole,
   deleteUser,
 };

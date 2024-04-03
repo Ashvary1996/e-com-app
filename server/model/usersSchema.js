@@ -28,6 +28,8 @@ const User = new UserSchema({
   },
   phoneNumber: {
     type: Number,
+    min: [1000000000, "Phone number is too short"],
+    max: [9999999999, "Phone number is too long"],
     required: [true, "Please Enter Your Phone-Number"],
   },
   role: {

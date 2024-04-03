@@ -10,8 +10,8 @@ const {
   logOutFn,
   updatePassFn,
   updateProfile,
-  getSingleUser,
   deleteUser,
+  updateUserRole,
 } = require("../controller/userController");
 
 const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
@@ -22,12 +22,12 @@ route.post("/logout", logOutFn);
 
 route.post("/forgotPass", forgotPassFn);
 route.post("/reset", resetPassFn);
-route.post("/updatePassword", updatePassFn);
+route.put("/updatePassword", updatePassFn);
 
 route.put("/updateProfile", isAuthenticatedUser, updateProfile);
 
 route.get(
-  "/getusers",
+  "/admin/getAllusers",
   isAuthenticatedUser,
   authorizedRole("admin"),
   getallUsers
@@ -36,7 +36,7 @@ route.put(
   "/admin/getSingleUser",
   isAuthenticatedUser,
   authorizedRole("admin"),
-  getSingleUser
+  updateUserRole
 );
 route.delete(
   "/admin/deleteUser/:userId",

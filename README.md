@@ -19,11 +19,4 @@ Todos-
 
 \*Fix the proxy Thing.
 
----
-
-backend:
-
-<!-- 4.35 t-->
-
-# Re-structuring Back-end
-<!-- updateOrder working on this  -->
+# Backend Functionalty almost all completed 

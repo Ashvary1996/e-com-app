@@ -9,7 +9,7 @@ const sendToken = (user, res, msg) => {
   const token = jwt.sign(payload, secret, { expiresIn: "1w" });
 
   const options = {
-    expiresIn: "7d",
+    expiresIn: "7d", 
     httpOnly: true,
   };
 
