@@ -18,7 +18,7 @@ const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
 route.put("/addProductFromApi", apiProducts);
 
 // Route to add a new Single product
-route.put(
+route.post(
   "/addProduct",
   isAuthenticatedUser,
   authorizedRole("admin"),

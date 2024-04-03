@@ -309,7 +309,31 @@ const updatePassFn = async (req, res) => {
 
     await Usermodel.findByIdAndUpdate(user._id, { password: hash });
 
-    sendToken(user, res, "Password has been Changed");
+    const currentDate = new Date().toISOString();
+    const email = user.email;
+    const subject = "Password Update successfully";
+    const htmlContent = `
+      <h1>Password Update Successfully</h1>
+      <h4> On: ${currentDate}</h4>
+      <p>You have successfully update your password. If you did not initiate this change, please secure your account immediately.</p>
+      <p>Visit <a href="${req.protocol}://${req.get(
+      "host"
+    )}/home/" target="_blank">our website</a> to log in or change your password again if necessary.</p>
+      <p>If you encounter any issues or did not request a password reset, please contact our support team immediately at <a href="mailto:legion.ugc.lt@gmail.com">legion.ugc.lt@gmail.com</a>.</p>
+      <p>Thank you for ensuring the security of your account!</p>
+    `;
+
+    sendEmail(email, subject, htmlContent)
+      .then((mailResponse) => {
+        if (mailResponse.success) {
+          console.log("Email sent successfully");
+        } else {
+          console.log("Failed to send email");
+        }
+      })
+      .catch((err) => console.log("Error sending email: ", err));
+
+    sendToken(user, res, "Password has been updated");
   } catch (error) {
     console.error("Error updating password:", error);
     res.status(500).send("Internal Server Error");

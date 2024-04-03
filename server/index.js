@@ -25,7 +25,7 @@ app.use("/demo", (res) => res.send("Hello World"));
 app.use("/user", require("./routes/UserRoute"));
 app.use("/home", require("./routes/HomeRoute"));
 app.use("/product", require("./routes/ProductRoute"));
-app.use("/user", require("./routes/CartRoute"));
+app.use("/user/cart", require("./routes/CartRoute"));
 app.use("/order", require("./routes/OrderRoute"));
 
 // .................................................................

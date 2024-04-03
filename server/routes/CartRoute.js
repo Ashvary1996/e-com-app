@@ -6,17 +6,11 @@ const {
   updateCart,
   delCartItem,
 } = require("../controller/cartController");
+const { isAuthenticatedUser } = require("../middleware/auth");
 
-// Route for addToCart
-route.post("/cart", addToCart);
-
-// Route to get a product Items from cart
-route.post("/getCartItems", getCartItems);
-
-// Route to update the products from cart
-route.post("/updateCartItems", updateCart);
-
-// Route to remove the single Products from cart
-route.post("/removeCartItems", delCartItem);
+route.post("/addTocart", isAuthenticatedUser, addToCart);
+route.get("/getCartItems", isAuthenticatedUser, getCartItems);
+route.put("/updateCartItems", isAuthenticatedUser, updateCart);
+route.delete("/removeCartItems", isAuthenticatedUser, delCartItem);
 
 module.exports = route;

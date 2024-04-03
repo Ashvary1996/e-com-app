@@ -85,9 +85,11 @@ const deleteProduct = async (req, res, next) => {
 
     await items.deleteOne();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Product Deleted Successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Product Deleted Successfully",
+      Deleted_Item_Detail: items,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -159,7 +161,12 @@ const productReview = async (req, res) => {
 
   await product.save({ validateBeforeSave: false });
 
-  res.status(200).json({ success: true });
+  res.status(200).json({
+    success: true,
+    message: "Review Added Successfully",
+    productId: productId,
+    details: product.reviews,
+  });
 };
 // get all reviews of a single product
 const getProductReviews = async (req, res) => {
@@ -174,6 +181,7 @@ const getProductReviews = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+      productTitle:product.title,
       reviews: product.reviews,
     });
   } catch (error) {

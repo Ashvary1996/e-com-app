@@ -1,14 +1,20 @@
 const CartModel = require("../model/cartSchema");
 
 const addToCart = async (req, res) => {
-  const { userId, userName, productId } = req.body;
+  const { productId } = req.body;
+  const userId = req.userId;
   console.log(productId);
   try {
     let userInCart = await CartModel.findOne({ userId: userId });
+
+    if (!productId.toString()) {
+      return res.json({ msg: "Product ID not Available" });
+    }
+
     if (!userInCart) {
       userInCart = new CartModel({
         userId: userId,
-        userName: userName,
+        userName: req.user.firstName,
         products: [
           {
             productId: productId,
@@ -43,7 +49,7 @@ const addToCart = async (req, res) => {
 };
 
 const getCartItems = async (req, res) => {
-  const { userId } = req.body;
+  const userId = req.userId;
   // ...........................................................................
   try {
     let userCart = await CartModel.findOne({ userId: userId }).populate(
@@ -60,11 +66,15 @@ const getCartItems = async (req, res) => {
         title: item.productId.title,
         description: item.productId.description,
         price: item.productId.price,
-        rating: item.productId.rating,
-        brand: item.productId.brand,
         category: item.productId.category,
+        brand: item.productId.brand,
         thumbnail: item.productId.thumbnail,
         images: item.productId.images,
+        stock: item.productId.stock,
+        discount: item.productId.discountPercentage,
+        reviews: item.productId.reviews,
+        totalReviews: item.productId.numOfReviews,
+        ratings: item.productId.rating,
         quantity: item.quantity,
       };
     });
@@ -81,53 +91,69 @@ const getCartItems = async (req, res) => {
 };
 
 const updateCart = async (req, res) => {
-  const { userId, productItemId, quantity } = req.body;
-  // ...........................................................................
+  const userId = req.userId;
+  const { productId, quantity } = req.body;
+
   try {
     let userCart = await CartModel.findOne({ userId: userId });
 
     if (!userCart) {
       return res.status(404).json({ message: "Cart not found" });
-    } else {
-      userCart.products.map((sp) => {
-        if (productItemId == sp._id.toString()) {
-          sp.quantity = quantity;
-        }
-      });
-
-      userCart.totalQuantity = userCart.products.reduce(
-        (acc, curr) => acc + curr.quantity,
-        0
-      );
-      userCart.totalUniqueProducts = userCart.products.length;
-      await userCart.save();
-      res.send(userCart);
     }
+
+    const productToUpdateIndex = userCart.products.findIndex(
+      (product) => product.productId.toString() === productId
+    );
+
+    if (productToUpdateIndex === -1) {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    userCart.products[productToUpdateIndex].quantity = quantity;
+
+    userCart.totalQuantity = userCart.products.reduce(
+      (acc, curr) => acc + curr.quantity,
+      0
+    );
+
+    await userCart.save();
+
+    res.send({ userCart });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 const delCartItem = async (req, res) => {
-  const { userId, productItemId } = req.body;
-  // ...........................................................................
+  const userId = req.userId;
+  const { productId } = req.body;
+
   try {
     let userCart = await CartModel.findOne({ userId: userId });
 
     if (!userCart) {
       return res.status(404).json({ message: "Cart not found" });
-    } else {
-      userCart.products = userCart.products.filter(
-        (sp) => sp._id.toString() !== productItemId
-      );
-      userCart.totalQuantity = userCart.products.reduce(
-        (acc, curr) => acc + curr.quantity,
-        0
-      );
-      userCart.totalUniqueProducts = userCart.products.length;
-
-      await userCart.save();
-      res.send(userCart.products);
     }
+
+    const productToDeleteIndex = userCart.products.findIndex(
+      (product) => product.productId.toString() === productId
+    );
+
+    if (productToDeleteIndex === -1) {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    userCart.products.splice(productToDeleteIndex, 1);
+
+    userCart.totalQuantity = userCart.products.reduce(
+      (acc, curr) => acc + curr.quantity,
+      0
+    );
+    userCart.totalUniqueProducts = userCart.products.length;
+
+    await userCart.save();
+
+    res.send({ userCart });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
