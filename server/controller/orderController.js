@@ -128,16 +128,17 @@ const updateOrder = async (req, res) => {
   try {
     const order = await Order.findById({ _id: req.params.orderId });
     let updateStatus = req.body.orderStatus;
+
     if (!order) return res.send("Order not found with this Id");
 
     if (order.orderStatus === "Delivered")
       return res.send("You have already delivered this order");
 
-    // if (req.body.status === "Shipped") {
-    //   order.orderItems.forEach(
-    //     async (order) => await updateStock(order.productId, order.quantity)
-    //   );
-    // }
+    if (req.body.status === "Shipped") {
+      order.orderItems.forEach(
+        async (order) => await updateStock(order.productId, order.quantity)
+      );
+    }
     order.orderStatus = updateStatus;
 
     if (req.body.status === "Delivered") order.deliveredAt = Date.now();

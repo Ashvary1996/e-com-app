@@ -20,3 +20,5 @@ Todos-
 \*Fix the proxy Thing.
 
 # Backend Functionalty almost all completed 
+
+using reflog to recover all commits 
