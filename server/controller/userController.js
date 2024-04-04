@@ -60,7 +60,7 @@ const signUpFn = async (req, res) => {
       })
       .catch((error) => console.log("Error sending email: ", error));
   } catch (error) {
-    res.json({ message: "Internal Server Error", error: error.message });
+    res.json({ detail: "Internal Server Error", error: error.message });
   }
 };
 
@@ -86,7 +86,7 @@ const logInFn = async (req, res) => {
       sendToken(user, res, "Log In Success");
     } else {
       return res.json({
-        status: false,
+        success: false,
         detail: "Logged In Failed / Wrong Password",
       });
     }
@@ -215,7 +215,7 @@ const resetPassFn = async (req, res) => {
     const user = await Usermodel.findById(jwtUser.id);
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).json({ status: false, msg: "User not found" });
     }
 
     if (newPassword !== confirmPassword) {

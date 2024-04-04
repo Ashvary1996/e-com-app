@@ -18,7 +18,7 @@ const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
 
 route.post("/signup", signUpFn);
 route.post("/login", logInFn);
-route.post("/logout", logOutFn);
+route.post("/logout", isAuthenticatedUser, logOutFn);
 
 route.post("/forgotPass", forgotPassFn);
 route.post("/reset", resetPassFn);

@@ -2,14 +2,21 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import logInValidation from "../validation/logInValidationSchema";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { setToken, setUserID } from "../config/authTokenUser";
-import {toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { logIn } from "../redux/userSlice";
+
 function LogInPage() {
   const [detail, setDetail] = useState("");
   const [forgot, setForgot] = useState(false);
   const signUpFormRef = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.userId);
+  const tokenCookie = useSelector((state) => state.user.token);
+
+  console.log("userId : ", userId);
+  console.log("token : ", tokenCookie);
 
   const initialValues = {
     email: "",
@@ -20,26 +27,28 @@ function LogInPage() {
       signUpFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
-  const submitForm = async (values) => {
-    await axios
-      .post("/user/login", values)
-      .then((response) => {
-        if (response.data.status === true) {
-          setToken(response.data.token);
-          setUserID(response.data.user._id);
-          navigate("/home");
-        } else {
-          setDetail(response.data.detail);
-          setForgot(true);
-          toast.warn("Wrong Credentials")
-        }
-      })
-      .catch((err) => console.log("error in sending data", err));
+  // const submitForm = async (values) => {
+  //   await axios
+  //     .post("http://localhost:5000/user/login", values)
+  //     .then((response) => {
+  //       if (response.data.success === true) {
+  //         setToken(response.data.token);
+  //         setUserID(response.data.user._id);
+  //         navigate("/home");
+  //       } else {
+  //         setDetail(response.data.detail);
+  //         if (response.data.detail == "Logged In Failed / Wrong Password") {
+  //           toast.warn("Wrong Credentials");
+  //         }
+  //         setForgot(true);
+  //       }
+  //     })
+  //     .catch((err) => console.log("error in sending data", err));
 
-    setTimeout(() => {
-      setDetail("");
-    }, 5000);
-  };
+  //   setTimeout(() => {
+  //     setDetail("");
+  //   }, 5000);
+  // };
 
   return (
     <div ref={signUpFormRef} className="signUpFormDiv p-10">
@@ -47,7 +56,8 @@ function LogInPage() {
         initialValues={initialValues}
         validationSchema={logInValidation}
         onSubmit={(values, { resetForm }) => {
-          submitForm(values);
+          dispatch(logIn(values, navigate, setDetail, toast, setForgot));
+          // submitForm(values);
           //   resetForm({ values: "" })
         }}
       >
@@ -103,7 +113,7 @@ function LogInPage() {
 
                 <div className=" mt-3 flex justify-center  text-sm overflow-hidden lg:overflow-visible">
                   <p className="inline-block text-white text-sm mt-1 mr-1.5">
-                    Don't have an account? 
+                    Don't have an account?
                   </p>
                   <Link
                     to="/signup"

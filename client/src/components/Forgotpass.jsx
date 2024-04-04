@@ -13,7 +13,10 @@ function Forgotpass() {
   const sendMail = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("/user/forgotPass", { email: edit });
+      const response = await axios.post(
+        "http://localhost:5000/user/forgotPass",
+        { email: edit }
+      );
       if (response.data.status === true) {
         setMessage(response.data.detail);
         setEmailSent(true);

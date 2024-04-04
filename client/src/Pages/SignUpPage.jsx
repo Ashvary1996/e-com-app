@@ -2,14 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import signUpValidation from "../validation/signUpValidationSchema";
-import axios from "axios";
+ 
 import logo from "../items/logo.png";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { signUp } from "../redux/userSlice";
 
 function SignUpPage() {
   const [detail, setDetail] = useState("");
   const navigate = useNavigate();
   const signUpFormRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const tokenCookie = useSelector((state) => state.user.token);
+  console.log("tokenCokie",tokenCookie); 
   let initialValues = {
     firstName: "",
     lastName: "",
@@ -19,36 +25,38 @@ function SignUpPage() {
     checkbox: false,
   };
 
-  let submitForm = async (values, resetForm) => {
-    const data = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      password: values.password,
-      phoneNumber: values.phoneNumber,
-    };
+  // let submitForm = async (values, resetForm) => {
+  //   const data = {
+  //     firstName: values.firstName,
+  //     lastName: values.lastName,
+  //     email: values.email,
+  //     password: values.password,
+  //     phoneNumber: values.phoneNumber,
+  //   };
 
-    await axios
-      .post("/user/signup", data)
-      .then((response) => {
-        if (response.data.status === true) {
-          setDetail("");
-          console.log("Succefully Registerd : ", response.data.user);
-          // resetForm({ values: "" });
-          toast.success("Sign Up Successfully");
-          navigate("/login");
-        } else {
-          setDetail(response.data.detail);
-          console.log(response.data.detail);
-        }
-      })
-      .catch((err) => console.log("error in saving/sending data", err));
-  };
+  //   await axios
+  //     .post("http://localhost:5000/user/signup", data)
+  //     .then((response) => {
+  //       if (response.data.success === true) {
+  //         setDetail("");
+  //         console.log("Succefully Registerd : ", response.data.user);
+  //         // resetForm({ values: "" });
+  //         toast.success("Sign Up Successfully");
+  //         // navigate("/home");
+  //       } else {
+  //         setDetail(response.data.detail);
+  //         console.log(response.data.detail);
+  //       }
+  //     })
+  //     .catch((err) => console.log("error in saving/sending data", err));
+  // };
+
   useEffect(() => {
     if (window.innerWidth < 768 && signUpFormRef.current) {
       signUpFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
+
   return (
     <div className="mainSignUpDiv flex flex-wrap min-h-screen bg-gradient-to-r from-teal-300 to-blue-500">
       <div className="welcomeDiv w-full lg:w-1/3 p-5 lg:p-10 bg-white shadow-lg rounded-lg m-auto">
@@ -56,17 +64,17 @@ function SignUpPage() {
           Welcome to Your Next Shopping Adventure!
         </h1>
         <img className="mx-auto my-4" src={logo} alt="Logo" />
-        <p className="text-sm text-gray-600 italic mb-4">
+        <div className="text-sm text-gray-600 italic mb-4">
           Get ready to embark on an exhilarating shopping journey like no other!
           <p className="inline-block text-red-700">Legion e-Com</p> isn't just
           an e-commerce platform; it's your first-class ticket to an endless
           array of exclusive products, jaw-dropping deals, and personalized
           shopping experiences that cater to your unique style and preferences.
-        </p>
-        <p className="text-sm text-gray-600 italic">
+        </div>
+        <div className="text-sm text-gray-600 italic">
           <p className="inline-block underline"> Sign up today</p> and transform
           your shopping routine into an exciting adventure!
-        </p>
+        </div>
       </div>
       <div
         ref={signUpFormRef}
@@ -77,7 +85,16 @@ function SignUpPage() {
           initialValues={initialValues}
           validationSchema={signUpValidation}
           onSubmit={(values, { resetForm }) => {
-            submitForm(values, resetForm);
+            const userData = {
+              firstName: values.firstName,
+              lastName: values.lastName,
+              email: values.email,
+              password: values.password,
+              phoneNumber: values.phoneNumber,
+            };
+            dispatch(signUp(userData, setDetail, toast, navigate));
+
+            // submitForm(values, resetForm);
           }}
         >
           {({ values }) => (

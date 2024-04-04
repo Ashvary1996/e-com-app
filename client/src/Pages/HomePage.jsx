@@ -25,10 +25,10 @@ function HomePage() {
   const [cartNumber, setCartNumber] = useState("");
   const [laoding, setLoading] = useState(true);
 
-  console.log("displayItems", displayItems.length, laoding);
+  // console.log("displayItems", displayItems.length, laoding);
   const fetchProducts = () => {
     axios
-      .get(`/user/allProducts`)
+      .get(`http://localhost:5000/home`)
       .then((response) => {
         setItems(response.data.items);
         setDisplayItems(response.data.items);
@@ -110,7 +110,7 @@ function HomePage() {
 
   const fetchCartItems = useCallback(() => {
     axios
-      .post("/user/getCartItems", { userId: userID })
+      .post("http://localhost:5000/user/cart/getCartItems", { userId: userID })
       .then((response) => {
         setCartNumber(response.data.totalItems);
         console.log("responseCart", response.data.totalItems);
@@ -124,7 +124,7 @@ function HomePage() {
     const jwttoken = getToken();
     if (jwttoken) {
       axios
-        .get("/user/home", {
+        .get("http://localhost:5000/home", {
           headers: {
             token: `Bearer ${jwttoken}`,
             Accept: "application/json",
@@ -300,3 +300,4 @@ function HomePage() {
 }
 
 export default HomePage;
+ 

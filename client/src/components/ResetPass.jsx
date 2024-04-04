@@ -8,13 +8,17 @@ import { toast } from "react-toastify";
 
 function ResetPass() {
   const validatePassword = Yup.object({
-    password: Yup.string()
+    newPassword: Yup.string()
       .min(7, "At least 7 characters")
       .max(20, "Password allowed only up to 20 characters")
-      .required("Password required!"),
+      .required("New Password required!"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("newPassword"), null], "Passwords didn't match")
+      .required("Confirm Password required!"),
   });
   let initialValues = {
-    password: "",
+    newPassword: "",
+    confirmPassword: "",
   };
 
   const [message, setMessage] = useState("");
@@ -26,8 +30,9 @@ function ResetPass() {
   const resetPw = async (values) => {
     setIsLoading(true);
     try {
-      await axios.post(`/user/reset`, {
-        newPassword: values.password,
+      await axios.post("http://localhost:5000/user/reset", {
+        newPassword: values.newPassword,
+        confirmPassword: values.confirmPassword,
         token: token.token,
       });
       setStatus(true);
@@ -44,7 +49,7 @@ function ResetPass() {
     } catch (err) {
       toast.warn("Password-Reset Time Expired.");
       setStatus(false);
-      setMessage(err.response?.data || "An error occurred");
+      setMessage(err.response.msg || "An error occurred");
       setTimeout(() => {
         setMessage("");
       }, 10000);
@@ -70,12 +75,24 @@ function ResetPass() {
             <Field
               className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500"
               type="password"
-              id="password"
-              name="password"
-              placeholder="New password"
+              id="newPassword"
+              name="newPassword"
+              placeholder="enter New password"
             />
             <ErrorMessage
-              name="password"
+              name="newPassword"
+              component="div"
+              className="text-red-600 text-sm mb-4"
+            />
+            <Field
+              className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="confirm New password"
+            />
+            <ErrorMessage
+              name="confirmPassword"
               component="div"
               className="text-red-600 text-sm mb-4"
             />
