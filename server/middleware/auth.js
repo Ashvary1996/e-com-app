@@ -7,7 +7,7 @@ const isAuthenticatedUser = async (req, res, next) => {
     if (!token)
       return res.status(401).json({
         status: "false",
-        msg: "Please log In to get access",
+        msg: "token not available",
       });
 
     const jwtUser = jwt.verify(token, process.env.JWT_SECRET);
@@ -19,7 +19,8 @@ const isAuthenticatedUser = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    res.json({ err: error.message });
+    // console.log(error.message);
+    res.json({ status: false, msg: "authenticaion failed" });
   }
 };
 

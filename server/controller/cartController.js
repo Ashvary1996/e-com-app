@@ -2,6 +2,7 @@ const CartModel = require("../model/cartSchema");
 
 const addToCart = async (req, res) => {
   const { productId } = req.body;
+
   const userId = req.userId;
   console.log(productId);
   try {
@@ -41,7 +42,7 @@ const addToCart = async (req, res) => {
       userInCart.totalUniqueProducts = userInCart.products.length;
     }
 
-    const updatedCart = await userInCart.save();
+    const updatedCart = await userInCart.save({ validate: false });
     res.status(201).json({ updatedCart: updatedCart });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -60,23 +61,25 @@ const getCartItems = async (req, res) => {
     }
     // res.json({ userCart });
     const items = userCart.products.map((item) => {
-      return {
-        cart_item_id: item._id,
-        product_id: item.productId._id,
-        title: item.productId.title,
-        description: item.productId.description,
-        price: item.productId.price,
-        category: item.productId.category,
-        brand: item.productId.brand,
-        thumbnail: item.productId.thumbnail,
-        images: item.productId.images,
-        stock: item.productId.stock,
-        discount: item.productId.discountPercentage,
-        reviews: item.productId.reviews,
-        totalReviews: item.productId.numOfReviews,
-        ratings: item.productId.rating,
-        quantity: item.quantity,
-      };
+      if (item.productId) {
+        return {
+          cart_item_id: item._id,
+          product_id: item.productId._id,
+          title: item.productId.title,
+          description: item.productId.description,
+          price: item.productId.price,
+          category: item.productId.category,
+          brand: item.productId.brand,
+          thumbnail: item.productId.thumbnail,
+          images: item.productId.images,
+          stock: item.productId.stock,
+          discount: item.productId.discountPercentage,
+          reviews: item.productId.reviews,
+          totalReviews: item.productId.numOfReviews,
+          ratings: item.productId.rating,
+          quantity: item.quantity,
+        };
+      }
     });
 
     res.json({
@@ -102,7 +105,7 @@ const updateCart = async (req, res) => {
     }
 
     const productToUpdateIndex = userCart.products.findIndex(
-      (product) => product.productId.toString() === productId
+      (product) => product.productId.toString() === productId.toString()
     );
 
     if (productToUpdateIndex === -1) {
@@ -136,7 +139,7 @@ const delCartItem = async (req, res) => {
     }
 
     const productToDeleteIndex = userCart.products.findIndex(
-      (product) => product.productId.toString() === productId
+      (product) => product.productId.toString() === productId.toString()
     );
 
     if (productToDeleteIndex === -1) {

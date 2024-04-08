@@ -21,7 +21,7 @@ Frontend :
 \*Fix the proxy Thing.
 
 
-# Working On cookies + Redux Toolkit + optimising Frontend
+# All Bug and error fix for update products and add to cart + remove frontend cookie
 
 
  

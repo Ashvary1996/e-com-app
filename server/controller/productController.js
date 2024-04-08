@@ -44,8 +44,8 @@ const getAllProducts = async (req, res) => {
 const getSingleProduct = async (req, res) => {
   try {
     let item = await Product.findOne({
-      _id: req.body.itemId,
-    });
+      _id: req.params.itemId,
+    }); 
 
     if (!item) {
       return res.json({ message: "Item not found" });

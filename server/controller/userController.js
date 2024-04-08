@@ -40,7 +40,7 @@ const signUpFn = async (req, res) => {
 
     await user.save();
     /////////////////
-
+    // res.cookie("signupTestCooki", "dummy data");
     sendToken(user, res, "User Saved");
 
     const subject = `Welcome ${user.firstName} to e-com website.`;
@@ -84,6 +84,7 @@ const logInFn = async (req, res) => {
     if (isMatch) {
       delete user.password; // this will not return password in response
       sendToken(user, res, "Log In Success");
+      
     } else {
       return res.json({
         success: false,

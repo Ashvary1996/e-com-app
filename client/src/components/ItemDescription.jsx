@@ -5,10 +5,13 @@ import addToCart from "../config/addToCartFn";
 import { getUserID } from "../config/authTokenUser";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ItemDescription() {
   const { itemId } = useParams();
-  const [item, setItem] = useState({});
+  const [item, setItem] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -16,12 +19,14 @@ function ItemDescription() {
   const navigate = useNavigate();
 
   // console.log(userID);
+  // console.log(itemId);
 
   useEffect(() => {
     axios
-      .post(`/user/singleProduct/`, { itemId: itemId })
+      .get(`http://localhost:5000/product/singleProduct/${itemId}`)
       .then((response) => {
-        setItem(response.data.item[0]);
+        console.log(response.data);
+        setItem(response.data.item);
       })
       .catch((err) => {
         console.error("Error fetching item:", err);
@@ -51,6 +56,7 @@ function ItemDescription() {
 
   return (
     <div className="bg-gray-100 p-5">
+      <ToastContainer />
       <div className="flex justify-between ">
         <button onClick={() => navigate("/home")}>
           <IoIosArrowRoundBack />
@@ -95,8 +101,8 @@ function ItemDescription() {
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               onClick={() => {
-                addToCart(itemId, userID);
-                alert("ItemAddedToCart");
+                const title = item.title;
+                addToCart(itemId, title, userID, toast);
               }}
             >
               Add to Cart

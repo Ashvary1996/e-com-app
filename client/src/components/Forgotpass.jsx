@@ -50,14 +50,25 @@ function Forgotpass() {
         />
         <p
           className={`${
-            emailSent ? "text-green-500" : "text-red-500"
+            emailSent ? "text-green-400" : "text-red-500"
           } text-sm mb-6 text-center`}
         >
           {message}
         </p>
+        {emailSent && (
+          <a
+            className="text-orange-600 font-medium "
+            href={process.env.REACT_APP_MAIL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Go to Mail
+          </a>
+        )}
+
         <button
           onClick={sendMail}
-          className={`w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 rounded-lg transition duration-300 ease-in-out ${
+          className={`w-full mt-1 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 rounded-lg transition duration-300 ease-in-out ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
           disabled={loading || edit === ""}

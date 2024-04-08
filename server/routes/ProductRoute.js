@@ -29,7 +29,7 @@ route.post(
 route.get("/getallProducts", getAllProducts);
 
 // Route to get Single products Details
-route.get("/singleProduct", getSingleProduct);
+route.get("/singleProduct/:itemId", getSingleProduct);
 
 // Route to update a single Products
 route.put(

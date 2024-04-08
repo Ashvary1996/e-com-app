@@ -16,9 +16,11 @@ function Cart() {
   const userID = getUserID();
 
   const fetchCartItems = useCallback(() => {
+    axios.defaults.withCredentials = true;
     axios
-      .post("/user/getCartItems", { userId: userID })
+      .get("http://localhost:5000/user/cart/getCartItems")
       .then((response) => {
+        // console.log("data:", response.data);
         setData(response.data);
         calculateTotal(response.data.items);
         setTotalItemsCount(response.data.totalItems);
@@ -28,10 +30,6 @@ function Cart() {
       });
   }, [userID]);
 
-  useEffect(() => {
-    fetchCartItems();
-  }, [fetchCartItems]);
-
   const calculateTotal = (cartItems) => {
     let totalAmount = 0;
     cartItems.forEach((item) => {
@@ -40,66 +38,85 @@ function Cart() {
     setTotal(totalAmount);
   };
 
-  const updateItems = async (productItemId, quantity) => {
-    await axios
-      .post("/user/updateCartItems", {
-        userId: userID,
-        productItemId: productItemId,
+  const updateItems = async (productId, quantity) => {
+    try {
+      await axios.put("http://localhost:5000/user/cart/updateCartItems", {
+        productId: productId,
         quantity: quantity,
-      })
-      .then(() => {})
-      .catch((error) => {
-        console.error("Error fetching cart items:", error);
       });
+    } catch (error) {
+      console.error("Error updating cart items:", error);
+    }
   };
-  const updateItemsLocal = (productItemId, quantity) => {
+
+  const updateItemsLocal = (productId, quantity) => {
+    // console.log("updateItemsLocal", productId);
     const updatedItems = data.items.map((item) => {
-      if (item.cart_item_id === productItemId) {
+      if (item.product_id === productId) {
+        // console.log("selectedItem", item);
         return { ...item, quantity: quantity };
       }
       return item;
     });
-    setData({ ...data, items: updatedItems });
+
+    // setData({ ...data, items: updatedItems });
+    setData((prevData) => ({ ...prevData, items: updatedItems }));
     calculateTotal(updatedItems);
     setTotalItemsCount(
       updatedItems.reduce((total, item) => total + item.quantity, 0)
     );
   };
+
   const inc = (elem) => {
-    updateItemsLocal(elem.cart_item_id, elem.quantity + 1);
-    updateItems(elem.cart_item_id, elem.quantity + 1);
-    console.log("elem", elem.cart_item_id);
+    const productId = elem.product_id;
+    const quantity = elem.quantity;
+    // console.log(productId);
+    // console.log(quantity);
+    updateItemsLocal(productId, quantity + 1);
+    updateItems(productId, quantity + 1);
   };
+
   const dec = (elem) => {
+    const productId = elem.product_id;
+    const quantity = elem.quantity;
     if (elem.quantity > 1) {
-      updateItemsLocal(elem.cart_item_id, elem.quantity - 1);
-      updateItems(elem.cart_item_id, elem.quantity - 1);
+      updateItemsLocal(productId, quantity - 1);
+      updateItems(productId, quantity - 1);
     }
-    console.log("decr cart done");
   };
+  useEffect(() => {
+    fetchCartItems();
+  }, [fetchCartItems]);
+
   const removeCartItem = async (elem) => {
-    await axios
-      .post("/user/removeCartItems", {
-        userId: userID,
-        productItemId: elem.cart_item_id,
-      })
-      .then((response) => {
-        console.log(response.data);
-        toast.warn(`${elem.title + " : Removed"}`);
-      })
-      .catch((error) => {
-        console.error("Error fetching cart items:", error);
-      });
-    const updatedItems = data.items.filter(
-      (item) => item.cart_item_id !== elem.cart_item_id
-    );
-    setData({ ...data, items: updatedItems });
-    calculateTotal(updatedItems);
-    console.log(elem.cart_item_id);
-    setTotalItemsCount(
-      updatedItems.reduce((total, item) => total + item.quantity, 0)
-    );
+    const productId = elem.product_id;
+
+    // console.log("selectedElem: ", productId);
+    axios.defaults.withCredentials = true;
+    try {
+      const response = await axios.delete(
+        "http://localhost:5000/user/cart/removeCartItems",
+        {
+          data: {
+            productId: productId,
+          },
+        }
+      );
+      console.log(response.data);
+
+      const updatedItems = data.items.filter(
+        (item) => item.product_id !== productId
+      );
+      setData((prevData) => ({ ...prevData, items: updatedItems }));
+      calculateTotal(updatedItems);
+      setTotalItemsCount(
+        updatedItems.reduce((total, item) => total + item.quantity, 0)
+      );
+    } catch (error) {
+      console.error("Error removing cart item:", error);
+    }
   };
+
   const navigate = useNavigate();
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">

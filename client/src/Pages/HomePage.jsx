@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   getToken,
@@ -8,13 +9,13 @@ import {
   removeUserID,
 } from "../config/authTokenUser";
 import Loader from "../components/Loader";
-import addToCart from "../config/addToCartFn";
 import Header from "../components/Header";
 import { toast } from "react-toastify";
+import addToCart from "../config/addToCartFn";
 
 function HomePage() {
-  const userID = getUserID();
   const [user, setUser] = useState();
+  const [userID, setuserID] = useState();
   const [items, setItems] = useState([]);
   const [displayItems, setDisplayItems] = useState([]);
   const [sortBy, setSortBy] = useState("");
@@ -24,11 +25,15 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState("");
   const [laoding, setLoading] = useState(true);
+  ///////////////////////
+  const tokenCookie = useSelector((state) => state.user.token);
 
+  // const userID = getUserID();
+  // console.log("tokenCookie", tokenCookie);
   // console.log("displayItems", displayItems.length, laoding);
   const fetchProducts = () => {
     axios
-      .get(`http://localhost:5000/home`)
+      .get(`http://localhost:5000/product/getallProducts`)
       .then((response) => {
         setItems(response.data.items);
         setDisplayItems(response.data.items);
@@ -37,10 +42,16 @@ function HomePage() {
       .catch((err) => console.log(err));
   };
 
-  const logoutFn = () => {
-    setUser("");
-    removeToken();
-    removeUserID();
+  const logoutFn = async () => {
+    try {
+      await axios.post("http://localhost:5000/user/logout");
+      console.log("Logged Out Successfully");
+      setUser("");
+      removeToken();
+      removeUserID();
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   useEffect(() => {
@@ -109,10 +120,12 @@ function HomePage() {
   };
 
   const fetchCartItems = useCallback(() => {
+    axios.defaults.withCredentials = true;
     axios
-      .post("http://localhost:5000/user/cart/getCartItems", { userId: userID })
+      .get("http://localhost:5000/user/cart/getCartItems", { userId: userID })
       .then((response) => {
         setCartNumber(response.data.totalItems);
+
         console.log("responseCart", response.data.totalItems);
       })
       .catch((error) => {
@@ -121,24 +134,22 @@ function HomePage() {
   }, [userID]);
 
   useEffect(() => {
-    const jwttoken = getToken();
-    if (jwttoken) {
-      axios
-        .get("http://localhost:5000/home", {
-          headers: {
-            token: `Bearer ${jwttoken}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          setUser(response.data.currentUser[0].firstName);
-          // setUserId(response.data.currentUser[0]._id);
-        })
-        .catch((err) => console.log(err));
-    }
+    axios.defaults.withCredentials = true;
+    axios
+      .get("http://localhost:5000/home", { withCredentials: true })
+      .then((res) => {
+        // console.log(res.data);
+        // console.log(res.data.user.firstName);
+        setUser(res.data.user.firstName);
+        setuserID(res.data.user._id);
+        if (res.data.user._id) {
+          fetchCartItems();
+        }
+        // console.log(userID);
+      })
+      .catch((err) => console.log("PLease Log In to Get Access"));
+
     fetchProducts();
-    fetchCartItems();
   }, [fetchCartItems]);
 
   const [isHovered, setIsHovered] = useState(false);
@@ -238,9 +249,18 @@ function HomePage() {
                 </div>
                 <p className="text-sm">Rating: {Number(elem.rating)}</p>
                 <button
-                  onClick={() => {
-                    addToCart(elem._id, userID, user, fetchCartItems);
-                    toast.info(`${elem.title} : Added to Cart `);
+                  onClick={async () => {
+                    const itemId = elem._id;
+                    const title = elem.title;
+                    addToCart(
+                      elem,
+                      itemId,
+                      title,
+                      userID,
+                      user,
+                      fetchCartItems,
+                      toast
+                    );
 
                     console.log("Items Details: ", elem);
                   }}
@@ -300,4 +320,3 @@ function HomePage() {
 }
 
 export default HomePage;
- 
