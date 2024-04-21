@@ -30,7 +30,7 @@ function ResetPass() {
   const resetPw = async (values) => {
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:5000/user/reset", {
+      await axios.post(`${process.env.REACT_APP_HOST_URL}/user/reset`, {
         newPassword: values.newPassword,
         confirmPassword: values.confirmPassword,
         token: token.token,

@@ -14,7 +14,7 @@ function Forgotpass() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/forgotPass",
+        `${process.env.REACT_APP_HOST_URL}/user/forgotPass`,
         { email: edit }
       );
       if (response.data.status === true) {

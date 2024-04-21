@@ -1,5 +1,6 @@
 {
   "name": "e-com-app",
+  "homepage": "https://ecom-app-by-ashvary.netlify.app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

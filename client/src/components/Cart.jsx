@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { getUserID } from "../config/authTokenUser";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 function Cart() {
   const [data, setData] = useState({
@@ -13,12 +12,12 @@ function Cart() {
 
   const [total, setTotal] = useState(0);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  const userID = getUserID();
+  // const userID = getUserID();
 
   const fetchCartItems = useCallback(() => {
     axios.defaults.withCredentials = true;
     axios
-      .get("http://localhost:5000/user/cart/getCartItems")
+      .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`)
       .then((response) => {
         // console.log("data:", response.data);
         setData(response.data);
@@ -28,7 +27,7 @@ function Cart() {
       .catch((error) => {
         console.error("Error fetching cart items:", error);
       });
-  }, [userID]);
+  }, []);
 
   const calculateTotal = (cartItems) => {
     let totalAmount = 0;
@@ -40,7 +39,7 @@ function Cart() {
 
   const updateItems = async (productId, quantity) => {
     try {
-      await axios.put("http://localhost:5000/user/cart/updateCartItems", {
+      await axios.put(`${process.env.REACT_APP_HOST_URL}/user/cart/updateCartItems`, {
         productId: productId,
         quantity: quantity,
       });
@@ -95,7 +94,7 @@ function Cart() {
     axios.defaults.withCredentials = true;
     try {
       const response = await axios.delete(
-        "http://localhost:5000/user/cart/removeCartItems",
+        `${process.env.REACT_APP_HOST_URL}/user/cart/removeCartItems`,
         {
           data: {
             productId: productId,
@@ -197,7 +196,7 @@ function Cart() {
         </h1>
         {totalItemsCount > 0 ? (
           <Link
-            to="/paymentGateway"
+            to="/cart/paymentGateway"
             state={{ finalAmount: total }}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105"
           >

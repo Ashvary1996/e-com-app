@@ -1,17 +1,13 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  getToken,
-  getUserID,
-  removeToken,
-  removeUserID,
-} from "../config/authTokenUser";
+import { removeToken, removeUserID } from "../config/authTokenUser";
 import Loader from "../components/Loader";
 import Header from "../components/Header";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import addToCart from "../config/addToCartFn";
+import { cartItemFn, logoutFn } from "../redux/userSlice";
 
 function HomePage() {
   const [user, setUser] = useState();
@@ -25,15 +21,12 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState("");
   const [laoding, setLoading] = useState(true);
+  const dispatch = useDispatch();
   ///////////////////////
-  const tokenCookie = useSelector((state) => state.user.token);
 
-  // const userID = getUserID();
-  // console.log("tokenCookie", tokenCookie);
-  // console.log("displayItems", displayItems.length, laoding);
   const fetchProducts = () => {
     axios
-      .get(`http://localhost:5000/product/getallProducts`)
+      .get(`${process.env.REACT_APP_HOST_URL}/product/getallProducts`)
       .then((response) => {
         setItems(response.data.items);
         setDisplayItems(response.data.items);
@@ -42,18 +35,9 @@ function HomePage() {
       .catch((err) => console.log(err));
   };
 
-  const logoutFn = async () => {
-    try {
-      await axios.post("http://localhost:5000/user/logout");
-      console.log("Logged Out Successfully");
-      setUser("");
-      removeToken();
-      removeUserID();
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+  const logout = () => {
+    dispatch(logoutFn(setUser, removeToken, removeUserID));
   };
-
   useEffect(() => {
     let updatedItems = [...items];
 
@@ -120,23 +104,13 @@ function HomePage() {
   };
 
   const fetchCartItems = useCallback(() => {
-    axios.defaults.withCredentials = true;
-    axios
-      .get("http://localhost:5000/user/cart/getCartItems", { userId: userID })
-      .then((response) => {
-        setCartNumber(response.data.totalItems);
-
-        console.log("responseCart", response.data.totalItems);
-      })
-      .catch((error) => {
-        console.error("Error fetching cart items:", error);
-      });
-  }, [userID]);
+    dispatch(cartItemFn(userID, setCartNumber));
+  }, [dispatch, userID]);
 
   useEffect(() => {
     axios.defaults.withCredentials = true;
     axios
-      .get("http://localhost:5000/home", { withCredentials: true })
+      .get(`${process.env.REACT_APP_HOST_URL}/home`, { withCredentials: true })
       .then((res) => {
         // console.log(res.data);
         // console.log(res.data.user.firstName);
@@ -154,18 +128,22 @@ function HomePage() {
 
   const [isHovered, setIsHovered] = useState(false);
   const toggleHover = () => setIsHovered(!isHovered);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen((prevIsDropdownOpen) => !prevIsDropdownOpen);
+  // };
   return (
     <div className="homePage">
       {/* Header  */}
       <Header
         user={user}
         cartNumber={cartNumber}
-        logoutFn={logoutFn}
+        logoutFn={logout}
         handleSearchChange={handleSearchChange}
         searchQuery={searchQuery}
       />
-
+      <ToastContainer closeOnClick id="myContainer" />
       {/* /////////////////////Sort and Filter with Reset filter option//////////////////////// */}
       <div>
         <div className="   flex justify-end">
@@ -197,7 +175,9 @@ function HomePage() {
             <option value="Infinix">Infinix</option>
           </select>
         </div>
+        {/*  */}
 
+        {/*  */}
         {/* Button to reset filter */}
         {filterBy && (
           <>
@@ -249,6 +229,12 @@ function HomePage() {
                 </div>
                 <p className="text-sm">Rating: {Number(elem.rating)}</p>
                 <button
+                  className={`${
+                    !userID
+                      ? "cursor-not-allowed bg-green-400 text-white"
+                      : "hover:bg-green-700 text-sm transition duration-300 ease-in-out bg-green-600 text-white"
+                  } px-4 py-2 rounded-md`}
+                  disabled={!userID}
                   onClick={async () => {
                     const itemId = elem._id;
                     const title = elem.title;
@@ -264,7 +250,6 @@ function HomePage() {
 
                     console.log("Items Details: ", elem);
                   }}
-                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm transition duration-300 ease-in-out"
                 >
                   Add to Cart
                 </button>

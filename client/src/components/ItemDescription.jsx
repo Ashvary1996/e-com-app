@@ -8,22 +8,27 @@ import { FiShoppingCart } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useDispatch } from "react-redux";
+import { cartItemFn } from "../redux/userSlice";
 function ItemDescription() {
   const { itemId } = useParams();
   const [item, setItem] = useState([]);
-
+  const [cartNumber, setCartNumber] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const userID = getUserID();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // console.log(userID);
   // console.log(itemId);
 
   useEffect(() => {
+    const fetchCartItems = () => {
+      dispatch(cartItemFn(userID, setCartNumber));
+    };
     axios
-      .get(`http://localhost:5000/product/singleProduct/${itemId}`)
+      .get(`${process.env.REACT_APP_HOST_URL}/product/singleProduct/${itemId}`)
       .then((response) => {
         console.log(response.data);
         setItem(response.data.item);
@@ -31,8 +36,16 @@ function ItemDescription() {
       .catch((err) => {
         console.error("Error fetching item:", err);
       });
-  }, [itemId]);
+    fetchCartItems();
+  }, [itemId, userID, dispatch, setCartNumber]);
 
+  // const totalItems = useSelector((state) => state.user.totalCartNumber);
+  // const userName = useSelector((state) => state.user.userName);
+  // const userId = useSelector((state) => state.user.userId);
+
+  // console.log("totalItemsFetchFromREDUX", totalItems);
+  // console.log("userIdFromREDUX", userId);
+  // console.log("userNameFromREDUX", userName);
   const openModal = (index) => {
     setIsModalOpen(true);
     setSelectedImageIndex(index);
@@ -66,6 +79,7 @@ function ItemDescription() {
             className=" mr-1sm:w-[40px] bg-white rounded-e-2xl  "
             size={"23px"}
           />
+          {cartNumber}
         </button>
       </div>
       <div className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden md:flex">
@@ -102,7 +116,8 @@ function ItemDescription() {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               onClick={() => {
                 const title = item.title;
-                addToCart(itemId, title, userID, toast);
+                // addToCart(itemId, title, userID, toast);
+                addToCart(null, itemId, title, userID, null, null, toast);
               }}
             >
               Add to Cart

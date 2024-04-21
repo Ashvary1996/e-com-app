@@ -23,5 +23,6 @@ Frontend :
 
 # All Bug and error fix for update products and add to cart + remove frontend cookie
 
-
+update the routes location based on user interaction such as home > cart> paymentGateway not 
+home > paymentGateway
  

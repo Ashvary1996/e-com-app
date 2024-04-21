@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-// import Cookies from "js-cookie";
 
 export const userSlice = createSlice({
   name: "user",
@@ -10,6 +9,7 @@ export const userSlice = createSlice({
     // token: Cookies.get("ecom_token_Byash"),
     token: "",
     detail: "",
+    totalCartNumber: "",
   },
   reducers: {
     setDetail: (state, action) => {
@@ -24,6 +24,10 @@ export const userSlice = createSlice({
     setUserName: (state, action) => {
       state.userName = action.payload;
     },
+    setCartNumber: (state, action) => {
+      state.totalCartNumber = action.payload;
+      // console.log("fromRedux", state.totalCartNumber);
+    },
   },
 });
 
@@ -33,7 +37,7 @@ export const signUp =
     try {
       axios.defaults.withCredentials = true;
       const response = await axios.post(
-        "http://localhost:5000/user/signup",
+        `${process.env.REACT_APP_HOST_URL}/user/signup`,
         userData
       );
       if (response.data.success === true) {
@@ -55,10 +59,9 @@ export const signUp =
   };
 export const logIn =
   (values, navigate, setDetail, toast, setForgot) => async (dispatch) => {
-
     axios.defaults.withCredentials = true;
     await axios
-      .post("http://localhost:5000/user/login", values)
+      .post(`${process.env.REACT_APP_HOST_URL}/user/login`, values)
       .then((response) => {
         if (response.data.success === true) {
           dispatch(userSlice.actions.setUserID(response.data.user._id));
@@ -83,8 +86,30 @@ export const logIn =
       setDetail("");
     }, 5000);
   };
-
-
-
-  
+export const logoutFn =
+  (setUser, removeToken, removeUserID) => async (dispatch) => {
+    try {
+      axios.defaults.withCredentials = true;
+      await axios.post(`${process.env.REACT_APP_HOST_URL}/user/logout`);
+      console.log("Logged Out Successfully");
+      setUser("");
+      removeToken();
+      removeUserID();
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+export const cartItemFn = (userId, setCartNumber) => async (dispatch) => {
+  axios.defaults.withCredentials = true;
+  axios
+    .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`, { userId: userId })
+    .then((response) => {
+      setCartNumber(response.data.totalItems);
+      dispatch(userSlice.actions.setCartNumber(response.data.totalItems));
+      // console.log("responseCart", response.data.totalItems);
+    })
+    .catch((error) => {
+      console.error("Error fetching cart items:", error);
+    });
+};
 export default userSlice.reducer;

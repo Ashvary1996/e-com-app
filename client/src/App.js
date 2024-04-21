@@ -8,13 +8,19 @@ import ResetPass from "./components/ResetPass";
 import Cart from "./components/Cart";
 import BuyPage from "./components/BuyPage";
 import ItemDescription from "./components/ItemDescription";
-import { ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import Breadcrumb from "./components/Breadcrumb";
 function App() {
+  //will use all glovbl functions+ redux hereand send it to component
+
   return (
     <div className="App">
       <ToastContainer closeOnClick id="myContainer" />
+
       <Router>
+        <Breadcrumb />
         <Routes>
           <Route path="/signup" element={<SignUpPage />}>
             SignUp
@@ -37,7 +43,7 @@ function App() {
           <Route path="/cart" element={<Cart />}>
             LogIn
           </Route>
-          <Route path="/paymentGateway" element={<BuyPage />}>
+          <Route path="/cart/paymentGateway" element={<BuyPage />}>
             FinalBuyPage
           </Route>
           <Route path="/" element={<HomePage />}></Route>
