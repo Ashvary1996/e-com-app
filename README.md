@@ -26,3 +26,4 @@ Frontend :
 update the routes location based on user interaction such as home > cart> paymentGateway not 
 home > paymentGateway
  
+ use session cookies  to store user deteails shipping

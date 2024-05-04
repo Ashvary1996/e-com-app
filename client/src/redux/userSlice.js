@@ -112,4 +112,6 @@ export const cartItemFn = (userId, setCartNumber) => async (dispatch) => {
       console.error("Error fetching cart items:", error);
     });
 };
+
+
 export default userSlice.reducer;

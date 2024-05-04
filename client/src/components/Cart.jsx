@@ -19,7 +19,7 @@ function Cart() {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`)
       .then((response) => {
-        // console.log("data:", response.data);
+        console.log("data:", response.data);
         setData(response.data);
         calculateTotal(response.data.items);
         setTotalItemsCount(response.data.totalItems);
@@ -39,10 +39,13 @@ function Cart() {
 
   const updateItems = async (productId, quantity) => {
     try {
-      await axios.put(`${process.env.REACT_APP_HOST_URL}/user/cart/updateCartItems`, {
-        productId: productId,
-        quantity: quantity,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_HOST_URL}/user/cart/updateCartItems`,
+        {
+          productId: productId,
+          quantity: quantity,
+        }
+      );
     } catch (error) {
       console.error("Error updating cart items:", error);
     }
@@ -122,7 +125,7 @@ function Cart() {
       <ToastContainer stacked closeOnClick />
       <div className="flex justify-between">
         <p onClick={() => navigate("/home")} className="cursor-pointer">
-          Go To Home
+          <b>{"<--"}</b>
         </p>
         <h3 className="text-lg font-semibold text-gray-800">
           Your Cart has "{totalItemsCount}" items
@@ -196,18 +199,18 @@ function Cart() {
         </h1>
         {totalItemsCount > 0 ? (
           <Link
-            to="/cart/paymentGateway"
+            to="/contactInfo"
             state={{ finalAmount: total }}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105"
           >
-            Proceed to buy
+            Check Out
           </Link>
         ) : (
           <button
             className="bg-blue-500 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out transform hover:scale-105 opacity-50 cursor-not-allowed"
             disabled={true}
           >
-            Proceed to buy
+            Check Out
           </button>
         )}
       </div>
