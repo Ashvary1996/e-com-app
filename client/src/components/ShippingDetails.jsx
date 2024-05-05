@@ -95,8 +95,8 @@ function ShippingDetails() {
 
           {/* City */}
           <div className="mb-4">
-            <label htmlFor="city" className="block text-gray-600 mb-2">
-              City
+            <label htmlFor="state" className="block text-gray-600 mb-2">
+              State
             </label>
             <input
               id="state"

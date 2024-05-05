@@ -20,6 +20,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import ShippingDetails from "./components/ShippingDetails";
 import ContactInfo from "./components/ContactInfo";
 import ConfirmDetails from "./components/ConfirmDetails";
+import PaymentSuccess from "./components/PaymentSuccess";
 
 function App() {
   function BreadcrumbControlled() {
@@ -76,6 +77,7 @@ function App() {
             <Route path="/" element={<HomePage />}></Route>
             <Route path="*" element={<HomePage />}></Route>
             <Route path="/item/:itemId" element={<ItemDescription />} />
+            <Route path="/paymentsuccess" element={<PaymentSuccess />} />
           </Routes>
         </Router>
       </ChakraProvider>

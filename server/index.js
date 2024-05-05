@@ -22,21 +22,22 @@ app.use(
 );
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // .................................................................
 
-app.use("/demo", (res) => res.send("Hello World"));
+app.use("/demo", (req,res) => res.send("Hello World"));
 
 app.use("/user", require("./routes/UserRoute"));
 app.use("/home", require("./routes/HomeRoute"));
 app.use("/product", require("./routes/ProductRoute"));
-app.use("/user/cart", require("./routes/CartRoute"));
+app.use("/user/cart", require("./routes/CartRoute")); 
 app.use("/order", require("./routes/OrderRoute"));
+app.use("/payment", require("./routes/PaymentRoute"));
 
 // .................................................................
-
+ 
 app.listen(port, () => console.log(`App listening on port: ${port}!`));
 connectToDb();
 
