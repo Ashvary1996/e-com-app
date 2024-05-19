@@ -19,7 +19,7 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 28;
   const [searchQuery, setSearchQuery] = useState("");
-  const [cartNumber, setCartNumber] = useState("");
+  const [cartNumber, setCartNumber] = useState(0);
   const [laoding, setLoading] = useState(true);
   const dispatch = useDispatch();
   ///////////////////////

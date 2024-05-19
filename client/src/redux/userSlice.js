@@ -38,7 +38,13 @@ export const signUp =
       axios.defaults.withCredentials = true;
       const response = await axios.post(
         `${process.env.REACT_APP_HOST_URL}/user/signup`,
-        userData
+        userData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       if (response.data.success === true) {
         setDetail("");
@@ -48,7 +54,7 @@ export const signUp =
         // Cookies.set("ecom_token_Byash", response.data.token, { expires: 7 });
         // dispatch(userSlice.actions.setCokies(response.data.token));
         console.log("Successfully Registered: ", response.data.user);
-        // navigate("/login");
+        navigate("/home");
       } else {
         dispatch(userSlice.actions.setDetail(response.data.detail));
         console.log(response.data.detail);
@@ -61,7 +67,12 @@ export const logIn =
   (values, navigate, setDetail, toast, setForgot) => async (dispatch) => {
     axios.defaults.withCredentials = true;
     await axios
-      .post(`${process.env.REACT_APP_HOST_URL}/user/login`, values)
+      .post(`${process.env.REACT_APP_HOST_URL}/user/login`, values, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         if (response.data.success === true) {
           dispatch(userSlice.actions.setUserID(response.data.user._id));
@@ -73,7 +84,7 @@ export const logIn =
           navigate("/home");
         } else {
           dispatch(userSlice.actions.setDetail(response.data.detail));
-          // setDetail(response.data.detail);
+          setDetail(response.data.detail);
           if (response.data.detail === "Logged In Failed / Wrong Password") {
             toast.warn("Wrong Credentials");
           }
@@ -102,7 +113,9 @@ export const logoutFn =
 export const cartItemFn = (userId, setCartNumber) => async (dispatch) => {
   axios.defaults.withCredentials = true;
   axios
-    .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`, { userId: userId })
+    .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`, {
+      userId: userId,
+    })
     .then((response) => {
       setCartNumber(response.data.totalItems);
       dispatch(userSlice.actions.setCartNumber(response.data.totalItems));
@@ -112,6 +125,5 @@ export const cartItemFn = (userId, setCartNumber) => async (dispatch) => {
       console.error("Error fetching cart items:", error);
     });
 };
-
 
 export default userSlice.reducer;

@@ -75,11 +75,11 @@ function ItemDescription() {
           <IoIosArrowRoundBack />
         </button>
         <button onClick={() => navigate("/cart")}>
-          <FiShoppingCart
+          <FiShoppingCart 
             className=" mr-1sm:w-[40px] bg-white rounded-e-2xl  "
             size={"23px"}
           />
-          {cartNumber}
+          {/* {cartNumber} */}
         </button>
       </div>
       <div className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden md:flex">

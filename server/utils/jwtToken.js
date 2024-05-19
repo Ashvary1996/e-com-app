@@ -12,7 +12,8 @@ const sendToken = (user, res, msg) => {
     // expiresIn: "7d",
     expires: new Date(Date.now() + 9000000),
     httpOnly: true,
-    secure:true  //enable for https 
+    secure: true, // Ensure this is true if using HTTPS
+    sameSite: 'None' // Important for cross-site cookies
   };
 
   res.cookie("token", token, cookieOptions);

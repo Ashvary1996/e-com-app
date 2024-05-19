@@ -84,7 +84,6 @@ const logInFn = async (req, res) => {
     if (isMatch) {
       delete user.password; // this will not return password in response
       sendToken(user, res, "Log In Success");
-      
     } else {
       return res.json({
         success: false,
@@ -172,7 +171,8 @@ const forgotPassFn = async (req, res) => {
           expiresIn: "5m",
         });
 
-        const resetLink = `http://localhost:3000/reset/${token}`;
+        // const resetLink = `http://localhost:3000/reset/${token}`;
+        const resetLink = `${process.env.CORS_ORIGIN}/reset/${token}`;
         // const resetLink = `${req.protocol}://${req.get("host")}/reset/${token}`;
         const currentDate = new Date().toISOString();
 

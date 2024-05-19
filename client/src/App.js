@@ -21,6 +21,13 @@ import ShippingDetails from "./components/ShippingDetails";
 import ContactInfo from "./components/ContactInfo";
 import ConfirmDetails from "./components/ConfirmDetails";
 import PaymentSuccess from "./components/PaymentSuccess";
+import AdminComponent from "./components/AdminComponent";
+import AddProduct from "./components/adminFolder/AddProduct";
+import AllProducts from "./components/adminFolder/AllProducts";
+import AllMembers from "./components/adminFolder/AllMembers";
+import AllReviews from "./components/adminFolder/AllReviews";
+import AllOrders from "./components/adminFolder/AllOrders";
+import UpdateOrders from "./components/adminFolder/UpdateOrders";
 
 function App() {
   function BreadcrumbControlled() {
@@ -68,16 +75,24 @@ function App() {
             <Route path="/shippingDetails" element={<ShippingDetails />}>
               ShippingDetails
             </Route>
-            <Route path="/contactInfo" element={<ContactInfo/>}>
-            contactInfo
+            <Route path="/contactInfo" element={<ContactInfo />}>
+              contactInfo
             </Route>
-            <Route path="/confirmDetails" element={<ConfirmDetails/>}>
-            ConfirmDetails
+            <Route path="/confirmDetails" element={<ConfirmDetails />}>
+              ConfirmDetails
             </Route>
             <Route path="/" element={<HomePage />}></Route>
             <Route path="*" element={<HomePage />}></Route>
             <Route path="/item/:itemId" element={<ItemDescription />} />
             <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+            <Route path="/user/admin" element={<AdminComponent />}>
+              <Route path="addProduct" element={<AddProduct />} />
+              <Route path="allProducts" element={<AllProducts />} />
+              <Route path="updateOrder" element={<UpdateOrders />} />
+              <Route path="allOrders" element={<AllOrders />} />
+              <Route path="allMembers" element={<AllMembers />} />
+              <Route path="allReviews" element={<AllReviews />} />
+            </Route>
           </Routes>
         </Router>
       </ChakraProvider>

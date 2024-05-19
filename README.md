@@ -27,3 +27,8 @@ update the routes location based on user interaction such as home > cart> paymen
 home > paymentGateway
  
  use session cookies  to store user deteails shipping
+
+
+
+ demo Card :
+5267 3181 8797 5449

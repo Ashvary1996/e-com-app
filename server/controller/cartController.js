@@ -161,5 +161,32 @@ const delCartItem = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+const clearCart = async (req, res) => {
+  const userId = req.userId;
 
-module.exports = { addToCart, getCartItems, updateCart, delCartItem };
+  try {
+    let userCart = await CartModel.findOne({ userId: userId });
+
+    if (!userCart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    // Clear all products from the cart
+    userCart.products = [];
+
+    // Reset totalQuantity and totalUniqueProducts
+    userCart.totalQuantity = 0;
+    userCart.totalUniqueProducts = 0;
+
+    await userCart.save();
+
+    res.send({ message: "Cart cleared successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+
+module.exports = { addToCart, getCartItems, updateCart, delCartItem,clearCart };
