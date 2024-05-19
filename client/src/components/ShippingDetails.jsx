@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CheckOutSteps from "./CheckOutSteps";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";

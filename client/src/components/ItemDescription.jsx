@@ -8,7 +8,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"; 
 import { cartItemFn } from "../redux/userSlice";
 function ItemDescription() {
   const { itemId } = useParams();
@@ -16,7 +16,7 @@ function ItemDescription() {
   const [cartNumber, setCartNumber] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const userID = getUserID();
+  const userID = getUserID(); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

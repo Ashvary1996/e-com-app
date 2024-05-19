@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckOutSteps from "./CheckOutSteps";
 import axios from "axios";
 
-function ConfirmDetails({}) {
+function ConfirmDetails() {
   const [loading, setLoading] = useState(false);
 
   const { contactInfo, shippingInfo } = useSelector(
@@ -14,7 +14,7 @@ function ConfirmDetails({}) {
   const [totalPayableAmount, setTotalPayableAmount] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState("");
 
-  const calculateTotalAmount = () => {
+  const calculateTotalAmount = useCallback(() => {
     if (!orderItems || !orderItems.items) {
       return 0;
     }
@@ -22,9 +22,9 @@ function ConfirmDetails({}) {
       (accumulator, item) => accumulator + item.price * item.quantity,
       0
     );
-  };
+  }, [orderItems]);
 
-  const calculateTotalQuantity = () => {
+  const calculateTotalQuantity = useCallback(() => {
     if (!orderItems || !orderItems.items) {
       return 0;
     }
@@ -32,9 +32,9 @@ function ConfirmDetails({}) {
       (accumulator, item) => accumulator + item.quantity,
       0
     );
-  };
+  }, [orderItems]);
 
-  const calculateDiscount = () => {
+  const calculateDiscount = useCallback(() => {
     const totalQuantity = calculateTotalQuantity();
 
     if (totalQuantity >= 10) {
@@ -44,15 +44,16 @@ function ConfirmDetails({}) {
     } else {
       return 0;
     }
-  };
+  }, [calculateTotalQuantity, calculateTotalAmount]);
 
-  const calculateTotalPayableAmount = () => {
+
+  const calculateTotalPayableAmount = useCallback(() => {
     const totalAmount = calculateTotalAmount();
     const discount = calculateDiscount();
     const totalPayable = totalAmount - discount;
     setTotalPayableAmount(totalPayable);
     return totalPayable;
-  };
+  }, [calculateTotalAmount, calculateDiscount]);
 
   const fetchCartItems = () => {
     axios.defaults.withCredentials = true;
@@ -129,10 +130,10 @@ function ConfirmDetails({}) {
     } = await axios.post(
       `${process.env.REACT_APP_HOST_URL}/payment/create-order`,
       allData
-    );
+    ); 
     const options = {
       key: process.env.REACT_APP_KEY_ID,
-      amount: totalPayableAmount,
+      amount: totalPayableAmount, 
       currency: "INR",
       name: "Legion E-Com",
       description: "Payment of Items From E-Com Website",
@@ -143,7 +144,7 @@ function ConfirmDetails({}) {
       prefill: {
         name: "Gaurav Kumar",
         email: "gaurav.kumar@example.com",
-        contact: "9000090009", 
+        contact: "9000090009",
       },
       notes: {
         address: "Razorpay Corporate Office",
@@ -159,13 +160,13 @@ function ConfirmDetails({}) {
 
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, []); 
 
   useEffect(() => {
-    const deliveryFee = calculateTotalAmount() > 500 ? "Free" : "Rs. 50";
+    const deliveryFee = calculateTotalAmount() > 500 ? "Free" : "Rs. 50"; 
     setDeliveryFee(deliveryFee);
     calculateTotalPayableAmount();
-  }, [orderItems]);
+  }, [orderItems, calculateTotalAmount, calculateTotalPayableAmount]);
 
   return (
     <div className="container mx-auto py-8">

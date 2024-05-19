@@ -17,7 +17,7 @@ import {
 
 function CheckOutSteps({ activeStep }) {
   let { state } = useLocation();
-  let amount = state?.finalAmount;
+  // let amount = state?.finalAmount;
 
   const steps = [
     { id: "contact-info", title: "First", description: "Contact Info" },
