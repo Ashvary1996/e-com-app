@@ -29,6 +29,7 @@ import AllReviews from "./components/adminFolder/AllReviews";
 import AllOrders from "./components/adminFolder/AllOrders";
 import UpdateOrders from "./components/adminFolder/UpdateOrders";
 import EditProduct from "./components/adminFolder/EditProduct";
+import EditProfile from "./components/EditProfile";
 
 function App() {
   function BreadcrumbControlled() {
@@ -58,6 +59,10 @@ function App() {
             <Route path="/home" element={<HomePage />}>
               home
             </Route>
+            <Route path="/user/editProfile" element={<EditProfile />}>
+              home
+            </Route>
+
             <Route path="/forgot/" element={<Forgotpass />}>
               LogIn
             </Route>
@@ -93,6 +98,8 @@ function App() {
               <Route path="updateOrder" element={<UpdateOrders />} />
               <Route path="allOrders" element={<AllOrders />} />
               <Route path="allMembers" element={<AllMembers />} />
+              <Route path="editProfile" element={<EditProfile />} />
+
               <Route path="allReviews" element={<AllReviews />} />
             </Route>
           </Routes>

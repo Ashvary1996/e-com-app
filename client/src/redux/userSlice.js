@@ -62,6 +62,7 @@ export const signUp =
       } else {
         dispatch(userSlice.actions.setDetail(response.data.detail));
         console.log(response.data.detail);
+        toast.warn(response.data.detail);
       }
     } catch (error) {
       console.log("Error in saving/sending data", error);

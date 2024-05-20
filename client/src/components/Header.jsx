@@ -1,16 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../items/logo.png";
 import { RiMenuSearchLine } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
 
 function Header({
   user,
+  userData,
   cartNumber,
   logoutFn,
   handleSearchChange,
   searchQuery,
+  role,
 }) {
+  const data = userData;
+  console.log("userData from header,", data);
+  const navigate = useNavigate();
   return (
     <header className="homeHeader p-1 flex bg-teal-500 justify-between sticky top-0 z-50">
       <div className="w-[80px]">
@@ -38,6 +43,14 @@ function Header({
 
       <div className="w-[20%] ">
         <div className="flex justify-around mt-1 m-auto">
+          {role == "admin" && (
+            <Link
+              to={"/user/admin"}
+              className="bg-green-500 p-3   hover:bg-green-700 textlg"
+            >
+              Admin Menu
+            </Link>
+          )}
           <div className="dropdown relative inline-block ">
             <button className="dropbtn">{user ? user : "Guest"}</button>
             <div className="dropdown-content">
@@ -47,6 +60,15 @@ function Header({
                 </p>
               ) : (
                 <>
+                  <p
+                    onClick={() =>
+                      navigate("/user/editProfile", {
+                        state: { userData: data },
+                      })
+                    }
+                  >
+                    Edit Profile
+                  </p>
                   <p onClick={logoutFn}> Log-out</p>
                   {/* <p>Help</p> */}
                 </>

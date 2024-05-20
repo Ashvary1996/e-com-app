@@ -133,10 +133,10 @@ const getallUsers = async (req, res) => {
 };
 const updateUserRole = async (req, res) => {
   try {
-    const findUserId = req.body.findUserId;
+    const { findUserId, updateRole } = req.body;
     const user = await Usermodel.findByIdAndUpdate(
       findUserId,
-      { role: req.body.updateRole },
+      { role: updateRole },
       { new: true }
     );
 
@@ -146,9 +146,12 @@ const updateUserRole = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in fetching Details:", error);
-    return res.json({ message: "Internal Server Error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
+
 // /////////////////////////////////
 const forgotPassFn = async (req, res) => {
   try {
@@ -368,6 +371,35 @@ const updateProfile = async (req, res) => {
       .json({ error: "Failed to update user profile", message: error.message });
   }
 };
+const updateProfileByAdmin = async (req, res) => {
+  try {
+    const userID = req.body.userID;
+    const updateUserData = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      phoneNumber: req.body.phoneNumber,
+    };
+    if (!userID) {
+      return res.status(400).json({ error: "User ID not provided by Admin" });
+    }
+    const user = await Usermodel.findByIdAndUpdate(userID, updateUserData, {
+      new: true,
+      runValidators: false,
+      useFindAndModify: false,
+    });
+
+    // sendToken(user, res, "User updated successfully");
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+
+    res
+      .status(500)
+      .json({ error: "Failed to update user profile", message: error.message });
+  }
+};
 
 const deleteUser = async (req, res, next) => {
   try {
@@ -405,6 +437,7 @@ module.exports = {
   logOutFn,
   updatePassFn,
   updateProfile,
+  updateProfileByAdmin,
   updateUserRole,
   deleteUser,
 };

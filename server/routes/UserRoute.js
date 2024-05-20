@@ -12,6 +12,7 @@ const {
   updateProfile,
   deleteUser,
   updateUserRole,
+  updateProfileByAdmin,
 } = require("../controller/userController");
 
 const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
@@ -25,6 +26,12 @@ route.post("/reset", resetPassFn);
 route.put("/updatePassword", updatePassFn);
 
 route.put("/updateProfile", isAuthenticatedUser, updateProfile);
+route.put(
+  "/updateProfileByAdmin",
+  isAuthenticatedUser,
+  authorizedRole("admin"),
+  updateProfileByAdmin
+);
 
 route.get(
   "/admin/getAllusers",

@@ -11,6 +11,8 @@ import { cartItemFn, logoutFn } from "../redux/userSlice";
 
 function HomePage() {
   const [user, setUser] = useState();
+  const [userData, setUserData] = useState();
+  const [userRole, setUserRole] = useState("user");
   const [userID, setuserID] = useState();
   const [items, setItems] = useState([]);
   const [displayItems, setDisplayItems] = useState([]);
@@ -116,10 +118,12 @@ function HomePage() {
         // console.log(res.data.user.firstName);
         setUser(res.data.user.firstName);
         setuserID(res.data.user._id);
+        setUserRole(res.data.user.role)
+        setUserData(res.data.user)
         if (res.data.user._id) {
           fetchCartItems();
         }
-        // console.log(userID);
+        // console.log(userData);
       })
       .catch((err) => console.log("PLease Log In to Get Access"));
 
@@ -138,6 +142,8 @@ function HomePage() {
       {/* Header  */}
       <Header
         user={user}
+        userData={userData}
+        role={userRole}
         cartNumber={cartNumber}
         logoutFn={logout}
         handleSearchChange={handleSearchChange}

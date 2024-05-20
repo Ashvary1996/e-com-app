@@ -8,7 +8,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux"; 
+import { useDispatch } from "react-redux";
 import { cartItemFn } from "../redux/userSlice";
 function ItemDescription() {
   const { itemId } = useParams();
@@ -16,7 +16,7 @@ function ItemDescription() {
   const [cartNumber, setCartNumber] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const userID = getUserID(); 
+  const userID = getUserID();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ function ItemDescription() {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/singleProduct/${itemId}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setItem(response.data.item);
       })
       .catch((err) => {
@@ -74,10 +74,14 @@ function ItemDescription() {
         <button onClick={() => navigate("/home")}>
           <IoIosArrowRoundBack />
         </button>
-        <button onClick={() => navigate("/cart")}>
-          <FiShoppingCart 
-            className=" mr-1sm:w-[40px] bg-white rounded-e-2xl  "
+        <button onClick={() => navigate("/cart")}
+        disabled={!userID}>
+          <FiShoppingCart
+            className={`mr-1sm:w-[40px] bg-white rounded-e-2xl  ${
+              !userID ? "cursor-not-allowed" : ""
+            }`}
             size={"23px"}
+            
           />
           {/* {cartNumber} */}
         </button>
@@ -113,12 +117,15 @@ function ItemDescription() {
           </div>
           <div className="mt-4">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  ${
+                !userID ? "cursor-not-allowed" : ""
+              }`}
               onClick={() => {
                 const title = item.title;
                 // addToCart(itemId, title, userID, toast);
                 addToCart(null, itemId, title, userID, null, null, toast);
               }}
+              disabled={!userID}
             >
               Add to Cart
             </button>
