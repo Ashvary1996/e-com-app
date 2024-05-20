@@ -200,3 +200,29 @@ input::-webkit-inner-spin-button {
 /* Modal css for Single Item Details Div */
 
 /* ........................................................................// */
+
+.addForm,
+input {
+  text-align: center;
+  width: 80%;
+  margin: auto;
+}
+
+.allProductAdminTable,
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.allProductAdminTable,
+th,
+td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.allProductAdminTable,
+th {
+  background-color: #f2f2f2;  
+}

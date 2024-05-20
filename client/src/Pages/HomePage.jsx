@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { removeToken, removeUserID } from "../config/authTokenUser";
+// import { removeToken, removeUserID } from "../config/authTokenUser";
 import Loader from "../components/Loader";
 import Header from "../components/Header";
 import { ToastContainer, toast } from "react-toastify";
@@ -36,7 +36,7 @@ function HomePage() {
   };
 
   const logout = () => {
-    dispatch(logoutFn(setUser, removeToken, removeUserID));
+    dispatch(logoutFn(setUser));
   };
   useEffect(() => {
     let updatedItems = [...items];

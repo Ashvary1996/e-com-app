@@ -1,17 +1,24 @@
 import axios from "axios";
 import React, { useState } from "react";
+import {   useLocation, useNavigate } from "react-router";
+import { Navigate } from "react-router-dom";
 
-function AddProduct() {
+function EditProduct() {
+  const location = useLocation();
+  const selectedProduct = location.state.selectedProduct || "";
+    const navigate = useNavigate();
+
   const [product, setProduct] = useState({
-    title: "",
-    description: "",
-    price: "",
-    category: "",
-    brand: "",
-    thumbnail: "",
-    images: [""],
-    stock: "",
-    discountPercentage: 0,
+    title: selectedProduct.title || "",
+    description: selectedProduct.description || "",
+    price: selectedProduct.price || "",
+    category: selectedProduct.category || "",
+    brand: selectedProduct.brand || "",
+    thumbnail: selectedProduct.thumbnail || "",
+    images: selectedProduct.images || [""],
+    stock: selectedProduct.stock || "",
+    discountPercentage: selectedProduct.discountPercentage || 0,
+    ...selectedProduct,
   });
 
   const [details, setDetails] = useState("");
@@ -34,15 +41,17 @@ function AddProduct() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const updatedImages = product.images.filter((image) => image.trim() !== "");
+      const updatedImages = product.images.filter(
+        (image) => image.trim() !== ""
+      );
       const updatedProduct = { ...product, images: updatedImages };
-  
+    //   console.log("updatedProduct", updatedProduct);
       axios.defaults.withCredentials = true;
-  
-      const response = await axios.post(
-        `${process.env.REACT_APP_HOST_URL}/product/addProduct`,
+      const id = updatedProduct._id;
+      const response = await axios.put(
+        `${process.env.REACT_APP_HOST_URL}/product/updateProduct/${id}`,
         updatedProduct,
         {
           headers: {
@@ -50,24 +59,27 @@ function AddProduct() {
           },
         }
       );
-  
+
       if (response.data.success === true) {
-        console.log("response",response.data);
-        setDetails("Product Created Successfully");
+        console.log("response", response.data);
+        setDetails("Product Updated Successfully");
+        setTimeout(() => {
+            navigate("/user/admin/allProducts")
+        }, 3000);
       } else {
         console.log(response.data.message);
         setDetails(response.data.message);
       }
     } catch (error) {
       console.error("Error in saving/sending data:", error);
-      setDetails("Error: Failed to create product. Please try differnrt Title.");
+      setDetails("Error: Failed to update product.");
     }
   };
-  
+
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Add Product</h2>
+        <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
         <form onSubmit={handleSubmit} className="addForm">
           <div className="mb-4">
             <label
@@ -248,13 +260,13 @@ function AddProduct() {
               max="100"
             />
           </div>
-            {details}
-          <div className="flex items-center justify-between">
+          {details}
+          <div className="flex items-center justify-between ">
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Add Product
+              Update {selectedProduct.title}
             </button>
           </div>
         </form>
@@ -263,4 +275,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default EditProduct;

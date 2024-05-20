@@ -8,6 +8,7 @@ export const userSlice = createSlice({
     userName: "",
     // token: Cookies.get("ecom_token_Byash"),
     token: "",
+    role: "",
     detail: "",
     totalCartNumber: "",
   },
@@ -17,6 +18,9 @@ export const userSlice = createSlice({
     },
     setUserID: (state, action) => {
       state.userId = action.payload;
+    },
+    setUserRole: (state, action) => {
+      state.role = action.payload;
     },
     setCokies: (state, action) => {
       state.token = action.payload;
@@ -77,6 +81,7 @@ export const logIn =
         if (response.data.success === true) {
           dispatch(userSlice.actions.setUserID(response.data.user._id));
           dispatch(userSlice.actions.setUserName(response.data.user.firstName));
+          dispatch(userSlice.actions.setUserRole(response.data.user.role));
           // Cookies.set("ecom_token_Byash", response.data.token, { expires: 7 });
           dispatch(userSlice.actions.setCokies(response.data.token));
 
@@ -98,14 +103,13 @@ export const logIn =
     }, 5000);
   };
 export const logoutFn =
-  (setUser, removeToken, removeUserID) => async (dispatch) => {
+  (setUser ) => async (dispatch) => {
     try {
       axios.defaults.withCredentials = true;
       await axios.post(`${process.env.REACT_APP_HOST_URL}/user/logout`);
       console.log("Logged Out Successfully");
       setUser("");
-      removeToken();
-      removeUserID();
+      
     } catch (error) {
       console.error("Error logging out:", error);
     }

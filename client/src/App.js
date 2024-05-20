@@ -28,6 +28,7 @@ import AllMembers from "./components/adminFolder/AllMembers";
 import AllReviews from "./components/adminFolder/AllReviews";
 import AllOrders from "./components/adminFolder/AllOrders";
 import UpdateOrders from "./components/adminFolder/UpdateOrders";
+import EditProduct from "./components/adminFolder/EditProduct";
 
 function App() {
   function BreadcrumbControlled() {
@@ -88,6 +89,7 @@ function App() {
             <Route path="/user/admin" element={<AdminComponent />}>
               <Route path="addProduct" element={<AddProduct />} />
               <Route path="allProducts" element={<AllProducts />} />
+              <Route path="editProduct/:id" element={<EditProduct />} />
               <Route path="updateOrder" element={<UpdateOrders />} />
               <Route path="allOrders" element={<AllOrders />} />
               <Route path="allMembers" element={<AllMembers />} />
