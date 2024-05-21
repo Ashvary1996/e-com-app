@@ -1,44 +1,120 @@
+const CartModel = require("../model/cartSchema");
 const Order = require("../model/orderSchema");
 const Product = require("../model/productSchema");
+const axios = require("axios");
 
 const newOrder = async (req, res) => {
   try {
-    const {
-      shippingInfo,
-      orderItems,
-      paymentInfo,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-    } = req.body;
+    const { contactInfo, shippingInfo, items, totalItems, amount } = req.body;
+    const floorAmount = Math.floor(amount);
+    // Create new order in Razorpay and get the order ID
+    const razorpayOrder = await axios.post(
+      "https://api.razorpay.com/v1/orders",
+      {
+        amount: 2121 * 100, // Convert to paise
+        currency: "INR",
+        payment_capture: 1,
+      },
+      {
+        auth: {
+          username: process.env.KEY_ID,
+          password: process.env.KEY_SECRET,
+        },
+      }
+    );
 
+    const razorpayOrderId = razorpayOrder.data.id;
+
+    // Create new order
     const order = new Order({
-      shippingInfo,
-      orderItems,
-      paymentInfo,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-      paidAt: Date.now(),
-      userId: req.userId,
+      totalItems: totalItems,
+      shippingInfo: {
+        phoneNo: contactInfo.phoneNo,
+        address: shippingInfo.address,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        pinCode: shippingInfo.pinCode,
+      },
+      orderItems: items.map((item, i) => ({
+        name: item.title,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.images,
+        productId: item.product_id,
+      })),
+
+      userId: req.user,
+
+      razorpayOrderId,
+
+      paymentInfo: {
+        id: null,
+        status: "Pending",
+      },
+      paidAt: null,
+      itemsPrice: 10000,
+      taxPrice: 0,
+      shippingPrice: 0,
+      totalPrice: 10000,
+      orderStatus: "Processing", // Initial status
     });
+
+    // Save order to database
+
+    // await order.save();
+
+    const saveOrder = new Order(order);
+    await saveOrder.save({ validateBeforeSave: false });
+
+    // Return the Razorpay order ID
+    res.status(201).json({ order: { id: razorpayOrderId } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to create order", err: error });
+  }
+};
+const handleRazorpayCallback = async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, amount } = req.body;
+
+    // Find the order using the Razorpay order ID
+    const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Update order details
+    order.paymentInfo = {
+      id: razorpay_payment_id,
+      status: "Paid",
+    };
+    order.paidAt = new Date();
+    order.orderStatus = "Paid and Processing For Shipping";
+    // paid, shipped,delivered
+
+    ////////////////////////////
+    // removing cart after payment success //
+    const userId = order.userId;
+    let userCart = await CartModel.findOneAndDelete({ userId: userId });
+    if (!userCart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
 
     await order.save();
 
-    res.status(201).json({
+    // res.redirect(
+    //   `${process.env.CORS_ORIGIN}/paymentsuccess?reference=${razorpay_payment_id}`
+    // );
+    res.status(200).json({
       success: true,
-      order,
+      message: "Order status updated successfully",
+      razorpay_payment_id: razorpay_payment_id,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    console.error(error);
+    res.status(500).json({ message: "Failed to update order status" });
   }
 };
-
 //for admin
 const getUserOrders = async (req, res) => {
   try {
@@ -73,6 +149,29 @@ const getAllOrders = async (req, res) => {
       success: true,
 
       total_orders: order.length,
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+const getOrderByPayId = async (req, res) => {
+  try {
+    const payId = req.params.payId;
+    const order = await Order.findOne({ "paymentInfo.id": payId });
+
+    if (!order) {
+      return res.json({ msg: "order not Found" });
+    }
+
+    // use NodeMailer to send Order Detail To Customer here 
+      
+    res.status(200).json({
+      success: true,
+      payId: payId,
       order,
     });
   } catch (error) {
@@ -189,4 +288,6 @@ module.exports = {
   getSingleOrder,
   updateOrder,
   deleteOrder,
+  handleRazorpayCallback,
+  getOrderByPayId,
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AllMembers() {
   const [users, setUsers] = useState([]);
@@ -10,17 +11,25 @@ function AllMembers() {
     navigate("/user/admin/editProfile", { state: { userData: user } });
     console.log(`Edit user with id: ${id}`);
   };
+  /* eslint-disable no-restricted-globals */
+  const handleDelete = async (id, user) => {
+    const isConfirmed = confirm(
+      `Are you sure you want to delete ${user.firstName}?`
+    );
 
-  const handleDelete = async (id) => {
-    // Implement delete functionality
-    try {
-      await axios.delete(`http://localhost:5000/user/admin/delete/${id}`);
-      setUsers(users.filter((user) => user._id !== id));
-    } catch (error) {
-      console.error(`Error deleting user with id: ${id}`, error);
+    if (isConfirmed) {
+      try {
+       
+        await axios.delete(`${process.env.REACT_APP_HOST_URL}/user/admin/deleteUser/${id}`);
+        toast.success(`User ${user.firstName} deleted`);
+        setUsers(users.filter((existingUser) => existingUser._id !== id));
+      } catch (error) {
+        toast.error(`Error deleting user ${user.firstName}: ${error.message}`);
+        console.error(`Error deleting user with id: ${id}`, error);
+      }
     }
   };
-
+  /* eslint-enable no-restricted-globals */
   const handleRoleChange = async (id, newRole) => {
     console.log(id, newRole);
     // Implement role change functionality
@@ -42,7 +51,7 @@ function AllMembers() {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/user/admin/getAllusers"
+        `${process.env.REACT_APP_HOST_URL}/user/admin/getAllusers`
       );
       setUsers(res.data.inMoreDetail);
     } catch (err) {
@@ -106,7 +115,7 @@ function AllMembers() {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(user._id)}
+                    onClick={() => handleDelete(user._id, user)}
                     className="btn btn-danger"
                   >
                     Delete

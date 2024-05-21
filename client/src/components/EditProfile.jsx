@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
-
 const EditProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+
+  // console.log(location);
 
   const user = location.state.userData || {
     firstName: "",
@@ -17,7 +18,7 @@ const EditProfile = () => {
   };
   const userID = user._id;
 
-  console.log("userForEDit", user);
+  // console.log("userForEDit", user);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -42,7 +43,7 @@ const EditProfile = () => {
       ...formData,
       [name]: value,
     });
-    console.log(formData);
+    // console.log(formData);
   };
 
   const handleFormSubmit = async (e) => {
@@ -75,6 +76,7 @@ const EditProfile = () => {
 
   return (
     <div className="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
+      <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Edit User</h2>
       <form onSubmit={handleFormSubmit}>
         <div className="mb-4">
@@ -129,6 +131,7 @@ const EditProfile = () => {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
           />
         </div>
+
         <div className="flex justify-end">
           <button
             type="button"

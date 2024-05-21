@@ -13,10 +13,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // .................................................................
+const allowedOrigins = ["http://localhost:3000", process.env.CORS_ORIGIN];
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -27,17 +28,17 @@ app.use(cookieParser());
 
 // .................................................................
 
-app.use("/demo", (req,res) => res.send("Hello World"));
+app.use("/demo", (req, res) => res.send("Hello World"));
 
 app.use("/user", require("./routes/UserRoute"));
 app.use("/home", require("./routes/HomeRoute"));
 app.use("/product", require("./routes/ProductRoute"));
-app.use("/user/cart", require("./routes/CartRoute")); 
+app.use("/user/cart", require("./routes/CartRoute"));
 app.use("/order", require("./routes/OrderRoute"));
-app.use("/payment", require("./routes/PaymentRoute"));
+
 
 // .................................................................
- 
+
 app.listen(port, () => console.log(`App listening on port: ${port}!`));
 connectToDb();
 

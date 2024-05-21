@@ -7,12 +7,19 @@ const {
   updateOrder,
   getSingleOrder,
   deleteOrder,
+  handleRazorpayCallback,
+  getOrderByPayId,
 } = require("../controller/orderController");
 const { isAuthenticatedUser, authorizedRole } = require("../middleware/auth");
 const route = express.Router();
-
-route.post("/newOrder", isAuthenticatedUser, newOrder);
+//////////////
+route.post("/payment/create-order", isAuthenticatedUser, newOrder);
+route.post("/razorpay/callback", handleRazorpayCallback);
+/////////
 route.get("/getAllOrders", isAuthenticatedUser, getAllOrders);
+
+route.get("/getOrderByPayId/:payId", getOrderByPayId);
+
 route.get("/getmyOrders", isAuthenticatedUser, getmyOrder);
 //admin
 route.get(

@@ -1,38 +1,32 @@
-import React   from "react";
+import React from "react";
 import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
-// import axios from "axios";
+import { useEffect } from "react";
+import axios from "axios";
 
 const PaymentSuccess = () => {
   const location = useLocation();
+  // console.log(location);
   const searchParams = new URLSearchParams(location.search);
+  const payId = searchParams.get("reference"); 
 
-  const referenceNum = searchParams.get("reference");
-  // const itemsString = searchParams.get("items");
-  // const items = itemsString ? itemsString.split(",") : [];
+  const getOrders = async () => {
+    await axios
+      .get(`http://localhost:5000/order/getOrderByPayId/${payId}`)
+      .then((data) => console.log(data.data ))
+      .catch((err) => console.log(err));
+  };
 
-  // useEffect(() => {
-  //   const clearCart = async () => {
-  //     try {
-  //       const response = await axios.delete(
-  //         `${process.env.REACT_APP_HOST_URL}/user/cart/clearCartItems`
-  //       );
-  //       console.log("Cart Cleared Successfully");
-       
-  //     } catch (error) {
-  //       console.error("Error clearing cart:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    getOrders();
+  }, [searchParams]);
 
-  //   clearCart();
-  // }, []);
-
-  return ( 
+  return (
     <Box>
       <VStack h="100vh" justifyContent={"center"} alignItems="center">
         <Heading textTransform={"uppercase"}> Order Successful</Heading>
 
-        <Text>Reference No.: {referenceNum}</Text>
+        <Text>Reference No.: {payId}</Text>
 
         {/* <Text>Items:</Text> 
         <ul>

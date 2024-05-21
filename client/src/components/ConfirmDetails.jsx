@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckOutSteps from "./CheckOutSteps";
 import axios from "axios";
 
 function ConfirmDetails() {
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const { contactInfo, shippingInfo } = useSelector(
     (state) => state.cartForPayment
   );
@@ -46,7 +46,6 @@ function ConfirmDetails() {
     }
   }, [calculateTotalQuantity, calculateTotalAmount]);
 
-
   const calculateTotalPayableAmount = useCallback(() => {
     const totalAmount = calculateTotalAmount();
     const discount = calculateDiscount();
@@ -68,49 +67,7 @@ function ConfirmDetails() {
       });
   };
   ///////////////////////////////////////
-  // const handelPayment = async () => {
-  //   const allData = {
-  //     contactInfo,
-  //     shippingInfo,
-  //     items: orderItems.items,
-  //     totalItems: calculateTotalQuantity(),
-  //     totalPayableAmount,
-  //   };
-
-  //   setLoading(true);
-
-  //   try {
-  //     const orderId = await createOrder(allData); // Function to create order on backend
-
-  //     if (window.Razorpay) {
-  //       const options = {
-  //         key: process.env.REACT_APP_KEY_ID,
-  //         amount: allData.totalPayableAmount * 100, // Amount in paisa
-  //         currency: "INR",
-  //         order_id: orderId,
-  //         name: "Legion E-com",
-  //         description: "Payment for purchase",
-  //         handler: (response) => {
-  //           console.log(response);
-  //           setLoading(false);
-  //           // Handle success or failure
-  //         },
-  //       };
-
-  //       const rzp = new window.Razorpay(options);
-  //       rzp.open();
-  //     } else {
-  //       console.error("Razorpay SDK is not available.");
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error processing payment:", error);
-  //     setLoading(false);
-  //     // Handle error
-  //   }
-  // };
-
-  const handelPayment = async () => {
+  const handlePayment = async () => {
     const allData = {
       contactInfo,
       shippingInfo,
@@ -118,52 +75,87 @@ function ConfirmDetails() {
       totalItems: calculateTotalQuantity(),
       amount: totalPayableAmount,
     };
-    // console.log(window);
+    console.log("allData", allData);
+    try {
+      // Step 1: Create an order on the server
+      const {
+        data: { order },
+      } = await axios.post(
+        `${process.env.REACT_APP_HOST_URL}/order/payment/create-order`,
+        allData
+      );
 
-    // await axios
-    //   .post(`${process.env.REACT_APP_HOST_URL}/payment/create-order`, allData)
-    //   .then((res) => console.log(res.data))
-    //   .catch((err) => console.log(err));
+      // Step 2: Configure Razorpay options
+      const options = {
+        key: process.env.REACT_APP_KEY_ID,
+        amount: 2121 * 100, // Razorpay accepts amount in paise
+        currency: "INR",
+        name: "Legion E-Com",
+        description: "Payment of Items From E-Com Website",
+        image:
+          "https://assets.materialup.com/uploads/6201b674-8e98-40a9-9ad5-24f2cb5cd0f0/preview.gif",
+        order_id: order.id,
+        handler: async (response) => {
+          // Step 3: Verify payment and save order details
+          const paymentData = {
+            ...allData,
+            paymentInfo: {
+              id: response.razorpay_payment_id,
+              status: "Paid",
+            },
+            razorpay_order_id: order.id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            paidAt: new Date().toISOString(),
+          };
 
-    const {
-      data: { order },
-    } = await axios.post(
-      `${process.env.REACT_APP_HOST_URL}/payment/create-order`,
-      allData
-    ); 
-    const options = {
-      key: process.env.REACT_APP_KEY_ID,
-      amount: totalPayableAmount, 
-      currency: "INR",
-      name: "Legion E-Com",
-      description: "Payment of Items From E-Com Website",
-      image:
-        "https://assets.materialup.com/uploads/6201b674-8e98-40a9-9ad5-24f2cb5cd0f0/preview.gif",
-      order_id: order.id,
-      callback_url: `${process.env.REACT_APP_HOST_URL}/payment/verify_payment`,
-      prefill: {
-        name: "Gaurav Kumar",
-        email: "gaurav.kumar@example.com",
-        contact: "9000090009",
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-    const razor = new window.Razorpay(options);
-    razor.open();
+          try {
+            const res = await axios.post(
+              `${process.env.REACT_APP_HOST_URL}/order/razorpay/callback`,
+              paymentData
+            );
+            console.log(res.data);
+
+            if (res.data.success == true) {
+              navigate(
+                `/paymentsuccess?reference=${res.data.razorpay_payment_id}`
+              );
+            }
+
+            // Handle success message or any other actions after successful order creation
+          } catch (error) {
+            console.error("Error saving order to database:", error);
+            // Handle error
+          }
+        },
+        prefill: {
+          name: "Gaurav Kumar",
+          email: "gaurav.kumar@example.com",
+          contact: "9000090009",
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      // Step 4: Open Razorpay payment modal
+      const razor = new window.Razorpay(options);
+      razor.open();
+    } catch (error) {
+      console.error("Error creating order on server:", error);
+      // Handle error
+    }
   };
   ///////////////////////////////////////
 
   useEffect(() => {
     fetchCartItems();
-  }, []); 
+  }, []);
 
   useEffect(() => {
-    const deliveryFee = calculateTotalAmount() > 500 ? "Free" : "Rs. 50"; 
+    const deliveryFee = calculateTotalAmount() > 500 ? "Free" : "Rs. 50";
     setDeliveryFee(deliveryFee);
     calculateTotalPayableAmount();
   }, [orderItems, calculateTotalAmount, calculateTotalPayableAmount]);
@@ -253,7 +245,7 @@ function ConfirmDetails() {
             </div>
             <div className="flex justify-end mt-4">
               <button
-                onClick={handelPayment}
+                onClick={handlePayment}
                 className="bg-indigo-500 text-white px-4 py-2 rounded-md"
               >
                 {loading ? "Processing..." : "Pay Now"}

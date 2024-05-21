@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../items/logo.png";
 import { RiMenuSearchLine } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
+import { ToastContainer } from "react-toastify";
 
 function Header({
   user,
@@ -14,10 +15,11 @@ function Header({
   role,
 }) {
   const data = userData;
-  console.log("userData from header,", data);
+  // console.log("userData from header,", data);
   const navigate = useNavigate();
   return (
     <header className="homeHeader p-1 flex bg-teal-500 justify-between sticky top-0 z-50">
+      {/* <ToastContainer/> */}
       <div className="w-[80px]">
         <img className="rounded-full w-14 h-14 " src={logo} alt="logo" />
       </div>

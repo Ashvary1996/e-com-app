@@ -6,16 +6,15 @@ const OrderSchema = new Schema({
     address: { type: String, required: true },
     city: { type: String, required: true },
     state: { type: String, required: true },
-    country: { type: String, required: true },
     pinCode: { type: Number, required: true },
-    phoneNo: { type: Number, required: true }, 
+    phoneNo: { type: Number, required: true },
   },
   orderItems: [
     {
       name: { type: String, required: true },
       price: { type: Number, required: true },
       quantity: { type: Number, required: true },
-      image: { type: String, required: true },
+      image: [{ type: String, required: true }],
       productId: {
         type: Schema.Types.ObjectId,
         ref: "Products",
@@ -24,6 +23,7 @@ const OrderSchema = new Schema({
     },
   ],
   userId: { type: Schema.Types.ObjectId, ref: "Users" },
+  razorpayOrderId: { type: String, required: true },
   paymentInfo: {
     id: { type: String, required: true },
     status: { type: String, required: true },
