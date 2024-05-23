@@ -25,7 +25,6 @@ import AdminComponent from "./components/AdminComponent";
 import AddProduct from "./components/adminFolder/AddProduct";
 import AllProducts from "./components/adminFolder/AllProducts";
 import AllMembers from "./components/adminFolder/AllMembers";
-import AllReviews from "./components/adminFolder/AllReviews";
 import AllOrders from "./components/adminFolder/AllOrders";
 import UpdateOrders from "./components/adminFolder/UpdateOrders";
 import EditProduct from "./components/adminFolder/EditProduct";
@@ -99,8 +98,6 @@ function App() {
               <Route path="allOrders" element={<AllOrders />} />
               <Route path="allMembers" element={<AllMembers />} />
               <Route path="editProfile" element={<EditProfile />} />
-
-              <Route path="allReviews" element={<AllReviews />} />
             </Route>
           </Routes>
         </Router>

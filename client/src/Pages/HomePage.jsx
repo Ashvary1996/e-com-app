@@ -263,12 +263,12 @@ function HomePage() {
             </div>
           ))}
         </div>
-      </main>
+      </main>  
 
       {/* /////////////////// Footer  //////////////////// */}
 
       <footer
-        onMouseEnter={toggleHover}
+        onMouseEnter={toggleHover} 
         onMouseLeave={toggleHover}
         className={`transition-all duration-300 ${
           isHovered ? "fixed inset-x-0 bottom-0" : "relative"

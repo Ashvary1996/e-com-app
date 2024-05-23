@@ -1,6 +1,6 @@
 {
   "name": "e-com-app",
-  "proxy":"https://e-com-app-19i5.onrender.com",
+  "proxy": "https://e-com-app-19i5.onrender.com",
   "homepage": "https://ecom-app-by-ashvary.netlify.app",
   "version": "0.1.0",
   "private": true,
@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "autoprefixer": "^10.4.17",
     "http-proxy-middleware": "^2.0.6",
     "postcss": "^8.4.35",
