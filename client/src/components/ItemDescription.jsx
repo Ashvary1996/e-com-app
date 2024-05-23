@@ -1,32 +1,30 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import addToCart from "../config/addToCartFn";
-import { getUserID } from "../config/authTokenUser";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import { cartItemFn } from "../redux/userSlice";
+
 function ItemDescription() {
+  const location = useLocation();
   const { itemId } = useParams();
   const [item, setItem] = useState([]);
-  const [cartNumber, setCartNumber] = useState("");
+
+  // const [cartNumber, setCartNumber] = useState("");
+  // const [cartNumber, setCartNumber] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const userID = getUserID();
-  const dispatch = useDispatch();
+  const userID = location.state;
+  console.log("userID", location);
+
   const navigate = useNavigate();
 
-  // console.log(userID);
   // console.log(itemId);
 
   useEffect(() => {
-    const fetchCartItems = () => {
-      dispatch(cartItemFn(userID, setCartNumber));
-    };
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/singleProduct/${itemId}`)
       .then((response) => {
@@ -36,8 +34,7 @@ function ItemDescription() {
       .catch((err) => {
         console.error("Error fetching item:", err);
       });
-    fetchCartItems();
-  }, [itemId, userID, dispatch, setCartNumber]);
+  }, [itemId, userID]);
 
   // const totalItems = useSelector((state) => state.user.totalCartNumber);
   // const userName = useSelector((state) => state.user.userName);
@@ -74,14 +71,12 @@ function ItemDescription() {
         <button onClick={() => navigate("/home")}>
           <IoIosArrowRoundBack />
         </button>
-        <button onClick={() => navigate("/cart")}
-        disabled={!userID}>
+        <button onClick={() => navigate("/cart")} disabled={!userID}>
           <FiShoppingCart
             className={`mr-1sm:w-[40px] bg-white rounded-e-2xl  ${
               !userID ? "cursor-not-allowed" : ""
             }`}
             size={"23px"}
-            
           />
           {/* {cartNumber} */}
         </button>

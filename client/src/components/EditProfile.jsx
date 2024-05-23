@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -10,12 +10,13 @@ const EditProfile = () => {
 
   // console.log(location);
 
-  const user = location.state.userData || {
+  const user = useMemo(() => location.state.userData || {
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-  };
+  }, [location.state.userData]);
+
   const userID = user._id;
 
   // console.log("userForEDit", user);
@@ -50,7 +51,7 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       const linkbyRole =
-        user.role == "admin" ? "updateProfileByAdmin" : "updateProfile";
+        user.role === "admin" ? "updateProfileByAdmin" : "updateProfile";
 
       const res = await axios.put(`http://localhost:5000/user/${linkbyRole}`, {
         // const res = await axios.put(
@@ -62,7 +63,7 @@ const EditProfile = () => {
         phoneNumber: formData.phoneNumber,
         role: user.role,
       });
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         toast.success("Profile Updated Successfully");
         setTimeout(() => {
           navigate(-1);

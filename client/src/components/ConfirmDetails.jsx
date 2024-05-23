@@ -5,7 +5,7 @@ import CheckOutSteps from "./CheckOutSteps";
 import axios from "axios";
 
 function ConfirmDetails() {
-  const [loading, setLoading] = useState(false);
+  let  loading = false;
   const navigate = useNavigate();
   const { contactInfo, shippingInfo } = useSelector(
     (state) => state.cartForPayment
@@ -115,7 +115,7 @@ function ConfirmDetails() {
             );
             console.log(res.data);
 
-            if (res.data.success == true) {
+            if (res.data.success === true) {
               navigate(
                 `/paymentsuccess?reference=${res.data.razorpay_payment_id}`
               );

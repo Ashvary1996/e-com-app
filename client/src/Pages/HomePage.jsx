@@ -118,8 +118,8 @@ function HomePage() {
         // console.log(res.data.user.firstName);
         setUser(res.data.user.firstName);
         setuserID(res.data.user._id);
-        setUserRole(res.data.user.role)
-        setUserData(res.data.user)
+        setUserRole(res.data.user.role);
+        setUserData(res.data.user);
         if (res.data.user._id) {
           fetchCartItems();
         }
@@ -209,12 +209,7 @@ function HomePage() {
               key={i}
               className="sProduct relative flex flex-col items-center"
             >
-              <Link
-                to={{
-                  pathname: `/item/${elem._id}`,
-                  state: { cartNumber },
-                }}
-              >
+              <Link to={`/item/${elem._id}`} state={{ userID: userID }}>
                 <img
                   className="w-full h-48 rounded-lg mb-3 scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
                   src={elem.thumbnail}
@@ -263,12 +258,12 @@ function HomePage() {
             </div>
           ))}
         </div>
-      </main>  
+      </main>
 
       {/* /////////////////// Footer  //////////////////// */}
 
       <footer
-        onMouseEnter={toggleHover} 
+        onMouseEnter={toggleHover}
         onMouseLeave={toggleHover}
         className={`transition-all duration-300 ${
           isHovered ? "fixed inset-x-0 bottom-0" : "relative"

@@ -7,8 +7,8 @@ const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
-  const [editedProduct, setEditedProduct] = useState(null);
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  // const [editedProduct, setEditedProduct] = useState(null);
+  // const [isEditOpen, setIsEditOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,13 +44,11 @@ const AllProducts = () => {
     navigate(`/user/admin/editProduct/${product._id}`, {
       state: { selectedProduct: product },
     });
-    setEditedProduct(product);
-    setIsEditOpen(true);
+    // setEditedProduct(product);
+    // setIsEditOpen(true);
     // console.log("Edit product with ID:", product);
   };
-  const handleEditClose = () => {
-    setIsEditOpen(false);
-  };
+  
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };

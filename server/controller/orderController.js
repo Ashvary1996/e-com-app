@@ -89,7 +89,7 @@ const handleRazorpayCallback = async (req, res) => {
       status: "Paid",
     };
     order.paidAt = new Date();
-    order.orderStatus = "Paid and Processing For Shipping";
+    order.orderStatus = "Proceed to Shipping";
     // paid, shipped,delivered
 
     ////////////////////////////
@@ -167,8 +167,8 @@ const getOrderByPayId = async (req, res) => {
       return res.json({ msg: "order not Found" });
     }
 
-    // use NodeMailer to send Order Detail To Customer here 
-      
+    // use NodeMailer to send Order Detail To Customer here
+
     res.status(200).json({
       success: true,
       payId: payId,
@@ -225,7 +225,7 @@ const getSingleOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   try {
-    const order = await Order.findById({ _id: req.params.orderId });
+    const order = await Order.findOne({ razorpayOrderId: req.params.orderId });
     let updateStatus = req.body.orderStatus;
 
     if (!order) return res.send("Order not found with this Id");
@@ -233,16 +233,19 @@ const updateOrder = async (req, res) => {
     if (order.orderStatus === "Delivered")
       return res.send("You have already delivered this order");
 
-    if (req.body.status === "Shipped") {
+    if (req.body.orderStatus === "Shipped") {
       order.orderItems.forEach(
-        async (order) => await updateStock(order.productId, order.quantity)
+        async (orderItem) =>
+          await updateStock(orderItem.productId, orderItem.quantity)
       );
     }
+
     order.orderStatus = updateStatus;
 
-    if (req.body.status === "Delivered") order.deliveredAt = Date.now();
+    if (req.body.orderStatus === "Delivered") order.deliveredAt = Date.now();
 
     await order.save({ validateBeforeSave: false });
+    
 
     res.status(200).json({
       success: true,

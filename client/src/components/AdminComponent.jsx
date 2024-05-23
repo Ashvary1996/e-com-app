@@ -32,11 +32,11 @@ function AdminComponent() {
     };
 
     const fetchStatistics = async () => {
-      try { 
+      try {
         const userData = await axios.get(
           `${process.env.REACT_APP_HOST_URL}/user/admin/getAllusers`
         );
- 
+
         let countAdmin = 0;
         userData.data.listofUser.forEach((user) => {
           if (user.role === "admin") {
@@ -163,11 +163,17 @@ function AdminComponent() {
                     </div>
                     <div className="text-3xl">{data.totalOrdersPlaced}</div>
                   </div>
-                  <div className="p-4 bg-slate-600 rounded-lg shadow">
-                    <div className="text-xl font-semibold">
-                      Order In Progress..
-                    </div>
-                    <div className="text-3xl">{data.orderInProgress}</div>
+                  <div
+                    className={`p-4 bg-slate-600 rounded-lg shadow  ${
+                      data.orderInProgress > 0 ? "bg-orange-500" : null
+                    }`}
+                  >
+                    <Link to={"/user/admin/updateOrder"}>
+                      <div className="text-xl font-semibold">
+                        Order In Progress..
+                      </div>
+                      <div className="text-3xl">{data.orderInProgress}</div>
+                    </Link>
                   </div>
                   <div className="p-4 bg-slate-600 rounded-lg shadow">
                     <div className="text-xl font-semibold">Order Delivered</div>

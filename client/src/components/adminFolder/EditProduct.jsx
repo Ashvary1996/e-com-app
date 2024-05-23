@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import {   useLocation, useNavigate } from "react-router";
-import { Navigate } from "react-router-dom";
 
 function EditProduct() {
-  const location = useLocation();
+  const location = useLocation(); 
   const selectedProduct = location.state.selectedProduct || "";
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
 
   const [product, setProduct] = useState({
     title: selectedProduct.title || "",

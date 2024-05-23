@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocation } from "react-router";
 
 import {
   Step,
@@ -7,17 +6,16 @@ import {
   StepIcon,
   StepIndicator,
   StepNumber,
-  StepSeparator,
+  StepSeparator, 
   StepStatus,
-  StepTitle,
+  StepTitle, 
   Stepper,
   useSteps,
   Box,
 } from "@chakra-ui/react";
 
 function CheckOutSteps({ activeStep }) {
-  let { state } = useLocation();
-  // let amount = state?.finalAmount;
+ 
 
   const steps = [
     { id: "contact-info", title: "First", description: "Contact Info" },

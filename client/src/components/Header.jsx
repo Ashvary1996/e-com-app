@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../items/logo.png";
 import { RiMenuSearchLine } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
-import { ToastContainer } from "react-toastify";
+ 
 
 function Header({
   user,
@@ -45,7 +45,7 @@ function Header({
 
       <div className="w-[20%] ">
         <div className="flex justify-around mt-1 m-auto">
-          {role == "admin" && (
+          {role === "admin" && (
             <Link
               to={"/user/admin"}
               className="bg-green-500 p-3   hover:bg-green-700 textlg"
