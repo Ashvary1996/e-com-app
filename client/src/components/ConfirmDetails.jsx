@@ -5,11 +5,12 @@ import CheckOutSteps from "./CheckOutSteps";
 import axios from "axios";
 
 function ConfirmDetails() {
-  let  loading = false;
+  let loading = false;
   const navigate = useNavigate();
   const { contactInfo, shippingInfo } = useSelector(
     (state) => state.cartForPayment
   );
+  // console.log(contactInfo, shippingInfo);
   const [orderItems, setOrderItems] = useState([]);
   const [totalPayableAmount, setTotalPayableAmount] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState("");
@@ -50,7 +51,7 @@ function ConfirmDetails() {
     const totalAmount = calculateTotalAmount();
     const discount = calculateDiscount();
     const totalPayable = totalAmount - discount;
-    setTotalPayableAmount(totalPayable);
+    setTotalPayableAmount(Math.ceil(totalPayable));
     return totalPayable;
   }, [calculateTotalAmount, calculateDiscount]);
 
@@ -66,16 +67,18 @@ function ConfirmDetails() {
         console.error("Error fetching cart items:", error);
       });
   };
+  // console.log(totalPayableAmount);
   ///////////////////////////////////////
   const handlePayment = async () => {
     const allData = {
       contactInfo,
       shippingInfo,
+      thumbnail: orderItems.thumbnail,
       items: orderItems.items,
       totalItems: calculateTotalQuantity(),
-      amount: totalPayableAmount,
+      totalPayableAmount: totalPayableAmount,
     };
-    console.log("allData", allData);
+    // console.log("allData", allData);
     try {
       // Step 1: Create an order on the server
       const {
@@ -88,7 +91,7 @@ function ConfirmDetails() {
       // Step 2: Configure Razorpay options
       const options = {
         key: process.env.REACT_APP_KEY_ID,
-        amount: 2121 * 100, // Razorpay accepts amount in paise
+        amount: totalPayableAmount * 100, // Razorpay accepts amount in paise
         currency: "INR",
         name: "Legion E-Com",
         description: "Payment of Items From E-Com Website",
@@ -96,6 +99,13 @@ function ConfirmDetails() {
           "https://assets.materialup.com/uploads/6201b674-8e98-40a9-9ad5-24f2cb5cd0f0/preview.gif",
         order_id: order.id,
         handler: async (response) => {
+          if (response.error) {
+            // If there is an error during payment
+            console.error("Payment error:", response.error);
+            navigate("/user/order/paymentFailed", {
+              state: { msg: response.error },
+            });
+          }
           // Step 3: Verify payment and save order details
           const paymentData = {
             ...allData,
@@ -120,23 +130,28 @@ function ConfirmDetails() {
                 `/paymentsuccess?reference=${res.data.razorpay_payment_id}`
               );
             }
-
-            // Handle success message or any other actions after successful order creation
           } catch (error) {
-            console.error("Error saving order to database:", error);
-            // Handle error
+            console.error("Error creating  order on server :", error);
+            navigate(`user/order/paymentFailed`, { state: { msg: error } });
           }
         },
+        // contactInfo, shippingInfo
         prefill: {
-          name: "Gaurav Kumar",
-          email: "gaurav.kumar@example.com",
-          contact: "9000090009",
+          name: `${contactInfo.firstName + " " + contactInfo.lastName}`,
+          email: `${contactInfo.email}`,
+          contact: `${contactInfo.phoneNo}`,
         },
         notes: {
           address: "Razorpay Corporate Office",
         },
         theme: {
           color: "#3399cc",
+        },
+        payment_options: {
+          card: true,
+          wallet: {
+            wallets: ["upi", "cards"],
+          },
         },
       };
 
@@ -200,16 +215,20 @@ function ConfirmDetails() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderItems.items?.map((item) => (
-                    <tr key={item.cart_item_id}>
-                      <td className="py-2">{item.title}</td>
-                      <td className="py-2 text-center">₹ {item.price}</td>
-                      <td className="py-2 text-center">{item.quantity}</td>
-                      <td className="py-2 text-center">
-                        ₹ {item.quantity * item.price}
-                      </td>
-                    </tr>
-                  ))}
+                  {orderItems.items?.map((item) => {
+                    return (
+                      <tr key={item.cart_item_id}>
+                        <td className="py-2">{item.title}</td>
+                        <td className="py-2 text-center">
+                          ₹ {item.price.toFixed(2)}
+                        </td>
+                        <td className="py-2 text-center">{item.quantity}</td>
+                        <td className="py-2 text-center">
+                          ₹ {item.quantity * item.price.toFixed(2)}
+                        </td>
+                      </tr>
+                    );
+                  })}
                   <tr>
                     <td colSpan="3" className="py-2 font-semibold text-right">
                       Total :
@@ -224,6 +243,7 @@ function ConfirmDetails() {
                     </td>
                     <td className="py-2 font-semibold">{deliveryFee}</td>
                   </tr>
+
                   <tr>
                     <td colSpan="3" className="py-2 font-semibold text-right">
                       Discount :
@@ -237,7 +257,7 @@ function ConfirmDetails() {
                       Total Payable Amount:
                     </td>
                     <td className="py-2 font-semibold">
-                      ₹ {totalPayableAmount.toFixed(2)}
+                      ₹ {totalPayableAmount}
                     </td>
                   </tr>
                 </tbody>

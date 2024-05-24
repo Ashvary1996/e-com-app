@@ -19,8 +19,9 @@ function AllMembers() {
 
     if (isConfirmed) {
       try {
-       
-        await axios.delete(`${process.env.REACT_APP_HOST_URL}/user/admin/deleteUser/${id}`);
+        await axios.delete(
+          `${process.env.REACT_APP_HOST_URL}/user/admin/deleteUser/${id}`
+        );
         toast.success(`User ${user.firstName} deleted`);
         setUsers(users.filter((existingUser) => existingUser._id !== id));
       } catch (error) {
@@ -34,10 +35,13 @@ function AllMembers() {
     console.log(id, newRole);
     // Implement role change functionality
     try {
-      await axios.put(`http://localhost:5000/user/admin/getSingleUser`, {
-        findUserId: id,
-        updateRole: newRole,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_HOST_URL}/user/admin/getSingleUser`,
+        {
+          findUserId: id,
+          updateRole: newRole,
+        }
+      );
       setUsers(
         users.map((user) =>
           user._id === id ? { ...user, role: newRole } : user

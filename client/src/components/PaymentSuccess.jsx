@@ -20,7 +20,7 @@ const PaymentSuccess = () => {
   const searchParams = new URLSearchParams(location.search);
   const payId = searchParams.get("reference");
   const [orderData, setOrderData] = useState(null);
-
+  console.log(orderData);
   useEffect(() => {
     const getOrders = async () => {
       try {
@@ -70,7 +70,7 @@ const PaymentSuccess = () => {
                       <Td>{index + 1}</Td>
                       <Td>
                         <Image
-                          src={item.image[0]}
+                          src={ item.image[0]}
                           alt={item.name}
                           w={20}
                           h={20}
@@ -78,14 +78,14 @@ const PaymentSuccess = () => {
                         />
                       </Td>
                       <Td>{item.name}</Td>
-                      <Td>${item.price}</Td>
+                      <Td>₹ {item.price.toFixed(2)}</Td>
                       <Td>{item.quantity}</Td>
                     </Tr>
                   ))}
                 </Tbody>
               </Table>
             </Box>
-            <Text>Total Price: Rs {orderData.totalPrice}</Text>
+            <Text>Total Amount Paid: ₹ {orderData.totalPrice}</Text>
             <Text>Order Status: {orderData.orderStatus}</Text>
           </>
         )}

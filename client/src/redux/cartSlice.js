@@ -29,7 +29,7 @@ const cartSlice = createSlice({
       const newContactInfo = action.payload;
       state.contactInfo = newContactInfo;
       localStorage.setItem("orderAllDetails", JSON.stringify({ ...state }));
-      console.log("newContactInfoFRomRedux",newContactInfo,);
+      // console.log("newContactInfoFRomRedux",newContactInfo,);
     },
     setShippingInfo(state, action) {
       const newShippingInfo = action.payload;

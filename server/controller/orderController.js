@@ -5,13 +5,12 @@ const axios = require("axios");
 
 const newOrder = async (req, res) => {
   try {
-    const { contactInfo, shippingInfo, items, totalItems, amount } = req.body;
-    const floorAmount = Math.floor(amount);
+    const { contactInfo, shippingInfo, items, totalItems, totalPayableAmount } = req.body;
     // Create new order in Razorpay and get the order ID
     const razorpayOrder = await axios.post(
       "https://api.razorpay.com/v1/orders",
       {
-        amount: 2121 * 100, // Convert to paise
+        amount: totalPayableAmount * 100, // Convert to paise
         currency: "INR",
         payment_capture: 1,
       },
@@ -52,16 +51,12 @@ const newOrder = async (req, res) => {
         status: "Pending",
       },
       paidAt: null,
-      itemsPrice: 10000,
+      itemsPrice: totalPayableAmount,
       taxPrice: 0,
       shippingPrice: 0,
-      totalPrice: 10000,
+      totalPrice: totalPayableAmount,
       orderStatus: "Processing", // Initial status
     });
-
-    // Save order to database
-
-    // await order.save();
 
     const saveOrder = new Order(order);
     await saveOrder.save({ validateBeforeSave: false });
@@ -80,7 +75,9 @@ const handleRazorpayCallback = async (req, res) => {
     // Find the order using the Razorpay order ID
     const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
     if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+      return res
+        .status(404)
+        .json({ status: false, message: "Order not found" });
     }
 
     // Update order details
@@ -183,17 +180,21 @@ const getOrderByPayId = async (req, res) => {
 };
 const getmyOrder = async (req, res) => {
   try {
-    const order = await Order.find({ userId: req.userId });
+    const myOrders = await Order.find({ userId: req.userId });
 
-    if (!order) {
-      return res.json({ msg: "order not Found" });
+    if (!myOrders || myOrders.length === 0) {
+      return res.status(404).json({ msg: "No orders found" });
     }
 
-    res.status(200).json({
+    const paidOrders = myOrders.filter(
+      (order) => order.paymentInfo.status === "Paid"
+    );
+
+    return res.status(200).json({
       success: true,
       userName: req.user.firstName,
-      total_orders: order.length,
-      order,
+      total_orders: paidOrders.length,
+      orders: paidOrders,
     });
   } catch (error) {
     res.status(500).json({
@@ -202,6 +203,7 @@ const getmyOrder = async (req, res) => {
     });
   }
 };
+
 //for admin
 const getSingleOrder = async (req, res) => {
   try {
@@ -225,7 +227,8 @@ const getSingleOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   try {
-    const order = await Order.findOne({ razorpayOrderId: req.params.orderId });
+    const objectId = mongoose.Types.ObjectId(req.params.orderId);
+    const order = await Order.find({ razorpayOrderId: objectId });
     let updateStatus = req.body.orderStatus;
 
     if (!order) return res.send("Order not found with this Id");
@@ -245,7 +248,6 @@ const updateOrder = async (req, res) => {
     if (req.body.orderStatus === "Delivered") order.deliveredAt = Date.now();
 
     await order.save({ validateBeforeSave: false });
-    
 
     res.status(200).json({
       success: true,

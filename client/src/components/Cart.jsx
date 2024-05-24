@@ -19,7 +19,7 @@ function Cart() {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`)
       .then((response) => {
-        console.log("data:", response.data);
+        // console.log("data:", response.data);
         setData(response.data);
         calculateTotal(response.data.items);
         setTotalItemsCount(response.data.totalItems);
@@ -32,7 +32,7 @@ function Cart() {
   const calculateTotal = (cartItems) => {
     let totalAmount = 0;
     cartItems.forEach((item) => {
-      totalAmount += Math.ceil(item.price * 83.01) * item.quantity;
+      totalAmount += Math.ceil(item.price) * item.quantity;
     });
     setTotal(totalAmount);
   };
@@ -96,7 +96,7 @@ function Cart() {
     // console.log("selectedElem: ", productId);
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.delete(
+       await axios.delete(
         `${process.env.REACT_APP_HOST_URL}/user/cart/removeCartItems`,
         {
           data: {
@@ -104,7 +104,7 @@ function Cart() {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
 
       const updatedItems = data.items.filter(
         (item) => item.product_id !== productId
@@ -151,7 +151,7 @@ function Cart() {
               <div className="w-2/5 pl-4">
                 <h2
                   onClick={() => {
-                    console.log(elem);
+                    // console.log(elem);
                   }}
                   className="text-xl text-gray-700"
                 >
@@ -178,7 +178,7 @@ function Cart() {
               </div>
               <div className="w-1/5 text-right">
                 <p className="text-lg text-gray-600">
-                  ₹ {Math.ceil(elem.price * 83.01) * elem.quantity}
+                  ₹ {Math.ceil(elem.price) * elem.quantity}
                 </p>
               </div>
               <button

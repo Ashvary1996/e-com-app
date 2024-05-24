@@ -55,9 +55,7 @@ export const signUp =
 
         dispatch(userSlice.actions.setUserID(response.data.user._id));
         toast.success("Sign Up Successful");
-        // Cookies.set("ecom_token_Byash", response.data.token, { expires: 7 });
-        // dispatch(userSlice.actions.setCokies(response.data.token));
-        console.log("Successfully Registered: ", response.data.user);
+        // console.log("Successfully Registered: ", response.data.user);
         navigate("/home");
       } else {
         dispatch(userSlice.actions.setDetail(response.data.detail));
@@ -103,18 +101,29 @@ export const logIn =
       setDetail("");
     }, 5000);
   };
-export const logoutFn =
-  (setUser ) => async (dispatch) => {
-    try {
-      axios.defaults.withCredentials = true;
-      await axios.post(`${process.env.REACT_APP_HOST_URL}/user/logout`);
+export const logoutFn = (setUser, toast) => async (dispatch) => {
+  try {
+    axios.defaults.withCredentials = true;
+    const response = await axios.post(
+      `${process.env.REACT_APP_HOST_URL}/user/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
+    if (response.data.success) {
       console.log("Logged Out Successfully");
+
       setUser("");
-      
-    } catch (error) {
-      console.error("Error logging out:", error);
+      toast.info("USER Logged-Out");
+    } else {
+      console.error("Failed to log out:", response.data.msg);
     }
-  };
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
+};
 export const cartItemFn = (userId, setCartNumber) => async (dispatch) => {
   axios.defaults.withCredentials = true;
   axios
@@ -127,7 +136,7 @@ export const cartItemFn = (userId, setCartNumber) => async (dispatch) => {
       // console.log("responseCart", response.data.totalItems);
     })
     .catch((error) => {
-      console.error("Error fetching cart items:", error);
+      console.log("Error fetching cart items:", error);
     });
 };
 

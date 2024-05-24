@@ -1,48 +1,25 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import addToCart from "../config/addToCartFn";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ItemDescription() {
   const location = useLocation();
   const { itemId } = useParams();
-  const [item, setItem] = useState([]);
-
-  // const [cartNumber, setCartNumber] = useState("");
-  // const [cartNumber, setCartNumber] = useState("");
+  const [item, setItem] = useState({});
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const userID = location.state;
-  console.log("userID", location);
+  const userID = location.state?.userID;
+  // const userName = location.state?.userName || "Anonymous";
 
   const navigate = useNavigate();
 
-  // console.log(itemId);
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_HOST_URL}/product/singleProduct/${itemId}`)
-      .then((response) => {
-        // console.log(response.data);
-        setItem(response.data.item);
-      })
-      .catch((err) => {
-        console.error("Error fetching item:", err);
-      });
-  }, [itemId, userID]);
-
-  // const totalItems = useSelector((state) => state.user.totalCartNumber);
-  // const userName = useSelector((state) => state.user.userName);
-  // const userId = useSelector((state) => state.user.userId);
-
-  // console.log("totalItemsFetchFromREDUX", totalItems);
-  // console.log("userIdFromREDUX", userId);
-  // console.log("userNameFromREDUX", userName);
   const openModal = (index) => {
     setIsModalOpen(true);
     setSelectedImageIndex(index);
@@ -64,21 +41,111 @@ function ItemDescription() {
     );
   };
 
+  const handleReviewSubmit = useCallback(() => {
+    if (!rating || !comment) {
+      toast.error("Rating and comment are required");
+      return;
+    }
+    axios.defaults.withCredentials = true;
+    axios
+      .put(`${process.env.REACT_APP_HOST_URL}/product/review`, {
+        productId: itemId,
+        rating,
+        comment,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setRating(0);
+          setComment("");
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((err) => {
+        toast.error("Error submitting review");
+        console.error("Error submitting review:", err);
+      });
+  }, [rating, comment, itemId]);
+
+  const removeReview = useCallback(
+    async (reviewID) => {
+      axios.defaults.withCredentials = true;
+      await axios
+        .delete(
+          `${process.env.REACT_APP_HOST_URL}/product/removeProductReview`,
+          {
+            data: { productId: itemId, reviewId: reviewID },
+          }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            toast.success(response.data.msg);
+            setItem((prevItem) => ({
+              ...prevItem,
+              reviews: prevItem.reviews.filter(
+                (review) => review._id !== reviewID
+              ),
+            }));
+          } else {
+            toast.error(response.data.msg);
+          }
+        })
+        .catch((err) => {
+          toast.error("Error in deleting review");
+          console.error("Error in deleting review:", err);
+        });
+    },
+    [itemId]
+  );
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_HOST_URL}/product/singleProduct/${itemId}`)
+      .then((response) => {
+        setItem(response.data.item);
+      })
+      .catch((err) => {
+        console.error("Error fetching item:", err);
+      });
+  }, [itemId, handleReviewSubmit, removeReview]);
+
+  // const editReview = async (productId, reviewId, newRating, newComment) => {
+  //   try {
+  //     const response = await axios.put(
+  //       "http://localhost:5000/product/editProductReview",
+  //       {
+  //         productId,
+  //         reviewId,
+  //         newRating,
+  //         newComment,
+  //       }
+  //     );
+
+  //     if (response.data.success) {
+  //       console.log("updated");
+  //     } else {
+  //       console.log("error");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in editing review:", error);
+  //   }
+  // };
+
   return (
     <div className="bg-gray-100 p-5">
       <ToastContainer />
-      <div className="flex justify-between ">
+      <div className="flex justify-between">
         <button onClick={() => navigate("/home")}>
-          <IoIosArrowRoundBack />
+          <IoIosArrowRoundBack size={24} />
         </button>
         <button onClick={() => navigate("/cart")} disabled={!userID}>
           <FiShoppingCart
-            className={`mr-1sm:w-[40px] bg-white rounded-e-2xl  ${
+            className={`mr-1 sm:w-[40px] bg-white rounded-e-2xl ${
               !userID ? "cursor-not-allowed" : ""
             }`}
-            size={"23px"}
+            size={23}
           />
-          {/* {cartNumber} */}
         </button>
       </div>
       <div className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden md:flex">
@@ -93,31 +160,33 @@ function ItemDescription() {
           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
             {item.category}
           </div>
-          <h1>
-            {item.title} ({item.brand}){" "}
+          <h1 className="mt-1 text-lg leading-tight font-medium text-black">
+            {item.title} ({item.brand})
           </h1>
+          <i className="text-sm"> ("product id" : {item._id}) </i>
           <p className="mt-2 text-gray-500">{item.description}</p>
           <div className="mt-4">
             <span className="text-teal-600 text-md font-semibold">
-              $ {item.price}
+              ₹ {Math.ceil(item.price)}
             </span>
-            <span className="text-sm text-gray-600">
-              ({item.discountPercentage}% off)
-            </span>
+            {item.discountPercentage !== 0 && (
+              <span className="text-sm text-gray-600">
+                ({item.discountPercentage}% off)
+              </span>
+            )}
           </div>
           <div className="mt-4">
             <span className="text-sm text-gray-600">
-              Rating: {item.rating} / 5
+              Rating: {item.ratings} / 5
             </span>
           </div>
           <div className="mt-4">
             <button
-              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  ${
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
                 !userID ? "cursor-not-allowed" : ""
               }`}
               onClick={() => {
                 const title = item.title;
-                // addToCart(itemId, title, userID, toast);
                 addToCart(null, itemId, title, userID, null, null, toast);
               }}
               disabled={!userID}
@@ -127,23 +196,119 @@ function ItemDescription() {
           </div>
         </div>
       </div>
+
       {/* Images Div */}
-      <div className="max-w-4xl mx-auto px-4 py-5 sm:px-6 lg:px-8">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          More Images
-        </h3>
-        <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {(item.images || []).map((image, index) => (
-            <img
-              key={index}
-              className="object-cover rounded-lg cursor-pointer hover:opacity-75"
-              src={image}
-              alt={`Product Img ${index + 1}`}
-              onClick={() => openModal(index)}
-            />
-          ))}
+      {item.images && item.images.length > 0 && (
+        <div className="max-w-4xl mx-auto px-4 py-5 sm:px-6 lg:px-8">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            More Images
+          </h3>
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {item.images.map((image, index) => (
+              <img
+                key={index}
+                className="object-cover rounded-lg cursor-pointer hover:opacity-75"
+                src={image}
+                alt={`Product Img ${index + 1}`}
+                onClick={() => openModal(index)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Reviews */}
+      <section className="bg-gray-100 p-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold mb-4">Reviews</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            {item.reviews && item.reviews.length > 0 ? (
+              item.reviews.map((review, i) => (
+                <div key={i} className="bg-white p-4 rounded-lg shadow-md ">
+                  <p>
+                    <strong>Rating:</strong> {review.rating}
+                  </p>
+                  <p>
+                    <strong>Comment:</strong> {review.comment}
+                  </p>
+                  <p>
+                    <strong>By:</strong>{" "}
+                    {review.name ? review.name : "Anonymous"}
+                  </p>
+                  {userID === review.userID && (
+                    <div className="mt-2">
+                      {/* <button
+                        onClick={() => editReview()}
+                        className="bg-yellow-500 text-white py-1 px-3 rounded mr-2"
+                      >
+                        Edit
+                      </button> */}
+                      <button
+                        className="bg-red-500 text-white py-1 px-3 rounded"
+                        onClick={() => {
+                          let reviewID = review._id;
+                          console.log(review);
+                          removeReview(reviewID);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <i className="">
+                No reviews yet. Be the first to review this product.
+              </i>
+            )}
+          </div>
+        </div>
+
+        {/* Review Form */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Add Your Review</h2>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="rating"
+            >
+              Rating {rating}
+            </label>
+            <input
+              id="rating"
+              type="range"
+              min={0}
+              max={5}
+              step={0.1}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="comment"
+            >
+              Comment
+            </label>
+            <textarea
+              id="comment"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            ></textarea>
+          </div>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={handleReviewSubmit}
+          >
+            Submit Review
+          </button>
+        </div>
+      </section>
+
       {/* Modal for fullscreen image view */}
       {isModalOpen && (
         <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-black bg-opacity-75 z-50">
@@ -156,10 +321,10 @@ function ItemDescription() {
               &times;
             </span>
 
-            {/* Previous Arrow update this with icon in future*/}
+            {/* Previous Arrow */}
             <div
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-white text-4xl z-50 hover:text-green-400 "
-              style={{ paddingLeft: "15px", paddingRight: "15px" }} // Padding for easier click
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-white text-4xl z-50 hover:text-green-400"
+              style={{ paddingLeft: "15px", paddingRight: "15px" }}
               onClick={showPrevious}
             >
               &lt;
@@ -176,7 +341,7 @@ function ItemDescription() {
 
             {/* Next Arrow */}
             <div
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-white text-4xl z-50 hover:text-green-400 "
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-white text-4xl z-50 hover:text-green-400"
               style={{ paddingLeft: "15px", paddingRight: "15px" }}
               onClick={showNext}
             >

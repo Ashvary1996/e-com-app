@@ -10,12 +10,16 @@ const EditProfile = () => {
 
   // console.log(location);
 
-  const user = useMemo(() => location.state.userData || {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-  }, [location.state.userData]);
+  const user = useMemo(
+    () =>
+      location.state.userData || {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+      },
+    [location.state.userData]
+  );
 
   const userID = user._id;
 
@@ -79,6 +83,8 @@ const EditProfile = () => {
     <div className="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Edit User</h2>
+      <i>id : {userID}</i>
+      <br />
       <form onSubmit={handleFormSubmit}>
         <div className="mb-4">
           <label htmlFor="firstName" className="block text-gray-700">

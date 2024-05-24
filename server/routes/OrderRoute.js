@@ -20,9 +20,9 @@ route.get("/getAllOrders", isAuthenticatedUser, getAllOrders);
 
 route.get("/getOrderByPayId/:payId", getOrderByPayId);
 
-route.get("/getmyOrders", isAuthenticatedUser, getmyOrder);
+route.get("/getmyOrders", isAuthenticatedUser, getmyOrder);  
 //admin
-route.get(
+route.get( 
   "/admin/getSingleOrder/:orderId",
   isAuthenticatedUser,
   getSingleOrder

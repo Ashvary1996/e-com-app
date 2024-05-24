@@ -45,7 +45,7 @@ const getSingleProduct = async (req, res) => {
   try {
     let item = await Product.findOne({
       _id: req.params.itemId,
-    }); 
+    });
 
     if (!item) {
       return res.json({ message: "Item not found" });
@@ -104,6 +104,10 @@ const apiProducts = async (req, res) => {
       "https://dummyjson.com/products?limit=100"
     );
     const items = response.data.products;
+
+    // const response = await axios.get("https://fakestoreapi.com/products");
+    // const items = response.data ;
+
     const allProduct = [];
 
     for (const elem of items) {
@@ -111,63 +115,100 @@ const apiProducts = async (req, res) => {
         title: elem.title,
         description: elem.description,
         category: elem.category,
-        brand: elem.brand,
-        thumbnail: elem.thumbnail,
-        price: elem.price,
+        price: elem.price * 83.31,
         discountPercentage: elem.discountPercentage,
-        // rating: elem.reviews.rating,
+        thumbnail: elem.thumbnail,
+        ratings: elem.rating,
+        stock: elem.stock,
+        brand: elem.brand,
+        reviews: elem.reviews,
+        numOfReviews: elem.reviews.length,
         images: elem.images,
       });
 
-      const savedProduct = await product.save();
+      const savedProduct = await product.save({ validateBeforeSave: false });
       allProduct.push(savedProduct);
     }
 
-    res.json({ status: "products added Successfully", array: allProduct });
+    res.json({
+      status: "products added Successfully",
+      numbers: allProduct.length,
+      array: allProduct,
+    });
   } catch (error) {
     console.error("Error fetching data:", error);
-    res.status(500).json({ error: "Failed to Add products", err: error });
+    res
+      .status(500)
+      .json({ error: "Failed to Add products", err: error.message });
   }
 };
 
 const productReview = async (req, res) => {
-  const { rating, comment, productId } = req.body;
+  try {
+    const { rating, comment, productId } = req.body;
 
-  const review = {
-    userID: req.userId,
-    name: req.user.firstName,
-    rating: Number(rating),
-    comment,
-  };
+    if (!rating || !comment || !productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating, comment, and product ID are required",
+      });
+    }
+    if (!req.userId || !req.user || !req.user.firstName) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated",
+      });
+    }
+    const review = {
+      userID: req.userId,
+      name: req.user.firstName,
+      rating: Number(rating),
+      comment,
+    };
 
-  const product = await Product.findById(productId);
-  const isReview = product.reviews.find(
-    (review) => review.userID.toString() === req.userId.toString()
-  );
+    const product = await Product.findById(productId);
 
-  if (isReview) {
-    isReview.rating = rating;
-    isReview.comment = comment;
-  } else {
-    product.reviews.push(review);
-    product.numOfReviews = product.reviews.length;
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const existingReview = product.reviews.find(
+      (r) => r.userID === req.userId.toString()
+    );
+
+    if (existingReview) {
+      existingReview.rating = review.rating;
+      existingReview.comment = review.comment;
+    } else {
+      product.reviews.push(review);
+      product.numOfReviews = product.reviews.length;
+    }
+
+    const sumOfRatings = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+    product.ratings = sumOfRatings / product.reviews.length;
+
+    await product.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      message: "Review added successfully",
+      productId,
+      details: product.reviews,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while processing the review",
+      error: error.message,
+      userID: req.userId,
+      name: req.user.firstName,
+    });
   }
-
-  let sumOfRatings = 0;
-  product.reviews.forEach((elem) => {
-    sumOfRatings += elem.rating;
-  });
-  product.ratings = sumOfRatings / product.reviews.length;
-
-  await product.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    success: true,
-    message: "Review Added Successfully",
-    productId: productId,
-    details: product.reviews,
-  });
 };
+
 // get all reviews of a single product
 const getProductReviews = async (req, res) => {
   try {
@@ -181,7 +222,7 @@ const getProductReviews = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      productTitle:product.title,
+      productTitle: product.title,
       reviews: product.reviews,
     });
   } catch (error) {
@@ -242,6 +283,51 @@ const removeProductReview = async (req, res) => {
     });
   }
 };
+//
+
+ 
+const editProductReview = async (req, res) => {
+  try {
+    const { productId, reviewId, newRating, newComment } = req.body;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ success: false, msg: "Product not found" });
+    }
+
+    const reviewToUpdate = product.reviews.find(
+      (review) => review._id.toString() === reviewId
+    );
+    if (!reviewToUpdate) {
+      return res.status(404).json({ success: false, msg: "Review not found" });
+    }
+
+    reviewToUpdate.rating = newRating;
+    reviewToUpdate.comment = newComment;
+
+    
+    let sumOfRatings = 0;
+    product.reviews.forEach((review) => {
+      sumOfRatings += review.rating;
+    });
+    product.ratings = sumOfRatings / product.reviews.length;
+
+    await product.save({ validateBeforeSave: false });
+
+    return res.status(200).json({
+      success: true,
+      msg: "Review updated successfully",
+      reviews: product.reviews,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+      errMsg: error.message,
+    });
+  }
+};
 
 module.exports = {
   createProduct,
@@ -253,4 +339,5 @@ module.exports = {
   productReview,
   getProductReviews,
   removeProductReview,
+  editProductReview
 };

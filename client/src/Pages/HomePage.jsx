@@ -23,6 +23,7 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState(0);
   const [laoding, setLoading] = useState(true);
+
   const dispatch = useDispatch();
   ///////////////////////
 
@@ -30,6 +31,7 @@ function HomePage() {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/getallProducts`)
       .then((response) => {
+        // console.log(response.data.items[0]);
         setItems(response.data.items);
         setDisplayItems(response.data.items);
         setLoading(false);
@@ -38,7 +40,7 @@ function HomePage() {
   };
 
   const logout = () => {
-    dispatch(logoutFn(setUser));
+    dispatch(logoutFn(setUser, toast));
   };
   useEffect(() => {
     let updatedItems = [...items];
@@ -47,8 +49,8 @@ function HomePage() {
       updatedItems.sort((a, b) => {
         if (sortBy === "price_LtH") return a.price - b.price;
         if (sortBy === "price_HtL") return b.price - a.price;
-        if (sortBy === "rating_LtH") return a.rating - b.rating;
-        if (sortBy === "rating_HtL") return b.rating - a.rating;
+        if (sortBy === "rating_LtH") return a.ratings - b.ratings;
+        if (sortBy === "rating_HtL") return b.ratings - a.ratings;
         return 0;
       });
     }
@@ -130,8 +132,17 @@ function HomePage() {
     fetchProducts();
   }, [fetchCartItems]);
 
-  const [isHovered, setIsHovered] = useState(false);
-  const toggleHover = () => setIsHovered(!isHovered);
+  useEffect(() => {
+    if (!user) {
+      setUserData(null);
+      setUserRole("user");
+      setuserID(null);
+      setCartNumber(0);
+    }
+  }, [user]);
+  // const [isHovered, setIsHovered] = useState(false);
+  // const toggleHover = () => setIsHovered(!isHovered);
+  
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // const toggleDropdown = () => {
@@ -202,7 +213,7 @@ function HomePage() {
       {/* ////////////////////  Main Div /////////////////// */}
       {laoding ? <Loader /> : null}
 
-      <main className="productsDisplay">
+      <main className="productsDisplay pb-16">
         <div className="flex flex-wrap gap-5 mt-5 justify-center">
           {displayItems.map((elem, i) => (
             <div
@@ -222,13 +233,13 @@ function HomePage() {
                 </p>
                 <p className="font-mono text-sm  ">{elem.brand}</p>
                 <p className="font-sans text-lg font-medium">
-                  ₹ {Math.ceil(elem.price * 83.01)}
+                  ₹ {Math.ceil(elem.price)}
                 </p>
 
                 <div className="description-container h-16 overflow-hidden mb-2">
                   <p className="font-thin pdesc text-sm">{elem.description}</p>
                 </div>
-                <p className="text-sm">Rating: {Number(elem.rating)}</p>
+                <p className="text-sm">Rating: {Number(elem.ratings)}</p>
                 <button
                   className={`${
                     !userID
@@ -249,7 +260,7 @@ function HomePage() {
                       toast
                     );
 
-                    console.log("Items Details: ", elem);
+                    // console.log("Items Details: ", elem);
                   }}
                 >
                   Add to Cart
@@ -262,41 +273,32 @@ function HomePage() {
 
       {/* /////////////////// Footer  //////////////////// */}
 
-      <footer
-        onMouseEnter={toggleHover}
-        onMouseLeave={toggleHover}
-        className={`transition-all duration-300 ${
-          isHovered ? "fixed inset-x-0 bottom-0" : "relative"
-        } bg-white shadow-md`}
-      >
-        <div className="paginationDiv flex justify-center space-x-4 py-1  ">
-          <p
-            onClick={() => {
-              if (currentPage > 1) handlePrevPage();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            className={`cursor-pointer ${
-              currentPage === 1
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-black hover:text-teal-600"
-            }`}
-          >
-            {"<"} Previous
-          </p>
+      <footer className="fixed bottom-0  w-full bg-white shadow-md border-2">
+        <div className="paginationDiv   flex justify-center space-x-4 py-1">
+          {currentPage > 1 && (
+            <p
+              onClick={() => {
+                handlePrevPage();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="text-black font-medium cursor-pointer hover:text-teal-600"
+            >
+              {"<"} Previous
+            </p>
+          )}
           <p className="text-black font-medium">{currentPage}</p>
-          <p
-            onClick={() => {
-              if (currentPage * itemsPerPage < items.length) handleNextPage();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            className={`cursor-pointer ${
-              currentPage * itemsPerPage >= items.length
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-black hover:text-teal-600"
-            }`}
-          >
-            Next {">"}
-          </p>
+          {displayItems.length === itemsPerPage &&
+            items.length > currentPage * itemsPerPage && (
+              <p
+                onClick={() => {
+                  handleNextPage();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="text-black font-medium cursor-pointer hover:text-teal-600"
+              >
+                Next {">"}
+              </p>
+            )}
         </div>
       </footer>
 

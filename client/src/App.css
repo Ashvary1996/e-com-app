@@ -182,14 +182,14 @@ input::-webkit-inner-spin-button {
   background-color: #3e8e41;
 }
 /* Footer  */
-.paginationDiv {
-  width: 30%;
+/* .paginationDiv {
+  width: 80%;
   margin: auto;
   display: flex;
   justify-content: space-around;
   border: 1px solid gray;
   margin-top: 10px;
-}
+} */
 
 /* /////////////////////////// */
 /* /////////////////////////// */

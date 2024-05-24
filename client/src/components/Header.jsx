@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../items/logo.png";
 import { RiMenuSearchLine } from "react-icons/ri";
 import { FiShoppingCart } from "react-icons/fi";
- 
 
 function Header({
   user,
@@ -69,7 +68,11 @@ function Header({
                       })
                     }
                   >
-                    Edit Profile
+                    View / Edit Profile
+                  </p>
+                  <p>
+                   
+                    <Link to="/user/order">My Orders</Link>
                   </p>
                   <p onClick={logoutFn}> Log-out</p>
                   {/* <p>Help</p> */}

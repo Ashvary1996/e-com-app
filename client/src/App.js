@@ -29,6 +29,8 @@ import AllOrders from "./components/adminFolder/AllOrders";
 import UpdateOrders from "./components/adminFolder/UpdateOrders";
 import EditProduct from "./components/adminFolder/EditProduct";
 import EditProfile from "./components/EditProfile";
+import UserOrder from "./components/UserOrder";
+import PaymentFailed from "./components/PaymentFailed";
 
 function App() {
   function BreadcrumbControlled() {
@@ -99,6 +101,11 @@ function App() {
               <Route path="allMembers" element={<AllMembers />} />
               <Route path="editProfile" element={<EditProfile />} />
             </Route>
+            <Route path="/user/order" element={<UserOrder />}></Route>
+            <Route
+              path="user/order/paymentFailed"
+              element={<PaymentFailed />}
+            ></Route>
           </Routes>
         </Router>
       </ChakraProvider>
