@@ -7,7 +7,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ItemDescription() {
+function ItemDescription() { 
   const location = useLocation();
   const { itemId } = useParams();
   const [item, setItem] = useState({});
@@ -70,11 +70,11 @@ function ItemDescription() {
         }
         console.error("Error submitting review:", err);
       });
-  }, [rating, comment, itemId]);
+  }, [rating, comment, itemId,userID]); 
 
   const removeReview = useCallback(
     async (reviewID) => {
-      axios.defaults.withCredentials = true;
+      axios.defaults.withCredentials = true; 
       await axios
         .delete(
           `${process.env.REACT_APP_HOST_URL}/product/removeProductReview`,

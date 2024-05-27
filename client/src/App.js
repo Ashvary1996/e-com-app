@@ -12,7 +12,6 @@ import Forgotpass from "./components/Forgotpass";
 import ResetPass from "./components/ResetPass";
 import Cart from "./components/Cart";
 import ItemDescription from "./components/ItemDescription";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Breadcrumb from "./components/Breadcrumb";
 import CheckOutSteps from "./components/CheckOutSteps";
