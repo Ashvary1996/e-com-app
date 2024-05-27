@@ -35,7 +35,6 @@ import PaymentFailed from "./components/PaymentFailed";
 function App() {
   function BreadcrumbControlled() {
     const location = useLocation();
-
     const pathsToHideBreadcrumb = ["/login", "/signup", "/home", "/"];
     const shouldHideBreadcrumb = pathsToHideBreadcrumb.includes(
       location.pathname
@@ -46,8 +45,6 @@ function App() {
   return (
     <div className="App">
       <ChakraProvider>
-        <ToastContainer closeOnClick id="myContainer" />
-
         <Router>
           <BreadcrumbControlled />
           <Routes>

@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-// import { removeToken, removeUserID } from "../config/authTokenUser";
 import Loader from "../components/Loader";
 import Header from "../components/Header";
 import { ToastContainer, toast } from "react-toastify";
@@ -22,16 +21,14 @@ function HomePage() {
   const itemsPerPage = 28;
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState(0);
-  const [laoding, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
-  ///////////////////////
 
   const fetchProducts = () => {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/getallProducts`)
       .then((response) => {
-        // console.log(response.data.items[0]);
         setItems(response.data.items);
         setDisplayItems(response.data.items);
         setLoading(false);
@@ -42,6 +39,7 @@ function HomePage() {
   const logout = () => {
     dispatch(logoutFn(setUser, toast));
   };
+
   useEffect(() => {
     let updatedItems = [...items];
 
@@ -58,26 +56,23 @@ function HomePage() {
     if (filterBy) {
       updatedItems = updatedItems.filter((item) => item.brand === filterBy);
     }
-    ///////////////////////////////////////
 
-    // Filtering items based on search query
     if (searchQuery) {
-      updatedItems = updatedItems.filter(
-        (item) =>
-          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.brand.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      updatedItems = updatedItems.filter((item) => {
+        const title = item.title?.toLowerCase() || ""; 
+        const brand = item.brand?.toLowerCase() || ""; 
+        return (
+          title.includes(searchQuery.toLowerCase()) ||
+          brand.includes(searchQuery.toLowerCase())
+        );
+      });
     }
-
-    /////////////// for pagination ////////////////////////
 
     const endIndex = currentPage * itemsPerPage;
     const startIndex = endIndex - itemsPerPage;
     const currentItems = updatedItems.slice(startIndex, endIndex);
 
     setDisplayItems(currentItems);
-
-    ///////////////////////////////////////
   }, [
     items,
     sortBy,
@@ -101,10 +96,10 @@ function HomePage() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
+
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
     setCurrentPage(1);
-    // console.log("searchQuery", searchQuery);
   };
 
   const fetchCartItems = useCallback(() => {
@@ -116,8 +111,6 @@ function HomePage() {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/home`, { withCredentials: true })
       .then((res) => {
-        // console.log(res.data);
-        // console.log(res.data.user.firstName);
         setUser(res.data.user.firstName);
         setuserID(res.data.user._id);
         setUserRole(res.data.user.role);
@@ -125,9 +118,8 @@ function HomePage() {
         if (res.data.user._id) {
           fetchCartItems();
         }
-        // console.log(userData);
       })
-      .catch((err) => console.log("PLease Log In to Get Access"));
+      .catch((err) => console.log("Please Log In to Get Access"));
 
     fetchProducts();
   }, [fetchCartItems]);
@@ -140,17 +132,9 @@ function HomePage() {
       setCartNumber(0);
     }
   }, [user]);
-  // const [isHovered, setIsHovered] = useState(false);
-  // const toggleHover = () => setIsHovered(!isHovered);
-  
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // const toggleDropdown = () => {
-  //   setIsDropdownOpen((prevIsDropdownOpen) => !prevIsDropdownOpen);
-  // };
   return (
     <div className="homePage">
-      {/* Header  */}
       <Header
         user={user}
         userData={userData}
@@ -161,120 +145,105 @@ function HomePage() {
         searchQuery={searchQuery}
       />
       <ToastContainer closeOnClick id="myContainer" />
-      {/* /////////////////////Sort and Filter with Reset filter option//////////////////////// */}
-      <div>
-        <div className="   flex justify-end">
-          {/* Sort dropdown */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-2 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-          >
-            <option value="">Sort By </option>
-            <option value="price_LtH">Price : Low to High</option>
-            <option value="price_HtL">Price : High to Low</option>
-            <option value="rating_LtH">Rating : Low to High</option>
-            <option value="rating_HtL">Rating : High to Low</option>
-            {/* Will Add more sorting options */}
-          </select>
-          {/* Filter dropdown */}
-          <select
-            value={filterBy}
-            onChange={(e) => setFilterBy(e.target.value)}
-            className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-          >
-            <option value="">Filter By</option>
-            <option value="Apple">Apple</option>
-            <option value="Samsung">Samsung </option>
-            <option value="OPPO">Oppo</option>
-            <option value="Huawei">Huawei</option>
-            <option value="HP Pavilion">HP Pavilion</option>
-            <option value="Infinix">Infinix</option>
-          </select>
-        </div>
-        {/*  */}
 
-        {/*  */}
-        {/* Button to reset filter */}
+      <div className="flex flex-wrap justify-end p-4 space-x-2">
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+        >
+          <option value="">Sort By</option>
+          <option value="price_LtH">Price: Low to High</option>
+          <option value="price_HtL">Price: High to Low</option>
+          <option value="rating_LtH">Rating: Low to High</option>
+          <option value="rating_HtL">Rating: High to Low</option>
+        </select>
+        <select
+          value={filterBy}
+          onChange={(e) => setFilterBy(e.target.value)}
+          className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+        >
+          <option value="">Filter By</option>
+          <option value="Apple">Apple</option>
+          <option value="Samsung">Samsung</option>
+          <option value="OPPO">Oppo</option>
+          <option value="Huawei">Huawei</option>
+          <option value="HP Pavilion">HP Pavilion</option>
+          <option value="Infinix">Infinix</option>
+        </select>
         {filterBy && (
-          <>
-            <p className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300">
-              Display Items : {displayItems.length}
-            </p>
-            <button
-              onClick={resetFilter}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-300"
-            >
-              Reset Filter
-            </button>
-          </>
+          <button
+            onClick={resetFilter}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-300"
+          >
+            Reset Filter
+          </button>
         )}
       </div>
-      {/* ////////////////////  Main Div /////////////////// */}
-      {laoding ? <Loader /> : null}
 
-      <main className="productsDisplay pb-16">
-        <div className="flex flex-wrap gap-5 mt-5 justify-center">
-          {displayItems.map((elem, i) => (
-            <div
-              key={i}
-              className="sProduct relative flex flex-col items-center"
-            >
-              <Link to={`/item/${elem._id}`} state={{ userID: userID }}>
-                <img
-                  className="w-full h-48 rounded-lg mb-3 scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
-                  src={elem.thumbnail}
-                  alt="Product img"
-                />
-              </Link>
-              <div className="sp2 text-center">
-                <p className={`font-semibold text-lg`}>
-                  {elem.title.slice(0, 30)}
-                </p>
-                <p className="font-mono text-sm  ">{elem.brand}</p>
-                <p className="font-sans text-lg font-medium">
-                  ₹ {Math.ceil(elem.price)}
-                </p>
-
-                <div className="description-container h-16 overflow-hidden mb-2">
-                  <p className="font-thin pdesc text-sm">{elem.description}</p>
+      {loading ? (
+        <Loader />
+      ) : (
+        <main className="productsDisplay pb-16">
+          <div className="flex flex-wrap gap-5 mt-5 justify-center">
+            {displayItems.map((elem, i) => (
+              <div
+                key={i}
+                className="sProduct relative flex flex-col items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-2"
+              >
+                <Link to={`/item/${elem._id}`} state={{ userID: userID }}>
+                  <img
+                    className="w-full h-48 rounded-lg mb-3 scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
+                    src={elem.thumbnail}
+                    alt="Product img"
+                  />
+                </Link>
+                <div className="sp2 text-center">
+                  <p className="font-semibold text-lg">
+                    {elem.title.slice(0, 30)}
+                  </p>
+                  <p className="font-mono text-sm">{elem.brand}</p>
+                  <p className="font-sans text-lg font-medium">
+                    ₹ {Math.ceil(elem.price)}
+                  </p>
+                  <div className="description-container h-16 overflow-hidden mb-2">
+                    <p className="font-thin pdesc text-sm">
+                      {elem.description}
+                    </p>
+                  </div>
+                  <p className="text-sm">Rating: {Number(elem.ratings)}</p>
+                  <button
+                    className={`${
+                      !userID
+                        ? "cursor-not-allowed bg-green-400 text-white"
+                        : "hover:bg-green-700 text-sm transition duration-300 ease-in-out bg-green-600 text-white"
+                    } px-4 py-2 rounded-md`}
+                    disabled={!userID}
+                    onClick={async () => {
+                      const itemId = elem._id;
+                      const title = elem.title;
+                      addToCart(
+                        elem,
+                        itemId,
+                        title,
+                        userID,
+                        user,
+                        fetchCartItems,
+                        toast
+                      );
+                    }}
+                  >
+                    Add to Cart
+                  </button>
                 </div>
-                <p className="text-sm">Rating: {Number(elem.ratings)}</p>
-                <button
-                  className={`${
-                    !userID
-                      ? "cursor-not-allowed bg-green-400 text-white"
-                      : "hover:bg-green-700 text-sm transition duration-300 ease-in-out bg-green-600 text-white"
-                  } px-4 py-2 rounded-md`}
-                  disabled={!userID}
-                  onClick={async () => {
-                    const itemId = elem._id;
-                    const title = elem.title;
-                    addToCart(
-                      elem,
-                      itemId,
-                      title,
-                      userID,
-                      user,
-                      fetchCartItems,
-                      toast
-                    );
-
-                    // console.log("Items Details: ", elem);
-                  }}
-                >
-                  Add to Cart
-                </button>
               </div>
-            </div>
-          ))}
-        </div>
-      </main>
+            ))}
+          </div>
+        </main>
+      )}
 
-      {/* /////////////////// Footer  //////////////////// */}
-
-      <footer className="fixed bottom-0  w-full bg-white shadow-md border-2">
-        <div className="paginationDiv   flex justify-center space-x-4 py-1">
+      <footer className="fixed bottom-0 w-full bg-white shadow-md border-t">
+        <div className="paginationDiv flex justify-center space-x-4 py-1">
           {currentPage > 1 && (
             <p
               onClick={() => {
@@ -301,8 +270,6 @@ function HomePage() {
             )}
         </div>
       </footer>
-
-      {/* ///////////////////////////////////////////// */}
     </div>
   );
 }

@@ -67,23 +67,22 @@ const AllOrders = () => {
     : filteredOrders;
 
   return (
-    <div className="container mx-auto px-4 sm:px-8">
+    <div className="container mx-auto p-4">
       <div className="py-8">
-        <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
-          <h2 className="text-2xl leading-tight">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold mb-2 sm:mb-0">
             Orders: {data.total_orders}
           </h2>
-
-          <div className="text-end flex items-center">
+          <div className="flex items-center mt-4 sm:mt-0">
             <input
               type="text"
               placeholder="Search..."
-              className="block w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 mr-4 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full sm:w-64 px-4 py-2 mr-4 mb-2 sm:mb-0 bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <select
-              className="block w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full sm:w-36 px-4 py-2 rounded bg-white border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
             >
@@ -95,35 +94,59 @@ const AllOrders = () => {
             </select>
           </div>
         </div>
-        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-          <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <div className="table-container">
             <table className="min-w-full leading-normal">
               <thead>
                 <tr>
-                  <th>S.no</th>
+                  <th className="px-4 py-2 border-b border-gray-200">S.no</th>
                   <th
                     onClick={() => sortOrders("createdAt")}
-                    className="cursor-pointer"
+                    className="px-4 py-2 cursor-pointer border-b border-gray-200"
                   >
                     Created At
                   </th>
-                  <th>Order ID</th>
-                  <th>User ID</th>
-                  <th>Total Price</th>
-                  <th>Order Status</th>
-                  <th>Payment Status</th>
+                  <th className="px-4 py-2 border-b border-gray-200">
+                    Order ID
+                  </th>
+                  <th className="px-4 py-2 border-b border-gray-200">
+                    User ID
+                  </th>
+                  <th className="px-4 py-2 border-b border-gray-200">
+                    Total Price
+                  </th>
+                  <th className="px-4 py-2 border-b border-gray-200">
+                    Order Status
+                  </th>
+                  <th className="px-4 py-2 border-b border-gray-200">
+                    Payment Status
+                  </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-gray-50">
                 {searchedOrders.map((order, i) => (
-                  <tr key={order.razorpayOrderId}>
-                    <td>{i + 1}</td>
-                    <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td>{order.razorpayOrderId}</td>
-                    <td>{order.userId}</td>
-                    <td>{order.totalPrice}</td>
-                    <td>{order.orderStatus}</td>
-                    <td>{order.paymentInfo.status}</td>
+                  <tr key={order.razorpayOrderId} className="hover:bg-gray-400 ">
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {i + 1}
+                    </td> 
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {order.razorpayOrderId}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {order.userId}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {order.totalPrice}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {order.orderStatus}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-200">
+                      {order.paymentInfo.status}
+                    </td>
                   </tr>
                 ))}
               </tbody>

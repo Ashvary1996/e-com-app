@@ -2,9 +2,11 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import logInValidation from "../validation/logInValidationSchema";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { logIn } from "../redux/userSlice";
+
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function LogInPage() {
   const [detail, setDetail] = useState("");
@@ -12,11 +14,12 @@ function LogInPage() {
   const signUpFormRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.user.userId);
-  const tokenCookie = useSelector((state) => state.user.token);
-
-  console.log("userId : ", userId);
-  console.log("token : ", tokenCookie);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+  // console.log("userId : ", userId);
+  // console.log("token : ", tokenCookie);
 
   const initialValues = {
     email: "",
@@ -27,31 +30,10 @@ function LogInPage() {
       signUpFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
-  // const submitForm = async (values) => {
-  //   await axios
-  //     .post("http://localhost:5000/user/login", values)
-  //     .then((response) => {
-  //       if (response.data.success === true) {
-  //         setToken(response.data.token);
-  //         setUserID(response.data.user._id);
-  //         navigate("/home");
-  //       } else {
-  //         setDetail(response.data.detail);
-  //         if (response.data.detail == "Logged In Failed / Wrong Password") {
-  //           toast.warn("Wrong Credentials");
-  //         }
-  //         setForgot(true);
-  //       }
-  //     })
-  //     .catch((err) => console.log("error in sending data", err));
-
-  //   setTimeout(() => {
-  //     setDetail("");
-  //   }, 5000);
-  // };
 
   return (
     <div ref={signUpFormRef} className="signUpFormDiv p-10">
+      <ToastContainer closeOnClick id="myContainer" />
       <Formik
         initialValues={initialValues}
         validationSchema={logInValidation}
@@ -82,12 +64,29 @@ function LogInPage() {
               </div>
               <div className="fieldDiv">
                 <label htmlFor="password">Password </label>
-                <Field
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="password"
-                />
+                <div className="flex bg-white rounded">
+                  <Field
+                    id="password"
+                    name="password"
+                    type={isPasswordVisible ? "text" : "password"}
+                    placeholder="Password"
+                    maxLength="15"
+                    className="w-full px-3 py-2   "
+                  />
+
+                  <button
+                    id="togglePassword"
+                    type="button"
+                    className="   p-2 relative  rounded-r-lg"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {isPasswordVisible ? (
+                      <ViewIcon color="black" />
+                    ) : (
+                      <ViewOffIcon color="black" />
+                    )}
+                  </button>
+                </div>
                 <ErrorMessage name="password">
                   {(emsg) => <div className="error ">{emsg}</div>}
                 </ErrorMessage>

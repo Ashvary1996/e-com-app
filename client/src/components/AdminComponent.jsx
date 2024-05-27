@@ -100,7 +100,7 @@ function AdminComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-500 text-white">
+    <div className="min-h-screen bg-slate-500 text-white ">
       <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row bg-slate-600 rounded-lg shadow-lg overflow-hidden">
           <aside className="w-full lg:w-1/4 p-6 bg-slate-700 lg:bg-slate-600">

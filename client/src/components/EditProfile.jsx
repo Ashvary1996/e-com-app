@@ -57,16 +57,17 @@ const EditProfile = () => {
       const linkbyRole =
         user.role === "admin" ? "updateProfileByAdmin" : "updateProfile";
 
-      const res = await axios.put(`http://localhost:5000/user/${linkbyRole}`, {
-        // const res = await axios.put(
-        //   `http://localhost:5000/user/updateProfileByAdmin`,  {
-        userID,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        role: user.role,
-      });
+      const res = await axios.put(
+        `${process.env.REACT_APP_HOST_URL}/user/${linkbyRole}`,
+        {
+          userID,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          role: user.role,
+        }
+      );
       if (res.data.success === true) {
         toast.success("Profile Updated Successfully");
         setTimeout(() => {

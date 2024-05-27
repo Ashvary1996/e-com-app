@@ -28,9 +28,7 @@ const UpdateOrders = () => {
     console.log(orderId, newStatus);
     try {
       await axios.put(
-        `${process.env.REACT_APP_HOST_URL}/order/admin/updateOrder/${String(
-          orderId
-        )}`,
+        `${process.env.REACT_APP_HOST_URL}/order/admin/updateOrder/${orderId}`,
         {
           orderStatus: newStatus,
         }
@@ -44,7 +42,7 @@ const UpdateOrders = () => {
         )
       );
     } catch (error) {
-      console.log(error);
+      console.log("orderId : ", orderId, error);
     }
   };
 
@@ -63,61 +61,61 @@ const UpdateOrders = () => {
   return (
     <div className="container mx-auto px-4 sm:px-8">
       <div className="py-8">
-        <h2 className="text-2xl leading-tight">Update Orders</h2>
-        <div className="my-4">
+        <h2 className="text-2xl leading-tight mb-4">Update Orders</h2>
+        <div className="mb-4">
           <input
             type="text"
             placeholder="Search by Order ID, User ID or Status"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            className=" text-black block w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-          <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
-            <table className="min-w-full leading-normal">
-              <thead>
-                <tr>
-                  <th>S.no</th>
-                  <th>Order ID</th>
-                  <th>Date</th>
-                  <th>Total Price</th>
-                  <th>Order Status</th>
-                  <th>Payment Status</th>
-                  <th>Actions</th>
+        <div className="overflow-x-auto">
+          <table className="min-w-full leading-normal bg-slate-100">
+            <thead>
+              <tr>
+                <th className="px-4 py-3">S.no</th>
+                <th className="px-4 py-3">Order ID</th>
+                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Total Price</th>
+                <th className="px-4 py-3">Order Status</th>
+                <th className="px-4 py-3">Payment Status</th>
+                <th className="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.map((order, i) => (
+                <tr key={order.razorpayOrderId}>
+                  <td className="px-4 py-3">{i + 1}</td>
+                  <td className="px-4 py-3">{order.razorpayOrderId}</td>
+                  <td className="px-4 py-3">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3">{order.totalPrice}</td>
+                  <td className="px-4 py-3">{order.orderStatus}</td>
+                  <td className="px-4 py-3">{order.paymentInfo.status}</td>
+                  <td className="px-4 py-3">
+                    {order.orderStatus !== "Delivered" && (
+                      <select
+                        value={order.orderStatus}
+                        onChange={(e) =>
+                          handleStatusChange(order.razorpayOrderId, e)
+                        }
+                        className="block w-full bg-white border border-gray-300 hover:border-gray-500 px-2 py-1 pr-2 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                      >
+                        <option value={order.orderStatus}>
+                          {order.orderStatus}
+                        </option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
+                    )}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order, i) => (
-                  <tr key={order.razorpayOrderId}>
-                    <td>{i + 1}</td>
-                    <td>{order.razorpayOrderId}</td>
-                    <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td>{order.totalPrice}</td>
-                    <td>{order.orderStatus}</td>
-                    <td>{order.paymentInfo.status}</td>
-                    <td>
-                      {order.orderStatus !== "Delivered" && (
-                        <select
-                          value={order.orderStatus}
-                          onChange={(e) =>
-                            handleStatusChange(order.razorpayOrderId, e)
-                          }
-                          className="block w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                          <option value={order.orderStatus}>
-                            {order.orderStatus}
-                          </option>
-                          <option value="Shipped">Shipped</option>
-                          <option value="Delivered">Delivered</option>
-                        </select>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

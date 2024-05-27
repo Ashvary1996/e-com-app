@@ -12,14 +12,12 @@ function Cart() {
 
   const [total, setTotal] = useState(0);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  // const userID = getUserID();
 
   const fetchCartItems = useCallback(() => {
     axios.defaults.withCredentials = true;
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/user/cart/getCartItems`)
       .then((response) => {
-        // console.log("data:", response.data);
         setData(response.data);
         calculateTotal(response.data.items);
         setTotalItemsCount(response.data.totalItems);
@@ -52,16 +50,13 @@ function Cart() {
   };
 
   const updateItemsLocal = (productId, quantity) => {
-    // console.log("updateItemsLocal", productId);
     const updatedItems = data.items.map((item) => {
       if (item.product_id === productId) {
-        // console.log("selectedItem", item);
         return { ...item, quantity: quantity };
       }
       return item;
     });
 
-    // setData({ ...data, items: updatedItems });
     setData((prevData) => ({ ...prevData, items: updatedItems }));
     calculateTotal(updatedItems);
     setTotalItemsCount(
@@ -72,8 +67,6 @@ function Cart() {
   const inc = (elem) => {
     const productId = elem.product_id;
     const quantity = elem.quantity;
-    // console.log(productId);
-    // console.log(quantity);
     updateItemsLocal(productId, quantity + 1);
     updateItems(productId, quantity + 1);
   };
@@ -86,6 +79,7 @@ function Cart() {
       updateItems(productId, quantity - 1);
     }
   };
+
   useEffect(() => {
     fetchCartItems();
   }, [fetchCartItems]);
@@ -93,18 +87,13 @@ function Cart() {
   const removeCartItem = async (elem) => {
     const productId = elem.product_id;
 
-    // console.log("selectedElem: ", productId);
-    axios.defaults.withCredentials = true;
     try {
-       await axios.delete(
+      await axios.delete(
         `${process.env.REACT_APP_HOST_URL}/user/cart/removeCartItems`,
         {
-          data: {
-            productId: productId,
-          },
+          data: { productId: productId },
         }
       );
-      // console.log(response.data);
 
       const updatedItems = data.items.filter(
         (item) => item.product_id !== productId
@@ -122,24 +111,24 @@ function Cart() {
   const navigate = useNavigate();
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <ToastContainer stacked closeOnClick />
-      <div className="flex justify-between">
-        <p onClick={() => navigate("/home")} className="cursor-pointer">
-          <b>{"<--"}</b>
-        </p>
+      <ToastContainer closeOnClick />
+      <div className="flex justify-between items-center">
+        <button onClick={() => navigate("/home")} className="text-blue-500">
+          &larr; Back to Home
+        </button>
         <h3 className="text-lg font-semibold text-gray-800">
-          Your Cart has "{totalItemsCount}" items
+          Your Cart: {totalItemsCount} items
         </h3>
       </div>
-      <div className="flex w-full">
-        <div className="w-full">
-          <h1 className="text-2xl font-bold text-gray-900 my-4">Your Items</h1>
-          {data.items.map((elem, i) => (
+      <div className="my-4">
+        {data.items.length > 0 ? (
+          data.items.map((elem, i) => (
             <div
               key={i}
-              className="flex justify-between items-center border-b-2 border-gray-200 p-4"
+              className="flex flex-col sm:flex-row justify-between items-center border-b-2 border-gray-200 p-4"
             >
-              <div className="w-1/5">
+              <p className="text-2xl mr-2 font-medium">{i+1}</p>
+              <div className="w-full sm:w-1/5">
                 <Link to={`/item/${elem.product_id}`}>
                   <img
                     src={elem.thumbnail}
@@ -148,20 +137,13 @@ function Cart() {
                   />
                 </Link>
               </div>
-              <div className="w-2/5 pl-4">
-                <h2
-                  onClick={() => {
-                    // console.log(elem);
-                  }}
-                  className="text-xl text-gray-700"
-                >
-                  {elem.title}
-                </h2>
+              <div className="w-full sm:w-2/5 mt-2 sm:mt-0 sm:pl-4">
+                <h2 className="text-xl text-gray-700">{elem.title}</h2>
               </div>
-              <p className="w-1/5 text-lg text-gray-600">
-                ₹ {Math.ceil(elem.price * 83.01)}
+              <p className="w-full sm:w-1/5 text-lg text-gray-600 mt-2 sm:mt-0 ">
+                ₹ {Math.ceil(elem.price)}
               </p>
-              <div className="w-1/5 flex items-center justify-between">
+              <div className="w-full sm:w-1/5 flex items-center justify-between mt-2 sm:mt-0">
                 <button
                   className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 transition-colors"
                   onClick={() => dec(elem)}
@@ -176,24 +158,24 @@ function Cart() {
                   +
                 </button>
               </div>
-              <div className="w-1/5 text-right">
-                <p className="text-lg text-gray-600">
+              <div className="w-full sm:w-1/5 text-right mt-2 sm:mt-0">
+                <p className="text-lg text-gray-600 mr-2">
                   ₹ {Math.ceil(elem.price) * elem.quantity}
                 </p>
               </div>
               <button
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
-                onClick={() => {
-                  removeCartItem(elem);
-                }}
+                className="mt-2 sm:mt-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={() => removeCartItem(elem)}
               >
                 Remove
               </button>
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600">Your cart is empty.</p>
+        )}
       </div>
-      <div className="sticky bottom-0 bg-white shadow-lg p-4 flex justify-between">
+      <div className="sticky bottom-0 bg-white shadow-lg p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold text-gray-900">
           Total Amount: ₹ {total}
         </h1>

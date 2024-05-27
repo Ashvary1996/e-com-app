@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const CartModel = require("../model/cartSchema");
 const Order = require("../model/orderSchema");
 const Product = require("../model/productSchema");
@@ -5,7 +6,8 @@ const axios = require("axios");
 
 const newOrder = async (req, res) => {
   try {
-    const { contactInfo, shippingInfo, items, totalItems, totalPayableAmount } = req.body;
+    const { contactInfo, shippingInfo, items, totalItems, totalPayableAmount } =
+      req.body;
     // Create new order in Razorpay and get the order ID
     const razorpayOrder = await axios.post(
       "https://api.razorpay.com/v1/orders",
@@ -227,8 +229,7 @@ const getSingleOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   try {
-    const objectId = mongoose.Types.ObjectId(req.params.orderId);
-    const order = await Order.find({ razorpayOrderId: objectId });
+    const order = await Order.findOne({ razorpayOrderId: req.params.orderId });
     let updateStatus = req.body.orderStatus;
 
     if (!order) return res.send("Order not found with this Id");

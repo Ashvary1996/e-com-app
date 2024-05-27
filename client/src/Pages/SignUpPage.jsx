@@ -2,21 +2,25 @@ import React, { useEffect, useRef, useState } from "react";
 import { Form, Field, Formik, ErrorMessage } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import signUpValidation from "../validation/signUpValidationSchema";
- 
 import logo from "../items/logo.png";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../redux/userSlice";
+
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function SignUpPage() {
   const [detail, setDetail] = useState("");
   const navigate = useNavigate();
   const signUpFormRef = useRef(null);
   const dispatch = useDispatch();
-
   const tokenCookie = useSelector((state) => state.user.token);
-  console.log("tokenCokie",tokenCookie); 
-  let initialValues = {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+  const initialValues = {
     firstName: "",
     lastName: "",
     email: "",
@@ -25,32 +29,6 @@ function SignUpPage() {
     checkbox: false,
   };
 
-  // let submitForm = async (values, resetForm) => {
-  //   const data = {
-  //     firstName: values.firstName,
-  //     lastName: values.lastName,
-  //     email: values.email,
-  //     password: values.password,
-  //     phoneNumber: values.phoneNumber,
-  //   };
-
-  //   await axios
-  //     .post("http://localhost:5000/user/signup", data)
-  //     .then((response) => {
-  //       if (response.data.success === true) {
-  //         setDetail("");
-  //         console.log("Succefully Registerd : ", response.data.user);
-  //         // resetForm({ values: "" });
-  //         toast.success("Sign Up Successfully");
-  //         // navigate("/home");
-  //       } else {
-  //         setDetail(response.data.detail);
-  //         console.log(response.data.detail);
-  //       }
-  //     })
-  //     .catch((err) => console.log("error in saving/sending data", err));
-  // };
-
   useEffect(() => {
     if (window.innerWidth < 768 && signUpFormRef.current) {
       signUpFormRef.current.scrollIntoView({ behavior: "smooth" });
@@ -58,30 +36,30 @@ function SignUpPage() {
   }, []);
 
   return (
-    <div className="mainSignUpDiv flex flex-wrap min-h-screen bg-gradient-to-r from-teal-300 to-blue-500">
-      <div className="welcomeDiv w-full lg:w-1/3 p-5 lg:p-10 bg-white shadow-lg rounded-lg m-auto">
-        <h1 className="text-2xl font-bold mb-4">
+    <div className="mainSignUpDiv flex flex-col lg:flex-row min-h-screen bg-gradient-to-r from-teal-300 to-blue-500">
+      <div className="welcomeDiv w-full lg:w-2/3 lg:mr-2    p-5 lg:p-10 bg-white shadow-lg rounded-lg m-auto">
+        <h1 className="text-2xl font-bold mb-4 text-center lg:text-left break-words">
           Welcome to Your Next Shopping Adventure!
         </h1>
-        <img className="mx-auto my-4" src={logo} alt="Logo" />
-        <div className="text-sm text-gray-600 italic mb-4">
+        <img className="mx-auto my-4 w-32 h-32" src={logo} alt="Logo" />
+        <div className="text-sm text-gray-600 italic mb-4 text-center lg:text-left">
           Get ready to embark on an exhilarating shopping journey like no other!
           <p className="inline-block text-red-700">Legion e-Com</p> isn't just
           an e-commerce platform; it's your first-class ticket to an endless
           array of exclusive products, jaw-dropping deals, and personalized
           shopping experiences that cater to your unique style and preferences.
         </div>
-        <div className="text-sm text-gray-600 italic">
-          <p className="inline-block underline"> Sign up today</p> and transform
+        <div className="text-sm text-gray-600 italic text-center lg:text-left">
+          <p className="inline-block underline">Sign up today</p> and transform
           your shopping routine into an exciting adventure!
         </div>
       </div>
+      <ToastContainer closeOnClick id="myContainer" />
       <div
         ref={signUpFormRef}
-        className="signUpFormDiv w-full lg:w-2/3 flex justify-center items-center p-5"
+        className="signUpFormDiv w-full lg:w-2/3  flex justify-center items-center p-1 "
       >
         <Formik
-          className="w-full max-w-xl"
           initialValues={initialValues}
           validationSchema={signUpValidation}
           onSubmit={(values, { resetForm }) => {
@@ -93,114 +71,146 @@ function SignUpPage() {
               phoneNumber: values.phoneNumber,
             };
             dispatch(signUp(userData, setDetail, toast, navigate));
-
-            // submitForm(values, resetForm);
           }}
         >
           {({ values }) => (
-            <Form className="regForm w-[100%]  bg-white p-8 shadow-lg rounded-lgw-full max-w-lg  rounded-lg">
-              <h1 className="heading  text-xl font-semibold mb-6">
-                Create A new account
+            <Form className="fform w-full  max-w-xl  p-2 shadow-lg rounded-lg">
+              <h1 className="text-xl font-extrabold mb-6 text-center  lg:text-center  text-white ">
+                Create A New Account
               </h1>
-              <div className="fieldDiv">
-                <label htmlFor="firstName">First Name </label>
+              <div className="mb-2">
+                <label htmlFor="firstName" className="block text-gray-700">
+                  First Name
+                </label>
                 <Field
                   id="firstName"
                   name="firstName"
                   type="text"
-                  placeholder="firstName"
-                  autoFocus
-                />{" "}
-                <ErrorMessage name="firstName">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
-                <label htmlFor="lastName">Last Name </label>
+                  placeholder="First Name"
+                  className="w-full px-3 py-2 border rounded"
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+              <div className="mb-2">
+                <label htmlFor="lastName" className="block text-gray-700">
+                  Last Name
+                </label>
                 <Field
                   id="lastName"
                   name="lastName"
                   type="text"
-                  placeholder="lastName"
+                  placeholder="Last Name"
+                  className="w-full px-3 py-2 border rounded"
                 />
-                <ErrorMessage name="lastName">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
+                <ErrorMessage
+                  name="lastName"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
-
-              <div className="fieldDiv">
-                <label htmlFor="email">E-mail </label>
+              <div className="mb-2">
+                <label htmlFor="email" className="block text-gray-700">
+                  E-mail
+                </label>
                 <Field
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="email address"
-                />{" "}
-                <ErrorMessage name="email">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
+                  placeholder="Email Address"
+                  className="w-full px-3 py-2 border rounded"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
-              <div className="fieldDiv">
-                <label htmlFor="phoneNumber">Phone Number </label>
+              <div className="mb-2">
+                <label htmlFor="phoneNumber" className="block text-gray-700">
+                  Phone Number
+                </label>
                 <Field
                   id="phoneNumber"
                   name="phoneNumber"
-                  type="Number"
-                  placeholder="mobile Number"
+                  type="text"
+                  placeholder="Mobile Number"
                   maxLength="10"
+                  className="w-full px-3 py-2 border rounded"
                 />
-                <ErrorMessage name="phoneNumber">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
-              </div>
-              <div className="fieldDiv">
-                <label htmlFor="password">Password </label>
-                <Field
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="password"
-                  maxLength="15"
+                <ErrorMessage
+                  name="phoneNumber"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
                 />
-                <ErrorMessage name="password">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
               </div>
-
-              <div className="fieldDiv">
-                <label className="checkbox label " htmlFor="checkbox">
-                  <Field
-                    name="checkbox"
-                    type="checkbox"
-                    className="checkbox mr-2    "
-                    value={values.toggle}
-                  />
-                  I agree to share my details.
+              <div className="mb-2 ">
+                <label htmlFor="password" className="block text-gray-700">
+                  Password
                 </label>
+                <div className="flex">
+                  <Field
+                    id="password"
+                    name="password"
+                    type={isPasswordVisible ? "text" : "password"}
+                    placeholder="Password"
+                    maxLength="15"
+                    className="w-full px-3 py-2 border rounded-l-md  "
+                  />
 
-                <ErrorMessage name="checkbox">
-                  {(emsg) => <div className="error ">{emsg}</div>}
-                </ErrorMessage>
+                  <button
+                    id="togglePassword"
+                    type="button"
+                    className="text-white rounded-r-sm p-2 relative bg-white"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {isPasswordVisible ? (
+                      <ViewIcon color="black" />
+                    ) : (
+                      <ViewOffIcon color="black" />
+                    )}
+                  </button>
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
-              <div className="mt-4">
+              <div className="mb-2 ">
+                <label for="checkbox" className="label flex ">
+                  <Field
+                    type="checkbox"
+                    name="checkbox"
+                    className=" ml-5 mr-10 w-4 justify-start hover:cursor-pointer "
+                  />
+                  <span class="text-white justify-center">
+                    I agree to share my details.
+                  </span>
+                </label>
+                <ErrorMessage
+                  name="checkbox"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+              <div className="mb-2">
                 <p className="text-red-700 text-sm">{detail}</p>
               </div>
-              <div>
-                <button
-                  className="w-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Sign-Up
-                </button>
-                <br />
-
-                <div className="mt-4 flex justify-between items-center text-sm overflow-hidden lg:overflow-visible">
-                  <p className="text-gray-300 ">Already a user?</p>
-                  <Link
-                    to="/login"
-                    className="text-amber-500 hover:underline transform hover:scale-150 transition-transform duration-200 mr-10 p-1"
-                  >
-                    Log-In
-                  </Link>
-                </div>
+              <button
+                className="w-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Sign-Up
+              </button>
+              <div className="mt-4 flex justify-between items-center text-sm">
+                <p className="text-gray-300">Already a user?</p>
+                <Link to="/login" className="text-amber-500 hover:underline">
+                  Log-In
+                </Link>
               </div>
             </Form>
           )}

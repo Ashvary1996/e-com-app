@@ -6,14 +6,15 @@ import { toast } from "react-toastify";
 function AllMembers() {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+
   const handleEdit = (id, user) => {
     // Implement edit functionality
     navigate("/user/admin/editProfile", { state: { userData: user } });
     console.log(`Edit user with id: ${id}`);
   };
-  /* eslint-disable no-restricted-globals */
+
   const handleDelete = async (id, user) => {
-    const isConfirmed = confirm(
+    const isConfirmed = window.confirm(
       `Are you sure you want to delete ${user.firstName}?`
     );
 
@@ -30,7 +31,7 @@ function AllMembers() {
       }
     }
   };
-  /* eslint-enable no-restricted-globals */
+
   const handleRoleChange = async (id, newRole) => {
     console.log(id, newRole);
     // Implement role change functionality
@@ -68,59 +69,77 @@ function AllMembers() {
   }, []);
 
   return (
-    <div className="container">
-      <h1>List of All Registered Members</h1>
-      <div className="table-responsive">
-        <table className="table table-bordered">
-          <thead>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">
+        List of All Registered Members
+      </h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
             <tr>
-              <th>#</th>
-              <th>Avatar</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Role</th>
-              <th>Sign Up Date</th>
-              <th>Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                #
+              </th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Phone Number
+              </th>
+              <th className="px-6 py-3 text-left   text-xs font-medium text-gray-500 uppercase tracking-wider  ">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Sign Up Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
-          <tbody>
-            {users.map((user, i) => (
+          <tbody className="bg-white divide-y divide-gray-200">
+            {users.map((user, index) => (
               <tr key={user._id}>
-                <td>{i + 1}</td>
-                <td>
-                  <img
-                    src={user.avatar.url}
-                    alt="Avatar"
-                    style={{ width: "50px", height: "50px" }}
-                  />
-                </td>
-                <td>
+                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+
+                <td className="px-6 py-4 whitespace-nowrap">
                   {user.firstName} {user.lastName}
                 </td>
-                <td>{user.email}</td>
-                <td>{user.phoneNumber}</td>
-                <td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {user.phoneNumber}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap relative">
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                    className=" p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200 w-24"
                   >
                     <option value={user.role}>{user.role}</option>
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
                   </select>
+                  <div className="absolute top-full left-0 -mt-2 bg-gray-200 px-2 py-1 rounded text-xs text-gray-700 opacity-0 hover:opacity-100 transition-opacity duration-200">
+                    {user.role}
+                  </div>
                 </td>
-                <td>{new Date(user.sign_up_Date).toLocaleDateString()}</td>
-                <td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {new Date(user.sign_up_Date).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap space-x-2">
                   <button
                     onClick={() => handleEdit(user._id, user)}
-                    className="btn btn-primary"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(user._id, user)}
-                    className="btn btn-danger"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >
                     Delete
                   </button>

@@ -9,11 +9,12 @@ const sendToken = (user, res, msg) => {
   const token = jwt.sign(payload, secret, { expiresIn: "1w" });
 
   const cookieOptions = {
-    // expiresIn: "7d",
-    expires: new Date(Date.now() + 9000000),
+    // expires: new Date(Date.now() + 9000000),
+    // expires: new Date(Date.now() + 60 * 60),
+    expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // Expire in Two Days
     httpOnly: true,
     secure: true, // Ensure this is true if using HTTPS
-    sameSite: 'None' // Important for cross-site cookies
+    sameSite: "None", // Important for cross-site cookies
   };
 
   res.cookie("token", token, cookieOptions);

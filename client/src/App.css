@@ -1,9 +1,4 @@
-.App {
-  text-align: center;
-}
-/* -------------------------- */
-
-/* -------------------------- */
+/* Loader */
 .loader {
   margin: auto;
   height: 200px;
@@ -11,8 +6,9 @@
   border: 3px solid red;
   border-radius: 50%;
   border-top-color: orange;
-  animation: loader 1s infinite; /*liner*/
+  animation: loader 1s infinite;
 }
+
 @keyframes loader {
   from {
     transform: rotate(0deg);
@@ -27,25 +23,42 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-/* /////////// /   Sign up Page css Starts  //////////////////// */
-.mainSignUpDiv > * {
-  /* Target direct children */
+
+/* SignUp Page */
+.mainSignUpDiv {
   transition: transform 1.5s;
+  padding: 1rem;
+  flex-grow: 1;
 }
 
 @media (max-width: 768px) {
   .mainSignUpDiv > * {
     transform: scale(0.95);
-    /* opacity: 0.7; */
+  }
+  .loginForm {
+    width: 100%;
   }
 }
+
 .signUpFormDiv {
   background-image: url("https://source.unsplash.com/random?commerce");
+  background-size: cover;
+  background-position: center;
   transition: all 1.5s ease;
-  height: 100vh; /* //This need to fix */
+  min-height: 100vh;
 }
+
 .welcomeDiv {
   transition: all 1.5s ease;
+}
+
+.fform {
+  background-color: rgba(26, 55, 52, 0.848);
+}
+
+.fform label {
+  color: rgb(210, 190, 190);
+  margin-bottom: 2px;
 }
 
 .regForm,
@@ -53,7 +66,6 @@ input::-webkit-inner-spin-button {
   background: #202123dc;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
 .heading {
@@ -73,13 +85,14 @@ input::-webkit-inner-spin-button {
 .fieldDiv input[type="email"],
 .fieldDiv input[type="Number"],
 .fieldDiv input[type="password"] {
-  width: 70%;
+  width: 100%;
   padding: 5px;
   border: 1px solid #ccd6dd;
   border-radius: 4px;
   text-align: center;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
+
 .fieldDiv input::selection {
   color: teal;
 }
@@ -89,38 +102,19 @@ input::-webkit-inner-spin-button {
   font-size: smaller;
 }
 
-/* /////////// /   Sign up Page css end  //////////////////// */
-/* 
-  
-
-/* ........................................................................// */
-/* /////////// /  HOME Page css Starts  //////////////////// */
-/*  */
-
-/* .homeHeader > div { */
-/* border: 2px solid red; */
-/* } */
-/* .productsDisplay{border: 2px solid red;} */
-.homePage {
-}
-/* .homePage::-webkit-scrollbar {
-  background-color: transparent;
-  width: 3px;
-}
-.homePage::-webkit-scrollbar-thumb {
-  background-color: teal;
-  border-radius: 20px;
-} */
+/* Home Page */
 .sProduct {
   height: 420px;
   width: 300px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 1.5px;
 }
+
 .sProduct > img {
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
 }
+
 .sProduct > img:hover {
   transform: scale(1.1);
 }
@@ -131,20 +125,18 @@ input::-webkit-inner-spin-button {
   height: 55px;
   font-size: 15px;
 }
+
 .pdesc::-webkit-scrollbar {
   background-color: transparent;
   width: 3px;
 }
+
 .pdesc::-webkit-scrollbar-thumb {
   background-color: teal;
   border-radius: 20px;
 }
-/* ////////////////////////////////// */
 
-/* .dropdown {
-  position: relative;
-  display: inline-block;
-} */
+/* Dropdown */
 .dropbtn {
   background-color: #04aa6d;
   color: white;
@@ -174,55 +166,8 @@ input::-webkit-inner-spin-button {
   cursor: pointer;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown-container:hover .dropdown-content,
+.dropdown-container:focus-within .dropdown-content,
+.dropdown-container .dropdown-content.show {
   display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
-}
-/* Footer  */
-/* .paginationDiv {
-  width: 80%;
-  margin: auto;
-  display: flex;
-  justify-content: space-around;
-  border: 1px solid gray;
-  margin-top: 10px;
-} */
-
-/* /////////////////////////// */
-/* /////////////////////////// */
-/* /////////// /  HOME Page css end  //////////////////// */
-
-/* ........................................................................// */
-
-/* Modal css for Single Item Details Div */
-
-/* ........................................................................// */
-
-.addForm,
-input {
-  text-align: center;
-  width: 80%;
-  margin: auto;
-}
-
-.allProductAdminTable,
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.allProductAdminTable,
-th,
-td {
-  border: 1px solid #dddddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.allProductAdminTable,
-th {
-  background-color: #f2f2f2;  
 }

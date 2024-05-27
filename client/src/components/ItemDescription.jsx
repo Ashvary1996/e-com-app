@@ -16,8 +16,7 @@ function ItemDescription() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const userID = location.state?.userID;
-  // const userName = location.state?.userName || "Anonymous";
-
+ 
   const navigate = useNavigate();
 
   const openModal = (index) => {
@@ -54,6 +53,7 @@ function ItemDescription() {
         comment,
       })
       .then((response) => {
+        // console.log(response.data);
         if (response.data.success) {
           toast.success(response.data.message);
           setRating(0);
@@ -63,7 +63,11 @@ function ItemDescription() {
         }
       })
       .catch((err) => {
-        toast.error("Error submitting review");
+        if (!userID) {
+          toast.error("Please Log-In to add Review.");
+        } else {
+          toast.error("Error submitting review");
+        }
         console.error("Error submitting review:", err);
       });
   }, [rating, comment, itemId]);
@@ -110,28 +114,7 @@ function ItemDescription() {
       });
   }, [itemId, handleReviewSubmit, removeReview]);
 
-  // const editReview = async (productId, reviewId, newRating, newComment) => {
-  //   try {
-  //     const response = await axios.put(
-  //       "http://localhost:5000/product/editProductReview",
-  //       {
-  //         productId,
-  //         reviewId,
-  //         newRating,
-  //         newComment,
-  //       }
-  //     );
-
-  //     if (response.data.success) {
-  //       console.log("updated");
-  //     } else {
-  //       console.log("error");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in editing review:", error);
-  //   }
-  // };
-
+ 
   return (
     <div className="bg-gray-100 p-5">
       <ToastContainer />
@@ -151,7 +134,7 @@ function ItemDescription() {
       <div className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden md:flex">
         <div className="md:flex-shrink-0">
           <img
-            className="h-48 w-full object-cover md:h-full md:w-48"
+            className="h-48 w-full object-cover md:h-full  md:w-48 sm:w-[100%]  "
             src={item.thumbnail}
             alt={item.title}
           />
@@ -237,12 +220,7 @@ function ItemDescription() {
                   </p>
                   {userID === review.userID && (
                     <div className="mt-2">
-                      {/* <button
-                        onClick={() => editReview()}
-                        className="bg-yellow-500 text-white py-1 px-3 rounded mr-2"
-                      >
-                        Edit
-                      </button> */}
+                       
                       <button
                         className="bg-red-500 text-white py-1 px-3 rounded"
                         onClick={() => {

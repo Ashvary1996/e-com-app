@@ -142,7 +142,7 @@ const apiProducts = async (req, res) => {
       .json({ error: "Failed to Add products", err: error.message });
   }
 };
-
+//add/update review
 const productReview = async (req, res) => {
   try {
     const { rating, comment, productId } = req.body;
@@ -159,12 +159,6 @@ const productReview = async (req, res) => {
         message: "User not authenticated",
       });
     }
-    const review = {
-      userID: req.userId,
-      name: req.user.firstName,
-      rating: Number(rating),
-      comment,
-    };
 
     const product = await Product.findById(productId);
 
@@ -176,35 +170,59 @@ const productReview = async (req, res) => {
     }
 
     const existingReview = product.reviews.find(
-      (r) => r.userID === req.userId.toString()
+      (r) => r.userID.toString() === req.userId.toString()
     );
 
     if (existingReview) {
-      existingReview.rating = review.rating;
-      existingReview.comment = review.comment;
+      existingReview.rating = Number(rating);
+      existingReview.comment = comment;
+
+      product.numOfReviews = product.reviews.length;
+
+      const sumOfRatings = product.reviews.reduce(
+        (sum, r) => sum + r.rating,
+        0
+      );
+      product.ratings = sumOfRatings / product.reviews.length;
+
+      await product.save({ validateBeforeSave: false });
+
+      return res.status(200).json({
+        success: true,
+        message: "Review updated successfully",
+        productId,
+        details: product.reviews,
+      });
     } else {
+      const review = {
+        userID: req.userId,
+        name: req.user.firstName,
+        rating: Number(rating),
+        comment,
+      };
       product.reviews.push(review);
       product.numOfReviews = product.reviews.length;
+
+      const sumOfRatings = product.reviews.reduce(
+        (sum, r) => sum + r.rating,
+        0
+      );
+      product.ratings = sumOfRatings / product.reviews.length;
+
+      await product.save({ validateBeforeSave: false });
+
+      return res.status(200).json({
+        success: true,
+        message: "Review added successfully",
+        productId,
+        details: product.reviews,
+      });
     }
-
-    const sumOfRatings = product.reviews.reduce((sum, r) => sum + r.rating, 0);
-    product.ratings = sumOfRatings / product.reviews.length;
-
-    await product.save({ validateBeforeSave: false });
-
-    res.status(200).json({
-      success: true,
-      message: "Review added successfully",
-      productId,
-      details: product.reviews,
-    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "An error occurred while processing the review",
       error: error.message,
-      userID: req.userId,
-      name: req.user.firstName,
     });
   }
 };
@@ -285,50 +303,6 @@ const removeProductReview = async (req, res) => {
 };
 //
 
- 
-const editProductReview = async (req, res) => {
-  try {
-    const { productId, reviewId, newRating, newComment } = req.body;
-
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ success: false, msg: "Product not found" });
-    }
-
-    const reviewToUpdate = product.reviews.find(
-      (review) => review._id.toString() === reviewId
-    );
-    if (!reviewToUpdate) {
-      return res.status(404).json({ success: false, msg: "Review not found" });
-    }
-
-    reviewToUpdate.rating = newRating;
-    reviewToUpdate.comment = newComment;
-
-    
-    let sumOfRatings = 0;
-    product.reviews.forEach((review) => {
-      sumOfRatings += review.rating;
-    });
-    product.ratings = sumOfRatings / product.reviews.length;
-
-    await product.save({ validateBeforeSave: false });
-
-    return res.status(200).json({
-      success: true,
-      msg: "Review updated successfully",
-      reviews: product.reviews,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      msg: "Internal Server Error",
-      errMsg: error.message,
-    });
-  }
-};
-
 module.exports = {
   createProduct,
   apiProducts,
@@ -339,5 +313,4 @@ module.exports = {
   productReview,
   getProductReviews,
   removeProductReview,
-  editProductReview
 };

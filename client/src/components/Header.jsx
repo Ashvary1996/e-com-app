@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../items/logo.png";
 import { RiMenuSearchLine } from "react-icons/ri";
@@ -13,83 +13,92 @@ function Header({
   searchQuery,
   role,
 }) {
-  const data = userData;
-  // console.log("userData from header,", data);
   const navigate = useNavigate();
+
   return (
-    <header className="homeHeader p-1 flex bg-teal-500 justify-between sticky top-0 z-50">
-      {/* <ToastContainer/> */}
-      <div className="w-[80px]">
-        <img className="rounded-full w-14 h-14 " src={logo} alt="logo" />
+    <header className="homeHeader p-2 bg-teal-500 flex justify-between items-center sticky top-0 z-50 w-full">
+      <div className="flex-shrink-0">
+        <img className="rounded-full w-14 h-14" src={logo} alt="logo" />
       </div>
-      {/* search bar */}
-      <div className="w-[40%] flex m-auto align-middle justify-center  first-letter:">
+
+      <div className="flex-grow mx-4 flex items-center">
         <input
-          className="w-[80%] h-10 text-center rounded-s-2xl  "
-          style={{ border: "none" }}
+          className="flex-grow h-10 px-4 rounded-l-2xl border-none text-center"
           type="text"
           placeholder="Search for Products/Brands"
           autoComplete="on"
           value={searchQuery}
           onChange={handleSearchChange}
         />
-
-        <button className="w-1/5 sm:w-[20%]   ">
-          <RiMenuSearchLine
-            size={"40px"}
-            className=" sm:w-[40px] bg-white rounded-e-2xl text-gray-500"
-          />
+        <button className="w-14 h-10 flex items-center justify-center bg-white rounded-r-2xl">
+          <RiMenuSearchLine size={24} className="text-gray-500" />
         </button>
       </div>
 
-      <div className="w-[20%] ">
-        <div className="flex justify-around mt-1 m-auto">
-          {role === "admin" && (
-            <Link
-              to={"/user/admin"}
-              className="bg-green-500 p-3   hover:bg-green-700 textlg"
-            >
-              Admin Menu
-            </Link>
-          )}
-          <div className="dropdown relative inline-block ">
-            <button className="dropbtn">{user ? user : "Guest"}</button>
-            <div className="dropdown-content">
-              {!user ? (
-                <p>
-                  <Link to="/login">Sign in</Link>
-                </p>
-              ) : (
-                <>
-                  <p
-                    onClick={() =>
-                      navigate("/user/editProfile", {
-                        state: { userData: data },
-                      })
-                    }
-                  >
-                    View / Edit Profile
-                  </p>
-                  <p>
-                   
-                    <Link to="/user/order">My Orders</Link>
-                  </p>
-                  <p onClick={logoutFn}> Log-out</p>
-                  {/* <p>Help</p> */}
-                </>
-              )}
-            </div>
+      <div className="flex items-center space-x-4">
+        {role === "admin" && (
+          <Link
+            to="/user/admin"
+            className="bg-green-500 p-2 text-lg font-medium rounded hover:bg-green-700  text-white"
+          >
+            Admin
+          </Link>
+        )}
+
+        <div className="dropdown-container relative">
+          <button
+            className={`dropdown-toggle p-2 text-lg font-medium rounded text-white bg-green-500   hover:bg-green-700     `}
+          >
+            {user ? user : "Guest"}
+          </button>
+
+          <div className="dropdown-content absolute right-0 mt-2 w-48 p-2 bg-slate-600 shadow-lg rounded z-50  ">
+            {!user ? (
+              <Link to="/login" className="block   hover:bg-gray-300">
+                Sign in
+              </Link>
+            ) : (
+              <>
+                <button
+                  onClick={() =>
+                    navigate("/user/editProfile", {
+                      state: { userData },
+                    })
+                  }
+                  className="block text-left  hover:bg-gray-300"
+                >
+                  View / Edit Profile
+                </button>
+                <Link
+                  to="/user/order"
+                  className="block  text-left hover:bg-gray-300"
+                >
+                  My Orders
+                </Link>
+                <Link
+                  onClick={logoutFn}
+                  className="block   text-left    hover:bg-gray-200"
+                >
+                  Log out
+                </Link>
+              </>
+            )}
           </div>
-          {user ? (
-            <Link to={"/cart"} className="p-3 bg-white flex items-center">
-              <FiShoppingCart
-                className=" mr-1sm:w-[40px] bg-white rounded-e-2xl  "
-                size={"23px"}
-              />
-              <sup className="text-base"> {cartNumber}</sup>
-            </Link>
-          ) : null}
         </div>
+
+        {user && (
+          <Link
+            to="/cart"
+            className="relative p-2 flex items-center bg-white rounded"
+          >
+            <FiShoppingCart size={24} className="text-gray-500" />
+            {cartNumber > 0 && (
+              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                {cartNumber}
+              </span>
+            )}
+          </Link>
+        )}
       </div>
     </header>
   );
