@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const CartModel = require("../model/cartSchema");
 const Order = require("../model/orderSchema");
 const Product = require("../model/productSchema");
@@ -58,7 +57,7 @@ const newOrder = async (req, res) => {
       shippingPrice: 0,
       totalPrice: totalPayableAmount,
       orderStatus: "Processing", // Initial status
-    });
+    }); 
 
     const saveOrder = new Order(order);
     await saveOrder.save({ validateBeforeSave: false });
@@ -101,9 +100,6 @@ const handleRazorpayCallback = async (req, res) => {
 
     await order.save();
 
-    // res.redirect(
-    //   `${process.env.CORS_ORIGIN}/paymentsuccess?reference=${razorpay_payment_id}`
-    // );
     res.status(200).json({
       success: true,
       message: "Order status updated successfully",

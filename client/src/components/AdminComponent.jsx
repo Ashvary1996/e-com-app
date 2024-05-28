@@ -9,8 +9,8 @@ function AdminComponent() {
     totalUsers: 0,
     totalAdmins: 0,
     totalOrdersPlaced: 0,
-    orderInProgress: 0, 
-    totalOrderDelivered: 0,
+    orderInProgress: 0,
+    totalOrderDelivered: 0, 
   });
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -165,7 +165,9 @@ function AdminComponent() {
                   </div>
                   <div
                     className={`p-4 bg-slate-600 rounded-lg shadow  ${
-                      data.orderInProgress > 0 ? "bg-orange-500" : "bg-orange-500"
+                      data.orderInProgress > 0
+                        ? "bg-orange-500"
+                        : "bg-orange-500"
                     }`}
                   >
                     <Link to={"/user/admin/updateOrder"}>

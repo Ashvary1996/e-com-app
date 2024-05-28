@@ -9,7 +9,7 @@ function ConfirmDetails() {
   const navigate = useNavigate();
   const { contactInfo, shippingInfo } = useSelector(
     (state) => state.cartForPayment
-  );
+  ); 
   // console.log(contactInfo, shippingInfo);
   const [orderItems, setOrderItems] = useState([]);
   const [totalPayableAmount, setTotalPayableAmount] = useState(0);

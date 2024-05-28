@@ -33,7 +33,7 @@ function ItemDescription() {
       prevIndex + 1 === item.images.length ? 0 : prevIndex + 1
     );
   };
-
+ 
   const showPrevious = () => {
     setSelectedImageIndex((prevIndex) =>
       prevIndex - 1 < 0 ? item.images.length - 1 : prevIndex - 1

@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 
 function Cart() {
   const [data, setData] = useState({
-    items: [],
+    items: [], 
     totalItems: 0,
     uniqueItems: 0,
   });

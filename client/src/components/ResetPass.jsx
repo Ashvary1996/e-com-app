@@ -15,7 +15,7 @@ function ResetPass() {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("newPassword"), null], "Passwords didn't match")
       .required("Confirm Password required!"),
-  });
+  }); 
   let initialValues = {
     newPassword: "",
     confirmPassword: "",

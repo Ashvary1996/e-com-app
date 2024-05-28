@@ -14,7 +14,7 @@ function PaymentFailed() {
       </p>
       <h2 className="text-xl font-bold text-center mb-4">Error Message:</h2>
       <p className="text-red-500 text-center">{"errMsg.error.message"}</p>{" "}
-      
+       
       <Link to="/home" className="block text-center mt-4 underline">
         Back to Home Page
       </Link>

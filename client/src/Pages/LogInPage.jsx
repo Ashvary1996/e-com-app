@@ -5,9 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { logIn } from "../redux/userSlice";
-
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-
+ 
 function LogInPage() {
   const [detail, setDetail] = useState("");
   const [forgot, setForgot] = useState(false);

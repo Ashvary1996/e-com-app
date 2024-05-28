@@ -7,7 +7,7 @@ import Header from "../components/Header";
 import { ToastContainer, toast } from "react-toastify";
 import addToCart from "../config/addToCartFn";
 import { cartItemFn, logoutFn } from "../redux/userSlice";
-
+ 
 function HomePage() {
   const [user, setUser] = useState();
   const [userData, setUserData] = useState();

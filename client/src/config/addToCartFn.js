@@ -1,5 +1,5 @@
 import axios from "axios";
-
+ 
 const addToCart = async (
   elem,
   itemId,

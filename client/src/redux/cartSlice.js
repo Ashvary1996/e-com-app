@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const orderData = localStorage.getItem("orderAllDetails")
   ? JSON.parse(localStorage.getItem("orderAllDetails"))
   : {};
-
+ 
 const initialState = {
   contactInfo: orderData.contactInfo || {
     firstName: "",
@@ -46,3 +46,4 @@ const cartSlice = createSlice({
 export const { setContactInfo, setShippingInfo, setOrderInfo } =
   cartSlice.actions;
 export default cartSlice.reducer;
+ 

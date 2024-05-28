@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-
+ 
 const validationSchema = Yup.object({
   firstName: Yup.string()
     .min(2, "FirstName name must be min 2 character.")
@@ -15,12 +15,11 @@ const validationSchema = Yup.object({
     .max(20, " password allowed only upto 20 characters")
     .required("Password Required !"),
   phoneNumber: Yup.number()
-    // .min(10, "Phone Number should be 10 characters")
+    .min(10, "Phone Number should be 10 characters")
     .required("Phone Number Required !"),
   checkbox: Yup.boolean().oneOf(
     [true],
     "You must accept the terms and conditions"
   ),
-  //   date: Yup.date().default(() => new Date()),
 });
 export default validationSchema;

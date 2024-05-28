@@ -9,8 +9,6 @@ const sendToken = (user, res, msg) => {
   const token = jwt.sign(payload, secret, { expiresIn: "1w" });
 
   const cookieOptions = {
-    // expires: new Date(Date.now() + 9000000),
-    // expires: new Date(Date.now() + 60 * 60),
     expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // Expire in Two Days
     httpOnly: true,
     secure: true, // Ensure this is true if using HTTPS
@@ -26,19 +24,6 @@ const sendToken = (user, res, msg) => {
     user,
     token,
   });
-  // res.cookie("usercookieOne", token, {
-  //   expires: new Date(Date.now() + 9000000),
-  //   httpOnly: true,
-  // });
-  // const result = {
-  //   success: true,
-  //   message: msg,
-  //   userId: user._id,
-  //   user,
-  //   token,
-  //   msg:"My custom msgggggggggggg"
-  // };
-  // res.status(200).json(result);
 };
 
 module.exports = { sendToken };

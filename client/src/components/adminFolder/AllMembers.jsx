@@ -6,13 +6,11 @@ import { toast } from "react-toastify";
 function AllMembers() {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
-
   const handleEdit = (id, user) => {
     // Implement edit functionality
     navigate("/user/admin/editProfile", { state: { userData: user } });
     console.log(`Edit user with id: ${id}`);
   };
-
   const handleDelete = async (id, user) => {
     const isConfirmed = window.confirm(
       `Are you sure you want to delete ${user.firstName}?`

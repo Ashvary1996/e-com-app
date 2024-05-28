@@ -9,7 +9,7 @@ function ContactInfo() {
   const dispatch = useDispatch();
   const contactInfo = useSelector((state) => state.cartForPayment.contactInfo);
   const { firstName, lastName, email, phoneNo } = contactInfo;
-
+ 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     dispatch(setContactInfo({ ...contactInfo, [name]: value }));

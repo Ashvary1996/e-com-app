@@ -14,7 +14,7 @@ function Header({
   role,
 }) {
   const navigate = useNavigate();
-
+ 
   return (
     <header className="homeHeader p-2 bg-teal-500 flex justify-between items-center sticky top-0 z-50 w-full">
       <div className="flex-shrink-0">

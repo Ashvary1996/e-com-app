@@ -6,7 +6,7 @@ function Breadcrumb() {
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
-    <nav
+    <nav 
       className="flex px-5 py-3 text-gray-700 border border-gray-200  bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
       aria-label="Breadcrumb"
     >

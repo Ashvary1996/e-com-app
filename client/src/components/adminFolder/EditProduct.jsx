@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
-import {   useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 function EditProduct() {
-  const location = useLocation(); 
+  const location = useLocation();
   const selectedProduct = location.state.selectedProduct || "";
-    const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState({
     title: selectedProduct.title || "",
@@ -46,7 +46,7 @@ function EditProduct() {
         (image) => image.trim() !== ""
       );
       const updatedProduct = { ...product, images: updatedImages };
-    //   console.log("updatedProduct", updatedProduct);
+      //   console.log("updatedProduct", updatedProduct);
       axios.defaults.withCredentials = true;
       const id = updatedProduct._id;
       const response = await axios.put(
@@ -63,7 +63,7 @@ function EditProduct() {
         console.log("response", response.data);
         setDetails("Product Updated Successfully");
         setTimeout(() => {
-            navigate("/user/admin/allProducts")
+          navigate("/user/admin/allProducts");
         }, 3000);
       } else {
         console.log(response.data.message);

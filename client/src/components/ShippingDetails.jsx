@@ -10,7 +10,7 @@ function ShippingDetails() {
   const shippingInfo = useSelector(
     (state) => state.cartForPayment.shippingInfo
   );
-
+ 
   const { address, city, pinCode, state } = shippingInfo;
 
   const handleInputChange = (e) => {

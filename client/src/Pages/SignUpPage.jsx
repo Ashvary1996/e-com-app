@@ -4,9 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import signUpValidation from "../validation/signUpValidationSchema";
 import logo from "../items/logo.png";
 import { ToastContainer, toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signUp } from "../redux/userSlice";
-
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function SignUpPage() {
@@ -14,7 +13,6 @@ function SignUpPage() {
   const navigate = useNavigate();
   const signUpFormRef = useRef(null);
   const dispatch = useDispatch();
-  const tokenCookie = useSelector((state) => state.user.token);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {

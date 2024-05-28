@@ -11,7 +11,7 @@ const AllProducts = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
-
+ 
   const fetchProducts = async () => {
     try {
       const response = await axios.get(

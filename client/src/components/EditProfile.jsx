@@ -9,7 +9,7 @@ const EditProfile = () => {
   const location = useLocation();
 
   // console.log(location);
-
+ 
   const user = useMemo(
     () =>
       location.state.userData || {

@@ -5,8 +5,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     userId: "",
-    userName: "",
-    // token: Cookies.get("ecom_token_Byash"),
+    userName: "", 
     token: "",
     role: "",
     detail: "",

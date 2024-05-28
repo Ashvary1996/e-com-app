@@ -7,7 +7,7 @@ import {
   StepIndicator,
   StepNumber,
   StepSeparator, 
-  StepStatus,
+  StepStatus, 
   StepTitle, 
   Stepper,
   useSteps,

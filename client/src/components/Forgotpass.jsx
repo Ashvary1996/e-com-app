@@ -9,7 +9,7 @@ function Forgotpass() {
   const [message, setMessage] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [loading, setLoading] = useState(false);
-
+ 
   const sendMail = async () => {
     setLoading(true);
     try {
