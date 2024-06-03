@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,7 +11,7 @@ const AllProducts = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
- 
+
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
@@ -29,6 +29,7 @@ const AllProducts = () => {
         `${process.env.REACT_APP_HOST_URL}/product/deleteProduct/${productId}`
       );
       console.log("deleted ", productId);
+      toast.warn("Product-Deleted Successfully");
       fetchProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -66,6 +67,7 @@ const AllProducts = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer/>
       <h1 className="text-2xl font-bold mb-4">Product List</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div className="w-full md:w-1/3 mb-4 md:mb-0">
@@ -116,7 +118,9 @@ const AllProducts = () => {
               <tr key={product._id} className="hover:bg-gray-200">
                 <td className="py-2 px-4 border-b">{i + 1}</td>
                 <td className="py-2 px-4 border-b">{product.title}</td>
-                <td className="py-2 px-4 border-b">₹ {product.price.toFixed(2)}</td>
+                <td className="py-2 px-4 border-b">
+                  ₹ {product.price.toFixed(2)}
+                </td>
                 <td className="py-2 px-4 border-b">{product.category}</td>
                 <td className="py-2 px-4 border-b">{product.stock}</td>
                 <td className="py-2 px-4 border-b">

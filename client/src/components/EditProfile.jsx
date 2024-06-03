@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+
 const EditProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   // console.log(location);
- 
+
   const user = useMemo(
     () =>
       location.state.userData || {
@@ -81,7 +80,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
+    <div className="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg text-black">
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Edit User</h2>
       <i>id : {userID}</i>
@@ -120,7 +119,7 @@ const EditProfile = () => {
           <input
             type="email"
             id="email"
-            name="email"
+            name="email" 
             value={formData.email}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { ToastContainer, toast } from "react-toastify";
 const UpdateOrders = () => {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
- 
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -49,6 +49,7 @@ const UpdateOrders = () => {
   const handleStatusChange = (orderId, e) => {
     const newStatus = e.target.value;
     updateOrderStatus(orderId, newStatus);
+    toast.info(`Order-Updated to ${newStatus}`);
   };
 
   const filteredOrders = orders.filter(
@@ -60,6 +61,7 @@ const UpdateOrders = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-8">
+      <ToastContainer />
       <div className="py-8">
         <h2 className="text-2xl leading-tight mb-4">Update Orders</h2>
         <div className="mb-4">

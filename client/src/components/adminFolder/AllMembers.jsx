@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
+import { ToastContainer, toast } from "react-toastify";
 function AllMembers() {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
@@ -21,8 +21,9 @@ function AllMembers() {
         await axios.delete(
           `${process.env.REACT_APP_HOST_URL}/user/admin/deleteUser/${id}`
         );
-        toast.success(`User ${user.firstName} deleted`);
+        toast.warn(`User ${user.firstName} deleted`);
         setUsers(users.filter((existingUser) => existingUser._id !== id));
+        
       } catch (error) {
         toast.error(`Error deleting user ${user.firstName}: ${error.message}`);
         console.error(`Error deleting user with id: ${id}`, error);
@@ -46,6 +47,7 @@ function AllMembers() {
           user._id === id ? { ...user, role: newRole } : user
         )
       );
+      toast.info(`Role Changed to ${newRole}`);
     } catch (error) {
       console.error(`Error updating role for user with id: ${id}`, error);
     }
@@ -68,6 +70,7 @@ function AllMembers() {
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       <h1 className="text-2xl font-semibold mb-4">
         List of All Registered Members
       </h1>

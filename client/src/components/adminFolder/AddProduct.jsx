@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
   
 function AddProduct() {
   const [product, setProduct] = useState({
@@ -58,6 +59,7 @@ function AddProduct() {
       );
 
       if (response.data.success === true) {
+        toast.success("Product Created Successfully")
         console.log("response", response.data);
         setDetails("Product Created Successfully");
       } else {
@@ -74,6 +76,7 @@ function AddProduct() {
 
   return (
     <div className="container mx-auto p-4 bg-slate-300 text-black">
+      <ToastContainer/>
       <div className="shadow-md rounded-lg p-6 ">
         <h2 className="text-2xl font-bold mb-4">Add Product</h2>
         <form onSubmit={handleSubmit} className="addForm">
@@ -259,7 +262,7 @@ function AddProduct() {
             </button>
           </div>
 
-          {details && <p className="text-red-500 mb-4">{details}</p>}
+          {details && <p className="text-blue-500 font-serif font-semibold mb-4">{details}</p>}
 
           <div className="flex items-center justify-between">
             <button

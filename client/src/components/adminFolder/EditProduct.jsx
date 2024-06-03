@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-
+import { ToastContainer, toast } from "react-toastify";
 function EditProduct() {
   const location = useLocation();
   const selectedProduct = location.state.selectedProduct || "";
@@ -61,6 +61,7 @@ function EditProduct() {
 
       if (response.data.success === true) {
         console.log("response", response.data);
+        toast.success("Product Updated Successfully");
         setDetails("Product Updated Successfully");
         setTimeout(() => {
           navigate("/user/admin/allProducts");
@@ -77,6 +78,7 @@ function EditProduct() {
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer/>
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
         <form onSubmit={handleSubmit} className="addForm">

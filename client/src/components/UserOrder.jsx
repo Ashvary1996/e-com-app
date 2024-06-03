@@ -5,7 +5,7 @@ function UserOrder() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDelivered, setShowDelivered] = useState(false);
- 
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -58,9 +58,10 @@ function UserOrder() {
           <h2>Current Orders</h2>
           {sortedOrders.map((order, i) => (
             <div key={order._id} className="bg-white p-6 rounded-lg shadow-md">
-              <div className="mb-4">
-                <h1>{i + 1}</h1>
-                <h2 className="text-xl font-semibold">Order ID: {order._id}</h2>
+              <div className="mb-4 m-auto">
+                <h1 className="text-center text-3xl font-semibold">{i + 1}</h1>
+                <h1 className="text-lg font-semibold mb-2">Order Details</h1>
+                <h2>Order ID: {order._id}</h2>
                 <p className="text-gray-600">
                   Ordered on: {new Date(order.createdAt).toLocaleDateString()}
                 </p>
@@ -69,10 +70,10 @@ function UserOrder() {
                   <span
                     className={` text-xl
                        ${
-                       order.orderStatus === "Delivered"
-                         ? "text-green-500 font-bold"
-                         : "text-orange-600 font-semibold"
-                     }`}
+                         order.orderStatus === "Delivered"
+                           ? "text-green-500 font-bold"
+                           : "text-orange-600 font-semibold"
+                       }`}
                   >
                     {order.orderStatus}
                   </span>

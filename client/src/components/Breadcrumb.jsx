@@ -4,10 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 function Breadcrumb() {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
-
+ 
   return (
-    <nav 
-      className="flex px-5 py-3 text-gray-700 border border-gray-200  bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+    <nav
+      className="sticky top-0 z-50 transition duration-300 ease-in-out` flex px-5 py-3 text-gray-700 border border-gray-200  bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
       aria-label="Breadcrumb"
     >
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

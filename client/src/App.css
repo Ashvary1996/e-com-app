@@ -7,6 +7,7 @@
   border-radius: 50%;
   border-top-color: orange;
   animation: loader 1s infinite;
+ 
 }
 
 @keyframes loader {
@@ -31,21 +32,13 @@ input::-webkit-inner-spin-button {
   flex-grow: 1;
 }
 
-@media (max-width: 768px) {
-  .mainSignUpDiv > * {
-    transform: scale(0.95);
-  }
-  .loginForm {
-    width: 100%;
-  }
-}
-
 .signUpFormDiv {
   background-image: url("https://source.unsplash.com/random?commerce");
   background-size: cover;
   background-position: center;
   transition: all 1.5s ease;
   min-height: 100vh;
+  text-align: center;
 }
 
 .welcomeDiv {
@@ -103,6 +96,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Home Page */
+ 
 .sProduct {
   height: 420px;
   width: 300px;
@@ -170,4 +164,35 @@ input::-webkit-inner-spin-button {
 .dropdown-container:focus-within .dropdown-content,
 .dropdown-container .dropdown-content.show {
   display: block;
+}
+
+.rbox {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .homeHeader {
+    margin: auto;
+    justify-content: center;
+    font-size: smaller;
+    display: flex;
+  }
+
+  .rbox {
+    display: flex !important;
+    width: 100%;
+    justify-content: flex-end;  
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainSignUpDiv > * {
+    transform: scale(0.95);
+  }
+  .loginForm {
+    width: 100%;
+  }
 }

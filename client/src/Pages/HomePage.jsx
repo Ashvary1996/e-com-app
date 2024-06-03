@@ -7,7 +7,8 @@ import Header from "../components/Header";
 import { ToastContainer, toast } from "react-toastify";
 import addToCart from "../config/addToCartFn";
 import { cartItemFn, logoutFn } from "../redux/userSlice";
- 
+import Carousel from "../components/Carousel";
+
 function HomePage() {
   const [user, setUser] = useState();
   const [userData, setUserData] = useState();
@@ -22,19 +23,34 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartNumber, setCartNumber] = useState(0);
   const [loading, setLoading] = useState(true);
-
+  const [dImgCurosol, setCurosol] = useState({ itemId: "", images: [] });
+  // console.log("dImgCurosol", dImgCurosol);
   const dispatch = useDispatch();
-
-  const fetchProducts = () => {
+  // console.log(items);
+  const fetchProducts = useCallback(() => {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/getallProducts`)
       .then((response) => {
+        console.log("Products Fetched");
         setItems(response.data.items);
         setDisplayItems(response.data.items);
         setLoading(false);
+        ///////////
+        const randomItems = [];
+        for (let i = 0; i < 5; i++) {
+          const randomIndex = Math.floor(
+            Math.random() * response.data.items.length
+          );
+          randomItems.push({
+            itemId: response.data.items[randomIndex]._id,
+            thumbnail: response.data.items[randomIndex].thumbnail,
+          });
+        }
+        setCurosol(randomItems);
+        ////////////
       })
       .catch((err) => console.log(err));
-  };
+  }, []);
 
   const logout = () => {
     dispatch(logoutFn(setUser, toast));
@@ -59,8 +75,8 @@ function HomePage() {
 
     if (searchQuery) {
       updatedItems = updatedItems.filter((item) => {
-        const title = item.title?.toLowerCase() || ""; 
-        const brand = item.brand?.toLowerCase() || ""; 
+        const title = item.title?.toLowerCase() || "";
+        const brand = item.brand?.toLowerCase() || "";
         return (
           title.includes(searchQuery.toLowerCase()) ||
           brand.includes(searchQuery.toLowerCase())
@@ -115,6 +131,7 @@ function HomePage() {
         setuserID(res.data.user._id);
         setUserRole(res.data.user.role);
         setUserData(res.data.user);
+
         if (res.data.user._id) {
           fetchCartItems();
         }
@@ -122,7 +139,7 @@ function HomePage() {
       .catch((err) => console.log("Please Log In to Get Access"));
 
     fetchProducts();
-  }, [fetchCartItems]);
+  }, [fetchCartItems, fetchProducts]);
 
   useEffect(() => {
     if (!user) {
@@ -185,6 +202,7 @@ function HomePage() {
         <Loader />
       ) : (
         <main className="productsDisplay pb-16">
+          <Carousel dImgCurosol={dImgCurosol} userID={userID} />
           <div className="flex flex-wrap gap-5 mt-5 justify-center">
             {displayItems.map((elem, i) => (
               <div
@@ -218,8 +236,12 @@ function HomePage() {
                         ? "cursor-not-allowed bg-green-400 text-white"
                         : "hover:bg-green-700 text-sm transition duration-300 ease-in-out bg-green-600 text-white"
                     } px-4 py-2 rounded-md`}
-                    disabled={!userID}
+                    // disabled={!userID}
                     onClick={async () => {
+                      if (!userID)
+                        return toast.info("You Need To Log in First", {
+                          pauseOnFocusLoss: false,
+                        });
                       const itemId = elem._id;
                       const title = elem.title;
                       addToCart(

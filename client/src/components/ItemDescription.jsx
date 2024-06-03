@@ -7,7 +7,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ItemDescription() { 
+function ItemDescription() {
   const location = useLocation();
   const { itemId } = useParams();
   const [item, setItem] = useState({});
@@ -16,7 +16,7 @@ function ItemDescription() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const userID = location.state?.userID;
- 
+
   const navigate = useNavigate();
 
   const openModal = (index) => {
@@ -33,7 +33,7 @@ function ItemDescription() {
       prevIndex + 1 === item.images.length ? 0 : prevIndex + 1
     );
   };
- 
+
   const showPrevious = () => {
     setSelectedImageIndex((prevIndex) =>
       prevIndex - 1 < 0 ? item.images.length - 1 : prevIndex - 1
@@ -70,11 +70,11 @@ function ItemDescription() {
         }
         console.error("Error submitting review:", err);
       });
-  }, [rating, comment, itemId,userID]); 
+  }, [rating, comment, itemId, userID]);
 
   const removeReview = useCallback(
     async (reviewID) => {
-      axios.defaults.withCredentials = true; 
+      axios.defaults.withCredentials = true;
       await axios
         .delete(
           `${process.env.REACT_APP_HOST_URL}/product/removeProductReview`,
@@ -114,7 +114,6 @@ function ItemDescription() {
       });
   }, [itemId, handleReviewSubmit, removeReview]);
 
- 
   return (
     <div className="bg-gray-100 p-5">
       <ToastContainer />
@@ -122,7 +121,15 @@ function ItemDescription() {
         <button onClick={() => navigate("/home")}>
           <IoIosArrowRoundBack size={24} />
         </button>
-        <button onClick={() => navigate("/cart")} disabled={!userID}>
+        <button
+          onClick={() => {
+            if (!userID)
+              return toast.info("You Need To Log in First", {
+                pauseOnFocusLoss: false,
+              });
+            navigate("/cart");
+          }}
+        >
           <FiShoppingCart
             className={`mr-1 sm:w-[40px] bg-white rounded-e-2xl ${
               !userID ? "cursor-not-allowed" : ""
@@ -169,10 +176,14 @@ function ItemDescription() {
                 !userID ? "cursor-not-allowed" : ""
               }`}
               onClick={() => {
+                if (!userID)
+                  return toast.info("You Need To Log in First", {
+                    pauseOnFocusLoss: false,
+                  });
                 const title = item.title;
                 addToCart(null, itemId, title, userID, null, null, toast);
               }}
-              disabled={!userID}
+              // disabled={!userID}
             >
               Add to Cart
             </button>
@@ -220,7 +231,6 @@ function ItemDescription() {
                   </p>
                   {userID === review.userID && (
                     <div className="mt-2">
-                       
                       <button
                         className="bg-red-500 text-white py-1 px-3 rounded"
                         onClick={() => {

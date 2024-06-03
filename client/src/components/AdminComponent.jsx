@@ -10,7 +10,7 @@ function AdminComponent() {
     totalAdmins: 0,
     totalOrdersPlaced: 0,
     orderInProgress: 0,
-    totalOrderDelivered: 0, 
+    totalOrderDelivered: 0,
   });
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -164,17 +164,19 @@ function AdminComponent() {
                     <div className="text-3xl">{data.totalOrdersPlaced}</div>
                   </div>
                   <div
-                    className={`p-4 bg-slate-600 rounded-lg shadow  ${
+                    className={`p-4   rounded-lg shadow   ${
                       data.orderInProgress > 0
-                        ? "bg-orange-500"
-                        : "bg-orange-500"
+                        ? "bg-orange-600"
+                        : "bg-slate-600"
+                    }
+                       
                     }`}
                   >
                     <Link to={"/user/admin/updateOrder"}>
                       <div className="text-xl font-semibold">
                         Order In Progress..
                       </div>
-                      <div className="text-3xl">{data.orderInProgress}</div>
+                      <div className={`text-3xl`}>{data.orderInProgress}</div>
                     </Link>
                   </div>
                   <div className="p-4 bg-slate-600 rounded-lg shadow">
