@@ -76,14 +76,14 @@ const EditProfile = () => {
       console.log(res.data);
     } catch (error) {
       console.error(`Error updating user details:`, error);
-    }
+    } 
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg text-black">
+    <div className="max-w-md mx-auto bg-white p-8 border-2 border-gray-300 rounded-lg shadow-lg text-black">
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Edit User</h2>
-      <i>id : {userID}</i>
+      <i  >user_id : {userID}</i>
       <br />
       <form onSubmit={handleFormSubmit}>
         <div className="mb-4">
@@ -119,7 +119,7 @@ const EditProfile = () => {
           <input
             type="email"
             id="email"
-            name="email" 
+            name="email"
             value={formData.email}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"

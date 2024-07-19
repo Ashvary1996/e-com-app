@@ -1,16 +1,15 @@
 /* Loader */
 .loader {
-  margin: auto;
-  height: 200px;
-  width: 200px;
-  border: 3px solid red;
+  /* margin: auto; */
+  height: 100px;
+  width: 100px;
+  border: 8px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  border-top-color: orange;
-  animation: loader 1s infinite;
- 
+  border-top-color: #3498db;
+  animation: spin 1s infinite linear;
 }
 
-@keyframes loader {
+@keyframes spin {
   from {
     transform: rotate(0deg);
   }
@@ -18,7 +17,6 @@
     transform: rotate(360deg);
   }
 }
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -41,6 +39,19 @@ input::-webkit-inner-spin-button {
   text-align: center;
 }
 
+.signUpFormDiv input {
+  width: 90%;
+}
+.signUpFormDiv .pDIv {
+  width: 90%;
+  margin: auto;
+}
+
+.fform input[type="checkbox"] {
+  width: 12%;
+  padding: 10px;
+  
+}
 .welcomeDiv {
   transition: all 1.5s ease;
 }
@@ -96,7 +107,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Home Page */
- 
+
 .sProduct {
   height: 420px;
   width: 300px;
@@ -183,7 +194,7 @@ input::-webkit-inner-spin-button {
   .rbox {
     display: flex !important;
     width: 100%;
-    justify-content: flex-end;  
+    justify-content: flex-end;
     gap: 10px;
   }
 }

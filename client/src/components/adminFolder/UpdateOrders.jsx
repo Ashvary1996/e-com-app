@@ -74,7 +74,7 @@ const UpdateOrders = () => {
           />
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full leading-normal bg-slate-100">
+          <table className="h-[60vh]   overflow-scroll min-w-full leading-normal bg-slate-100">
             <thead>
               <tr>
                 <th className="px-4 py-3">S.no</th>

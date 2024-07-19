@@ -95,9 +95,9 @@ const AllOrders = () => {
           </div>
         </div>
         <div className="overflow-x-auto">
-          <div className="table-container">
-            <table className="min-w-full leading-normal">
-              <thead>
+          <div className=" overflow-x-auto h-[60vh]  ">
+            <table className="min-w-full leading-normal overflow-x-auto h-[60vh]  ">
+              <thead className="bg-slate-100">
                 <tr>
                   <th className="px-4 py-2 border-b border-gray-200">S.no</th>
                   <th

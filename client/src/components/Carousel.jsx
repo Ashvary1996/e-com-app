@@ -20,13 +20,13 @@ const Carousel = ({ dImgCurosol, userID }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
-    }, 3000); // Change slide every 3 seconds
+    }, 3000);
     return () => clearInterval(interval);
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full" data-carousel="slide">
-      <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
+    <div className="relative w-full border-2" data-carousel="slide">
+      <div className="relative h-32 overflow-hidden rounded-lg md:h-96">
         {dImgCurosol.map((item, index) => (
           <div
             key={index}
@@ -42,7 +42,7 @@ const Carousel = ({ dImgCurosol, userID }) => {
                 alt={`Slide ${index + 1}`}
               />
             </Link>
-          </div> 
+          </div>
         ))}
       </div>
 

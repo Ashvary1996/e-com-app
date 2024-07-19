@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
@@ -27,6 +27,13 @@ function HomePage() {
   // console.log("dImgCurosol", dImgCurosol);
   const dispatch = useDispatch();
   // console.log(items);
+  const displayItemsRef = useRef(null);
+
+  const handleScrollToDisplayItems = () => {
+    if (displayItemsRef.current) {
+      displayItemsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const fetchProducts = useCallback(() => {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/getallProducts`)
@@ -202,8 +209,13 @@ function HomePage() {
         <Loader />
       ) : (
         <main className="productsDisplay pb-16">
-          <Carousel dImgCurosol={dImgCurosol} userID={userID} />
-          <div className="flex flex-wrap gap-5 mt-5 justify-center">
+          {searchQuery ? null : (
+            <Carousel dImgCurosol={dImgCurosol} userID={userID} />
+          )}
+          <div
+            ref={displayItemsRef}
+            className="displayItems flex flex-wrap gap-5 mt-5 justify-center"
+          >
             {displayItems.map((elem, i) => (
               <div
                 key={i}
@@ -270,7 +282,7 @@ function HomePage() {
             <p
               onClick={() => {
                 handlePrevPage();
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                handleScrollToDisplayItems();
               }}
               className="text-black font-medium cursor-pointer hover:text-teal-600"
             >
@@ -283,7 +295,7 @@ function HomePage() {
               <p
                 onClick={() => {
                   handleNextPage();
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  handleScrollToDisplayItems();
                 }}
                 className="text-black font-medium cursor-pointer hover:text-teal-600"
               >

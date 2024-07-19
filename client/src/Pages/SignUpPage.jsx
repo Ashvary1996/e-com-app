@@ -149,20 +149,20 @@ function SignUpPage() {
                 <label htmlFor="password" className="block text-gray-700">
                   Password
                 </label>
-                <div className="flex">
+                <div className="flex pDIv">
                   <Field
                     id="password"
                     name="password"
                     type={isPasswordVisible ? "text" : "password"}
                     placeholder="Password"
                     maxLength="15"
-                    className="w-full px-3 py-2 border rounded-l-md  "
+                    className="  px-3 py-2 border rounded-l-md w-[90%] "
                   />
 
                   <button
                     id="togglePassword"
                     type="button"
-                    className="text-white rounded-r-sm p-2 relative bg-white"
+                    className="text-white rounded-r-sm p-2 w-[10%] relative bg-white"
                     onClick={togglePasswordVisibility}
                   >
                     {isPasswordVisible ? (
@@ -179,16 +179,21 @@ function SignUpPage() {
                 />
               </div>
               <div className="mb-2 ">
-                <label for="checkbox" className="label flex ">
+                <label htmlFor="checkbox" className="label flex ">
                   <Field
                     type="checkbox"
                     name="checkbox"
+                    id="checkbox"
                     className=" ml-5 mr-10 w-4 justify-start hover:cursor-pointer "
                   />
-                  <span class="text-white justify-center">
+                  <span
+                    className="text-white justify-center"
+                    htmlFor="checkbox"
+                  >
                     I agree to share my details.
                   </span>
                 </label>
+                <div className="flex items-center"></div>
                 <ErrorMessage
                   name="checkbox"
                   component="div"
@@ -199,7 +204,7 @@ function SignUpPage() {
                 <p className="text-red-700 text-sm">{detail}</p>
               </div>
               <button
-                className="w-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="w-32 bg-teal-500  hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
                 Sign-Up

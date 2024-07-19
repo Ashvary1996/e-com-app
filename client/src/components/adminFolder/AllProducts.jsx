@@ -66,8 +66,8 @@ const AllProducts = () => {
   );
 
   return (
-    <div className="container mx-auto p-4">
-      <ToastContainer/>
+    <div className="container mx-auto p-4 border-2    ">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-4">Product List</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div className="w-full md:w-1/3 mb-4 md:mb-0">
@@ -76,7 +76,7 @@ const AllProducts = () => {
             placeholder="Search Products"
             value={searchTerm}
             onChange={handleSearch}
-            className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-black w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="flex space-x-2">
@@ -100,7 +100,7 @@ const AllProducts = () => {
           </button>
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div className=" h-[60vh]   overflow-scroll">
         <table className="min-w-full bg-white  ">
           <thead>
             <tr>
