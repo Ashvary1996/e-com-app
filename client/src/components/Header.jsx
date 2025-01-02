@@ -16,87 +16,46 @@ function Header({
   const navigate = useNavigate();
 
   return (
-    <header className="homeHeader p-2 bg-teal-500 flex flex-wrap justify-between items-center sticky top-0 z-50 w-full sm:flex-nowrap">
-      <div className="d1 flex-shrink-0">
+    <header className=" p-2 bg-teal-500 flex flex-wrap justify-between items-center sticky top-0 z-50 w-full sm:flex-nowrap">
+      <div className="flex items-center justify-start ">
         <Link to="/">
           <img
             className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
             src={logo}
             alt="logo"
+            width={64}
+            height={64}
           />
         </Link>
       </div>
-
-      <div className="d2 mx-4 flex items-center    ">
-        <input
-          className="flex-grow h-10 px-4 rounded-l-2xl border-none text-center"
-          type="text"
-          placeholder="Search for Products/Brands"
-          autoComplete="on"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        <button className="w-14 h-10 flex items-center justify-center bg-white rounded-r-2xl">
-          <RiMenuSearchLine size={24} className="text-gray-500" />
-        </button>
-      </div>
-
-      <div className="rbox d3   
-      ">
-        {role === "admin" && (
-          <Link
-            to="/user/admin"
-            className="bg-green-500 p-2 text-lg font-medium rounded hover:bg-green-700 text-white"
-          >
-            Admin
-          </Link>
-        )} 
-
-        <div className="dropdown-container relative">
+      {/* Search Bar */}
+      <div className="order-last w-full mt-1 sm:mt-0 sm:order-none sm:w-auto sm:flex-1  sm:mx-4 ">
+        <div className="  mx-4   relative flex items-center  sm:mx-auto sm:max-w-md   ">
+          <input
+            className="w-full h-10 px-4 rounded-l-lg    focus:outline-none"
+            type="text"
+            placeholder="Search for Products/Brands"
+            autoComplete="on"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
           <button
-            className={`dropdown-toggle p-2 text-lg font-medium rounded text-white bg-green-500 hover:bg-green-700`}
+            className="h-10 px-4 bg-white text-white rounded-r-lg 
+          hover:bg-gray-200 "
           >
-            {user ? user : "Guest"}
+            <RiMenuSearchLine size={24} className="text-gray-500 " />
           </button>
-
-          <div className="dropdown-content absolute right-0 mt-2 w-48 p-2 bg-slate-600 shadow-lg rounded z-50">
-            {!user ? (
-              <Link to="/login" className="block hover:bg-gray-300">
-                Sign in
-              </Link>
-            ) : (
-              <>
-                <button
-                  onClick={() =>
-                    navigate("/user/editProfile", {
-                      state: { userData },
-                    })
-                  }
-                  className="block text-left hover:bg-gray-300"
-                >
-                  View / Edit Profile
-                </button>
-                <Link
-                  to="/user/order"
-                  className="block text-left hover:bg-gray-300"
-                >
-                  My Orders
-                </Link>
-                <Link
-                  onClick={logoutFn}
-                  className="block text-left hover:bg-gray-200"
-                >
-                  Log out
-                </Link>
-              </>
-            )}
-          </div>
         </div>
-
+      </div>
+      {/* User & Cart */}
+      <div
+        className="flex items-center justify-end w-fit space-x-4    
+      "
+      >
         {user && (
           <Link
             to="/cart"
-            className="relative p-2 flex items-center bg-white rounded"
+            className="relative p-2 bg-white  rounded-full hover:bg-gray-100"
           >
             <FiShoppingCart size={24} className="text-gray-500" />
             {cartNumber > 0 && (
@@ -106,6 +65,53 @@ function Header({
             )}
           </Link>
         )}
+
+        <div className="dropdown-container relative inline-block">
+          <button
+            className={`dropdown-toggle p-2 text-lg font-medium rounded text-white bg-green-500 hover:bg-green-700`}
+          >
+            {user ? user : "Guest"}
+          </button>
+
+          <div
+            className="
+          dropdown-content hidden absolute right-0 w-48 p-2 bg-white shadow-lg rounded z-50"
+          >
+            {!user ? (
+              <Link to="/login" className="block hover:bg-gray-300  text-left  p-2 w-full" >
+                Sign in
+              </Link>
+            ) : (
+              <>
+                <div className="hover:bg-orange-500  text-lg  hover:text-white rounded   text-orange-500 font-medium  p-2 w-full">
+                  {role === "admin" && <Link to="/user/admin">Admin Menu</Link>}
+                </div>
+                <button
+                  onClick={() =>
+                    navigate("/user/editProfile", {
+                      state: { userData },
+                    })
+                  }
+                  className="block text-left hover:bg-gray-300 p-2 w-full"
+                >
+                  View / Edit Profile
+                </button>
+                <Link
+                  to="/user/order"
+                  className="block text-left hover:bg-gray-300 p-2 w-full"
+                >
+                  My Orders
+                </Link>
+                <Link
+                  onClick={logoutFn}
+                  className="block text-left hover:bg-orange-400 bg-gray-400 p-2 w-full hover:text-white "
+                >
+                  Log out
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );

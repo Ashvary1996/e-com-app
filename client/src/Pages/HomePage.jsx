@@ -8,7 +8,9 @@ import { ToastContainer, toast } from "react-toastify";
 import addToCart from "../config/addToCartFn";
 import { cartItemFn, logoutFn } from "../redux/userSlice";
 import Carousel from "../components/Carousel";
+import Footer from "../components/Footer";
 
+import { CardRating } from "../lib/CardRating";
 function HomePage() {
   const [user, setUser] = useState();
   const [userData, setUserData] = useState();
@@ -26,7 +28,7 @@ function HomePage() {
   const [dImgCurosol, setCurosol] = useState({ itemId: "", images: [] });
   // console.log("dImgCurosol", dImgCurosol);
   const dispatch = useDispatch();
-  // console.log(items);
+  console.log("items", items, displayItems);
   const displayItemsRef = useRef(null);
 
   const handleScrollToDisplayItems = () => {
@@ -208,47 +210,124 @@ function HomePage() {
       {loading ? (
         <Loader />
       ) : (
+        // /////////////////////////
+
+        // <main className="productsDisplay pb-16">
+        //   {searchQuery ? null : (
+        //     <Carousel dImgCurosol={dImgCurosol} userID={userID} />
+        //   )}
+        //   <div
+        //     ref={displayItemsRef}
+        //     className="displayItems flex flex-wrap gap-5 mt-5 justify-center"
+        //   >
+        //     {displayItems.map((elem, i) => (
+        //       <div
+        //         key={i}
+        //         className="sProduct relative flex flex-col items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-2"
+        //       >
+        //         <Link to={`/item/${elem._id}`} state={{ userID: userID }}>
+        //           <img
+        //             className="w-full h-48 rounded-lg mb-3 scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
+        //             src={elem.thumbnail}
+        //             alt="Product img"
+        //           />
+        //         </Link>
+        //         <div className="sp2 text-center">
+        //           <p className="font-semibold text-lg">
+        //             {elem.title.slice(0, 30)}
+        //           </p>
+        //           <p className="font-mono text-sm">{elem.brand}</p>
+        //           <p className="font-sans text-lg font-medium">
+        //             ₹ {Math.ceil(elem.price)}
+        //           </p>
+        //           <div className="description-container h-16 overflow-hidden mb-2">
+        //             <p className="font-thin pdesc text-sm  ">
+        //               {elem.description}
+        //             </p>
+        //           </div>
+
+        //           <p className="text-sm">Rating: {Number(elem.ratings)}</p>
+        //           <button
+        //             className={`${
+        //               !userID
+        //                 ? "cursor-not-allowed bg-green-400 text-white"
+        //                 : "hover:bg-green-700 text-sm transition duration-300 ease-in-out bg-green-600 text-white"
+        //             } px-4 py-2 rounded-md`}
+        //             // disabled={!userID}
+        //             onClick={async () => {
+        //               if (!userID)
+        //                 return toast.info("You Need To Log in First", {
+        //                   pauseOnFocusLoss: false,
+        //                 });
+        //               const itemId = elem._id;
+        //               const title = elem.title;
+        //               addToCart(
+        //                 elem,
+        //                 itemId,
+        //                 title,
+        //                 userID,
+        //                 user,
+        //                 fetchCartItems,
+        //                 toast
+        //               );
+        //             }}
+        //           >
+        //             Add to Cart
+        //           </button>
+        //         </div>
+        //       </div>
+        //     ))}
+        //   </div>
+        // </main>
+
         <main className="productsDisplay pb-16">
           {searchQuery ? null : (
             <Carousel dImgCurosol={dImgCurosol} userID={userID} />
           )}
           <div
             ref={displayItemsRef}
-            className="displayItems flex flex-wrap gap-5 mt-5 justify-center"
+            className=" displayItems grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4   gap-6 mt-5 px-4 "
           >
             {displayItems.map((elem, i) => (
               <div
                 key={i}
-                className="sProduct relative flex flex-col items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-2"
+                className="sProduct flex flex-col justify-between items-center bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 h-full m-auto"
               >
-                <Link to={`/item/${elem._id}`} state={{ userID: userID }}>
+                <Link
+                  to={`/item/${elem._id}`}
+                  state={{ userID: userID, cartNumber: cartNumber }}
+                >
                   <img
-                    className="w-full h-48 rounded-lg mb-3 scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
+                    className="w-full h-48 object-cover rounded-lg mb-3 scale-100 hover:scale-105 transition-transform duration-300 ease-in-out"
                     src={elem.thumbnail}
                     alt="Product img"
                   />
                 </Link>
-                <div className="sp2 text-center">
-                  <p className="font-semibold text-lg">
+                <div className="sp2 text-center space-y-2">
+                  <p className="font-semibold text-lg text-gray-800">
                     {elem.title.slice(0, 30)}
                   </p>
-                  <p className="font-mono text-sm">{elem.brand}</p>
-                  <p className="font-sans text-lg font-medium">
+                  <p className="font-mono text-sm text-gray-500">
+                    {elem.brand}
+                  </p>
+                  <p className="font-sans text-lg font-medium text-green-600">
                     ₹ {Math.ceil(elem.price)}
                   </p>
-                  <div className="description-container h-16 overflow-hidden mb-2">
-                    <p className="font-thin pdesc text-sm">
+                  <div className="description-container h-16 overflow-hidden p-2">
+                    <p className="font-medium text-sm text-gray-600 first-letter:uppercase">
                       {elem.description}
                     </p>
                   </div>
-                  <p className="text-sm">Rating: {Number(elem.ratings)}</p>
+                  <div className="flex items-center justify-center gap-1 text-sm text-gray-700">
+                    {/* <span>Rating:</span> */}
+                    <CardRating>{elem.ratings}</CardRating>
+                  </div>
                   <button
-                    className={`${
+                    className={`w-full px-4 py-2 rounded-md text-sm ${
                       !userID
-                        ? "cursor-not-allowed bg-green-400 text-white"
-                        : "hover:bg-green-700 text-sm transition duration-300 ease-in-out bg-green-600 text-white"
-                    } px-4 py-2 rounded-md`}
-                    // disabled={!userID}
+                        ? "cursor-not-allowed bg-gray-300 text-gray-600"
+                        : "bg-green-600 text-white hover:bg-green-700 transition-colors duration-300"
+                    }`}
                     onClick={async () => {
                       if (!userID)
                         return toast.info("You Need To Log in First", {
@@ -275,35 +354,40 @@ function HomePage() {
           </div>
         </main>
       )}
-
+      {/* ///////////////////////// */}
       <footer className="fixed bottom-0 w-full bg-white shadow-md border-t">
-        <div className="paginationDiv flex justify-center space-x-4 py-1">
-          {currentPage > 1 && (
-            <p
-              onClick={() => {
-                handlePrevPage();
-                handleScrollToDisplayItems();
-              }}
-              className="text-black font-medium cursor-pointer hover:text-teal-600"
-            >
-              {"<"} Previous
-            </p>
-          )}
-          <p className="text-black font-medium">{currentPage}</p>
-          {displayItems.length === itemsPerPage &&
-            items.length > currentPage * itemsPerPage && (
+        {!items.length ? (
+          <Footer />
+        ) : (
+          <div className="paginationDiv flex justify-center space-x-4 py-1">
+            {currentPage > 1 && (
               <p
                 onClick={() => {
-                  handleNextPage();
+                  handlePrevPage();
                   handleScrollToDisplayItems();
                 }}
                 className="text-black font-medium cursor-pointer hover:text-teal-600"
               >
-                Next {">"}
+                {"<"} Previous
               </p>
             )}
-        </div>
+            <p className="text-black font-medium">{currentPage}</p>
+            {displayItems.length === itemsPerPage &&
+              items.length > currentPage * itemsPerPage && (
+                <p
+                  onClick={() => {
+                    handleNextPage();
+                    handleScrollToDisplayItems();
+                  }}
+                  className="text-black font-medium cursor-pointer hover:text-teal-600"
+                >
+                  Next {">"}
+                </p>
+              )}
+          </div>
+        )}
       </footer>
+      {items.length ? <Footer /> : null}
     </div>
   );
 }

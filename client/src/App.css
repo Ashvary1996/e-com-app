@@ -50,7 +50,6 @@ input::-webkit-inner-spin-button {
 .fform input[type="checkbox"] {
   width: 12%;
   padding: 10px;
-  
 }
 .welcomeDiv {
   transition: all 1.5s ease;
@@ -109,10 +108,11 @@ input::-webkit-inner-spin-button {
 /* Home Page */
 
 .sProduct {
-  height: 420px;
+  /* height: 420px; */
   width: 300px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 1.5px;
+  /* user-select: none; */
 }
 
 .sProduct > img {
@@ -126,8 +126,8 @@ input::-webkit-inner-spin-button {
 
 .pdesc {
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
-  overflow-y: scroll;
-  height: 55px;
+  /* overflow-y: scroll; */
+  /* height: 55px; */
   font-size: 15px;
 }
 
@@ -142,12 +142,8 @@ input::-webkit-inner-spin-button {
 }
 
 /* Dropdown */
-.dropbtn {
-  background-color: #04aa6d;
-  color: white;
-  padding: 12px;
-  font-size: 16px;
-  border: none;
+.dropdown-container {
+  position: relative;
 }
 
 .dropdown-content {
@@ -158,25 +154,15 @@ input::-webkit-inner-spin-button {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
-
-.dropdown-content p {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content p:hover {
-  background-color: #ddd;
-  cursor: pointer;
-}
-
+ 
+ 
 .dropdown-container:hover .dropdown-content,
-.dropdown-container:focus-within .dropdown-content,
-.dropdown-container .dropdown-content.show {
+.dropdown-container:focus-within .dropdown-content {
   display: block;
 }
-
+.dropdown-content {
+  transition: opacity 0.2s ease-in-out;
+}
 .rbox {
   display: flex;
   justify-content: flex-end;

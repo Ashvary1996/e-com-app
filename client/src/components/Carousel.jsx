@@ -26,7 +26,7 @@ const Carousel = ({ dImgCurosol, userID }) => {
 
   return (
     <div className="relative w-full border-2" data-carousel="slide">
-      <div className="relative h-32 overflow-hidden rounded-lg md:h-96">
+      <div className="relative overflow-hidden rounded-lg h-40 sm:h-60 md:h-96">
         {dImgCurosol.map((item, index) => (
           <div
             key={index}

@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 
 function Cart() {
   const [data, setData] = useState({
-    items: [], 
+    items: [],
     totalItems: 0,
     uniqueItems: 0,
   });
@@ -113,8 +113,8 @@ function Cart() {
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
       <ToastContainer closeOnClick />
       <div className="flex justify-between items-center">
-        <button onClick={() => navigate("/home")} className="text-blue-500">
-          &larr; Back to Home
+        <button onClick={() => navigate("/home")} className="text-gray-500 text-2xl " >
+          &larr; 
         </button>
         <h3 className="text-lg font-semibold text-gray-800">
           Your Cart: {totalItemsCount} items
@@ -127,7 +127,7 @@ function Cart() {
               key={i}
               className="flex flex-col sm:flex-row justify-between items-center border-b-2 border-gray-200 p-4"
             >
-              <p className="text-2xl mr-2 font-medium">{i+1}</p>
+              <p className="text-2xl mr-2 font-medium">{i + 1}.</p>
               <div className="w-full sm:w-1/5">
                 <Link to={`/item/${elem.product_id}`}>
                   <img

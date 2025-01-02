@@ -6,6 +6,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CardRating } from "../lib/CardRating";
 
 function ItemDescription() {
   const location = useLocation();
@@ -15,7 +16,10 @@ function ItemDescription() {
   const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const userID = location.state?.userID;
+  const { userID, cartNumber } = location.state;
+  console.log("userID", userID);
+  console.log("cartNumber", cartNumber);
+  console.log("item", item);
 
   const navigate = useNavigate();
 
@@ -121,6 +125,7 @@ function ItemDescription() {
         <button onClick={() => navigate("/home")}>
           <IoIosArrowRoundBack size={24} />
         </button>
+
         <button
           onClick={() => {
             if (!userID)
@@ -134,8 +139,14 @@ function ItemDescription() {
             className={`mr-1 sm:w-[40px] bg-white rounded-e-2xl ${
               !userID ? "cursor-not-allowed" : ""
             }`}
-            size={23}
+            size={24}
           />
+          {/* <FiShoppingCart size={24} className="text-gray-500" />
+          {cartNumber > 0 && (
+            <span className=" top-10 right-10 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+              {cartNumber}
+            </span>
+          )} */}
         </button>
       </div>
       <div className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden md:flex">
@@ -150,13 +161,15 @@ function ItemDescription() {
           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
             {item.category}
           </div>
-          <h1 className="mt-1 text-lg leading-tight font-medium text-black">
-            {item.title} ({item.brand})
+          <h1 className="mt-1 text-lg leading-tight font-medium text-black mb-2">
+            {item.title} {item.brand && item.brand}
           </h1>
           <i className="text-sm"> ("product id" : {item._id}) </i>
-          <p className="mt-2 text-gray-500">{item.description}</p>
-          <div className="mt-4">
-            <span className="text-teal-600 text-md font-semibold">
+          <p className="mt-2 text-gray-500 first-letter:uppercase ">
+            {item.description}
+          </p>
+          <div className="mt-4 mb-2">
+            <span className="text-teal-600 text-xl font-semibold">
               ₹ {Math.ceil(item.price)}
             </span>
             {item.discountPercentage !== 0 && (
@@ -165,11 +178,21 @@ function ItemDescription() {
               </span>
             )}
           </div>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <span className="text-sm text-gray-600">
               Rating: {item.ratings} / 5
             </span>
-          </div>
+          </div> */}
+          {item.reviews && (
+            <div className="flex items-center   gap-1 text-sm text-gray-700 ">
+              {/* <span>Rating:</span> */}
+              <CardRating>{item.ratings} </CardRating>
+              <span className="text-gray-500 font-semibold">
+                ({item.reviews?.length})
+              </span>
+            </div>
+          )}
+
           <div className="mt-4">
             <button
               className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
@@ -214,7 +237,9 @@ function ItemDescription() {
       {/* Reviews */}
       <section className="bg-gray-100 p-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-4">Reviews</h1>
+          <h1 className="text-2xl font-semibold mb-4">
+            Reviews ({item.reviews?.length || 0})
+          </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
             {item.reviews && item.reviews.length > 0 ? (
               item.reviews.map((review, i) => (
