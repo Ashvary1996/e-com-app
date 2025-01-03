@@ -15,7 +15,7 @@ function ResetPass() {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("newPassword"), null], "Passwords didn't match")
       .required("Confirm Password required!"),
-  }); 
+  });
   let initialValues = {
     newPassword: "",
     confirmPassword: "",
@@ -68,33 +68,34 @@ function ResetPass() {
         }}
       >
         {() => (
-          <Form className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+          <Form className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full ">
             <h1 className="text-2xl font-bold text-center mb-4">
               Reset Password
             </h1>
             <Field
-              className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500"
-              type="password"
+              className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500 "
+              type="text"
               id="newPassword"
               name="newPassword"
-              placeholder="enter New password"
+              placeholder="Enter New password"
             />
             <ErrorMessage
               name="newPassword"
               component="div"
-              className="text-red-600 text-sm mb-4"
+              className="text-red-600 text-sm mb-4 text-center"
             />
             <Field
-              className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500"
-              type="password"
+              className="w-full px-4 py-2 mb-4 text-gray-700 border rounded-lg focus:outline-none focus:border-teal-500  "
+              type="text"
               id="confirmPassword"
               name="confirmPassword"
-              placeholder="confirm New password"
+              placeholder="Confirm New password"
+              onCopy={(e) => e.preventDefault()} // Prevent copying
             />
             <ErrorMessage
               name="confirmPassword"
               component="div"
-              className="text-red-600 text-sm mb-4"
+              className="text-red-600 text-sm mb-4 text-center"
             />
 
             <p
@@ -110,9 +111,9 @@ function ResetPass() {
                 <>
                   <Link
                     to="/forgot"
-                    className="text-sm font-medium text-orange-600"
+                    className="text-sm font-medium text-orange-600 mb-2"
                   >
-                    Generate New Token
+                    Generate New Link
                   </Link>
                 </>
               ) : null}

@@ -182,15 +182,30 @@ const forgotPassFn = async (req, res) => {
         const currentDate = new Date().toISOString();
 
         const email = req.body.email;
-        const subject = `Action Required: Reset Your Password.`;
+        const subject = `Reset Your Password - Action Required`;
+        // const htmlContent = `
+        // <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+        //   <p>Click the link below to reset your password. Please note that the link is valid for only 5 minutes.</p>
+        //   <p><a href="${resetLink}" style="color: #0652DD; text-decoration: none;">Reset your password</a></p>
+        //   <p><strong>Current time:</strong> ${currentDate}</p>
+        //   <p>If you did not request a password reset, please ignore this email or contact support if you believe this is an error.</p>
+        // </div>
+        // `;
         const htmlContent = `
-        <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
-          <p>Click the link below to reset your password. Please note that the link is valid for only 5 minutes.</p>
-          <p><a href="${resetLink}" style="color: #0652DD; text-decoration: none;">Reset your password</a></p>
-          <p><strong>Current time:</strong> ${currentDate}</p>
-          <p>If you did not request a password reset, please ignore this email or contact support if you believe this is an error.</p>
-        </div>
-        `;
+        <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.5;">
+          <h2 style="color: #0652DD; margin-bottom: 16px;">Password Reset Request</h2>
+          <p>We received a request to reset your password. You can reset your password by clicking the button below. Please note that this link will expire in <strong>5 minutes</strong>.</p>
+          <div style="margin: 20px 0; text-align: center;">
+            <a href="${resetLink}" style="background-color: #0652DD; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold;">Reset Your Password</a>
+          </div>
+          <p>If you did not request a password reset, please ignore this email. If you believe this was done in error, please contact our support team immediately.</p>
+          <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+          <p style="font-size: 14px; color: #666;">
+            <strong>Current Time:</strong> ${currentDate}<br>
+            If you encounter any issues, contact our support team at <a href="mailto:support@example.com" style="color: #0652DD;">support@example.com</a>.
+          </p>
+      </div>
+      `;
         sendEmail(email, subject, htmlContent)
           .then((mailResponse) => {
             if (mailResponse.success) {
@@ -240,20 +255,34 @@ const resetPassFn = async (req, res) => {
     const salt = await bcrypt.genSalt(Number(process.env.ROUND));
     const hash = await bcrypt.hash(newPassword, salt);
     user.password = hash;
-    await user.save();
+    // await user.save();
+    await user.save({ validateBeforeSave: false });
 
     const currentDate = new Date().toISOString();
     const email = user.email;
-    const subject = "Password reset successfully";
+    const subject = "Your Password Has Been Successfully Reset";
     const htmlContent = `
-      <h1>Password Reset Successfully</h1>
-      <h4> On: ${currentDate}</h4>
-      <p>You have successfully reset your password. If you did not initiate this change, please secure your account immediately.</p>
-      <p>Visit <a href="${req.protocol}://${req.get(
+    <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.5;">
+      <h2 style="color: #0652DD; margin-bottom: 16px;">Password Reset Successfully</h2>
+      <p>Your password has been successfully reset on <strong>${currentDate}</strong>. If you did not initiate this change, we recommend that you secure your account immediately.</p>
+      
+      <p>If this was you, no further action is needed. You can now <a href="${
+        req.protocol
+      }://${req.get(
       "host"
-    )}/home/" target="_blank">our website</a> to log in or change your password again if necessary.</p>
-      <p>If you encounter any issues or did not request a password reset, please contact our support team immediately at <a href="mailto:legion.ugc.lt@gmail.com">legion.ugc.lt@gmail.com</a>.</p>
-      <p>Thank you for ensuring the security of your account!</p>
+    )}/home/" style="color: #0652DD;">log in to your account</a> using your new password.</p>
+    
+      <p>If you didn't request this reset, please <strong>change your password</strong> and contact our support team right away to ensure your account’s safety.</p>
+    
+      <p>If you need any assistance, please do not hesitate to reach out to our support team at <a href="mailto:legion.ugc.lt@gmail.com" style="color: #0652DD;">legion.ugc.lt@gmail.com</a>.</p>
+      
+      <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+      
+      <p style="font-size: 14px; color: #666;">
+        Thank you for ensuring the security of your account! <br>
+        If you continue to experience issues, please contact us immediately.
+      </p>
+    </div>
     `;
 
     sendEmail(email, subject, htmlContent)
@@ -270,7 +299,11 @@ const resetPassFn = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send("Internal Error: Invalid or expired token. Generate New One.");
+      // .send("Internal Error: Invalid or expired token. Generate New One.");
+      .json({
+        msg: "Internal Error: Invalid or expired token. Generate New One.",
+        error: error,
+      });
   }
 };
 
@@ -317,16 +350,29 @@ const updatePassFn = async (req, res) => {
 
     const currentDate = new Date().toISOString();
     const email = user.email;
-    const subject = "Password Update successfully";
+    const subject = "Your Password Has Been Successfully Updated";
     const htmlContent = `
-      <h1>Password Update Successfully</h1>
-      <h4> On: ${currentDate}</h4>
-      <p>You have successfully update your password. If you did not initiate this change, please secure your account immediately.</p>
-      <p>Visit <a href="${req.protocol}://${req.get(
+    <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.5;">
+      <h2 style="color: #0652DD; margin-bottom: 16px;">Password Update Successfully</h2>
+      <p>Your password has been successfully updated on <strong>${currentDate}</strong>. If you did not initiate this change, we highly recommend that you secure your account immediately by updating your password and contacting support.</p>
+      
+      <p>If this was you, no further action is needed. You can now <a href="${
+        req.protocol
+      }://${req.get(
       "host"
-    )}/home/" target="_blank">our website</a> to log in or change your password again if necessary.</p>
-      <p>If you encounter any issues or did not request a password reset, please contact our support team immediately at <a href="mailto:legion.ugc.lt@gmail.com">legion.ugc.lt@gmail.com</a>.</p>
-      <p>Thank you for ensuring the security of your account!</p>
+    )}/home/" style="color: #0652DD;">log in to your account</a> using your new password.</p>
+    
+      <p>If you did not request this update or if you have any concerns, please <strong>change your password</strong> immediately and contact our support team to ensure your account’s security.</p>
+    
+      <p>If you need assistance or have any questions, feel free to reach out to us at <a href="mailto:legion.ugc.lt@gmail.com" style="color: #0652DD;">legion.ugc.lt@gmail.com</a>.</p>
+      
+      <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+      
+      <p style="font-size: 14px; color: #666;">
+        Thank you for ensuring the security of your account! <br>
+        If you continue to experience any issues, please contact us immediately.
+      </p>
+    </div>
     `;
 
     sendEmail(email, subject, htmlContent)

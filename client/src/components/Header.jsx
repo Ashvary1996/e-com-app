@@ -16,7 +16,7 @@ function Header({
   const navigate = useNavigate();
 
   return (
-    <header className=" p-2 bg-teal-500 flex flex-wrap justify-between items-center sticky top-0 z-50 w-full sm:flex-nowrap">
+    <header className=" p-2 bg-teal-500 flex flex-wrap justify-between items-center sticky top-0 z-50 w-full sm:flex-nowrap  ">
       <div className="flex items-center justify-start ">
         <Link to="/">
           <img
@@ -30,9 +30,9 @@ function Header({
       </div>
       {/* Search Bar */}
       <div className="order-last w-full mt-1 sm:mt-0 sm:order-none sm:w-auto sm:flex-1  sm:mx-4 ">
-        <div className="  mx-4   relative flex items-center  sm:mx-auto sm:max-w-md   ">
+        <div className="  mx-4   relative flex items-center  sm:mx-auto sm:max-w-md  focus-within:ring-1 focus-within:ring-orange-500   focus-within:rounded-lg">
           <input
-            className="w-full h-10 px-4 rounded-l-lg    focus:outline-none"
+            className="w-full h-10 px-4 rounded-l-lg    border-none outline-none"
             type="text"
             placeholder="Search for Products/Brands"
             autoComplete="on"
@@ -78,7 +78,10 @@ function Header({
           dropdown-content hidden absolute right-0 w-48 p-2 bg-white shadow-lg rounded z-50"
           >
             {!user ? (
-              <Link to="/login" className="block hover:bg-gray-300  text-left  p-2 w-full" >
+              <Link
+                to="/login"
+                className="block hover:bg-gray-300  text-left  p-2 w-full"
+              >
                 Sign in
               </Link>
             ) : (

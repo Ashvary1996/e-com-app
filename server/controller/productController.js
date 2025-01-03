@@ -66,7 +66,7 @@ const updateProduct = async (req, res, next) => {
 
     items = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true,
+      // runValidators: true,
       useFindAndModify: false,
     });
     res.json({ success: true, updated_Product: items });

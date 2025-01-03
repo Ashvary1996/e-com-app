@@ -257,8 +257,7 @@ function EditProduct() {
               value={product.discountPercentage}
               onChange={handleChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              min="0"
-              max="100"
+             
             />
           </div>
           {details}

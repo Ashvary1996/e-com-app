@@ -31,7 +31,10 @@ function LogInPage() {
   }, []);
 
   return (
-    <div ref={signUpFormRef} className="signUpFormDiv p-10">
+    <div
+      ref={signUpFormRef}
+      className="signUpFormDiv p-10 bg-gradient-to-r from-orange-200 to-orange-400   "
+    >
       <ToastContainer closeOnClick id="myContainer" />
       <Formik
         initialValues={initialValues}
@@ -47,36 +50,36 @@ function LogInPage() {
           // console.log(values);
 
           return (
-            <Form className="loginForm p-10 w-[60%] m-auto">
+            <Form className="loginForm p-10 w-[60%] m-auto ">
               <h1 className="heading text-2xl">Log In </h1>
-              <div className="fieldDiv">
+              <div className="fieldDiv ">
                 <label htmlFor="email">E-mail </label>
                 <Field
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="email"
+                  placeholder="user1234@gmail.com"
+                  className="outline-none focus-within:ring-1 focus-within:ring-orange-500"
                 />
                 <ErrorMessage name="email">
-                  {(emsg) => <div className="error ">{emsg}</div>}
+                  {(emsg) => <div className="error font-medium">{emsg}</div>}
                 </ErrorMessage>
               </div>
-              <div className="fieldDiv">
+              <div className="fieldDiv w-[80%] m-auto">
                 <label htmlFor="password">Password </label>
-                <div className="flex bg-white rounded">
+                <div className="flex bg-white rounded outline-none focus-within:ring-1 focus-within:ring-orange-500 justify-around">
                   <Field
                     id="password"
                     name="password"
                     type={isPasswordVisible ? "text" : "password"}
-                    placeholder="Password"
-                    maxLength="15"
-                    className="w-full px-3 py-2   "
+                    placeholder="user1234"
+                    className=" ml-14 outline-none border-none text-left "
                   />
 
                   <button
                     id="togglePassword"
                     type="button"
-                    className="   p-2 relative  rounded-r-lg"
+                    className=" w-[10%] relative  rounded-r-lg   outline-none border-none"
                     onClick={togglePasswordVisibility}
                   >
                     {isPasswordVisible ? (
@@ -87,12 +90,12 @@ function LogInPage() {
                   </button>
                 </div>
                 <ErrorMessage name="password">
-                  {(emsg) => <div className="error ">{emsg}</div>}
+                  {(emsg) => <div className="error font-medium">{emsg}</div>}
                 </ErrorMessage>
               </div>
-              <p className="text-red-700 text-sm">{detail}</p>
+              <p className="text-red-500 text-sm mt-1">{detail}</p>
 
-              <p className="text-red-700 text-sm  hover:underline mt-1">
+              <p className="text-orange-300 text-sm  hover:underline mt-1">
                 {forgot === true ? (
                   <Link to={`/forgot/${values.email}`}>
                     Forgot / Reset Password
@@ -102,7 +105,7 @@ function LogInPage() {
 
               <div className="">
                 <button
-                  className="bg-teal-600 text-white hover:bg-green-600  p-1 rounded mt-2 w-[35%] text-xxl font-semibold"
+                  className="bg-orange-500 text-white hover:bg-orange-600  p-1 rounded mt-2 w-[35%] text-xxl font-semibold"
                   type="submit"
                 >
                   Log-In

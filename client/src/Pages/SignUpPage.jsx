@@ -34,7 +34,7 @@ function SignUpPage() {
   }, []);
 
   return (
-    <div className="mainSignUpDiv flex flex-col lg:flex-row min-h-screen bg-gradient-to-r from-teal-300 to-blue-500">
+    <div className="mainSignUpDiv flex flex-col lg:flex-row min-h-screen bg-gradient-to-r from-orange-200 to-white">
       <div className="welcomeDiv w-full lg:w-2/3 lg:mr-2    p-5 lg:p-10 bg-white shadow-lg rounded-lg m-auto">
         <h1 className="text-2xl font-bold mb-4 text-center lg:text-left break-words">
           Welcome to Your Next Shopping Adventure!
@@ -77,7 +77,10 @@ function SignUpPage() {
                 Create A New Account
               </h1>
               <div className="mb-2">
-                <label htmlFor="firstName" className="block text-gray-700">
+                <label
+                  htmlFor="firstName"
+                  className="block text-gray-700 font-semibold"
+                >
                   First Name
                 </label>
                 <Field
@@ -85,16 +88,19 @@ function SignUpPage() {
                   name="firstName"
                   type="text"
                   placeholder="First Name"
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2  rounded font-semibold outline-none focus-within:ring-1 focus-within:ring-orange-500  "
                 />
                 <ErrorMessage
                   name="firstName"
                   component="div"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-500 text-sm mt-1 font-bold"
                 />
               </div>
               <div className="mb-2">
-                <label htmlFor="lastName" className="block text-gray-700">
+                <label
+                  htmlFor="lastName"
+                  className="block text-gray-700 font-semibold"
+                >
                   Last Name
                 </label>
                 <Field
@@ -102,16 +108,19 @@ function SignUpPage() {
                   name="lastName"
                   type="text"
                   placeholder="Last Name"
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 outline-none focus-within:ring-1 focus-within:ring-orange-500 rounded font-semibold"
                 />
                 <ErrorMessage
                   name="lastName"
                   component="div"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-500 text-sm mt-1 font-bold"
                 />
               </div>
               <div className="mb-2">
-                <label htmlFor="email" className="block text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-gray-700 font-semibold"
+                >
                   E-mail
                 </label>
                 <Field
@@ -119,16 +128,19 @@ function SignUpPage() {
                   name="email"
                   type="email"
                   placeholder="Email Address"
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 outline-none focus-within:ring-1 focus-within:ring-orange-500 rounded font-semibold"
                 />
                 <ErrorMessage
                   name="email"
                   component="div"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-500 text-sm mt-1 font-bold"
                 />
               </div>
               <div className="mb-2">
-                <label htmlFor="phoneNumber" className="block text-gray-700">
+                <label
+                  htmlFor="phoneNumber"
+                  className="block text-gray-700 font-semibold"
+                >
                   Phone Number
                 </label>
                 <Field
@@ -137,32 +149,39 @@ function SignUpPage() {
                   type="text"
                   placeholder="Mobile Number"
                   maxLength="10"
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 outline-none focus-within:ring-1 focus-within:ring-orange-500 rounded font-semibold"
+                  onInput={(e) => {
+                    // Restrict non-numeric input
+                    e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                  }}
                 />
                 <ErrorMessage
                   name="phoneNumber"
                   component="div"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-500 text-sm mt-1 font-bold"
                 />
               </div>
               <div className="mb-2 ">
-                <label htmlFor="password" className="block text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 font-semibold"
+                >
                   Password
                 </label>
-                <div className="flex pDIv">
+                <div className="flex pDIv  rounded-md focus-within:ring-1 focus-within:ring-orange-500">
                   <Field
                     id="password"
                     name="password"
                     type={isPasswordVisible ? "text" : "password"}
                     placeholder="Password"
-                    maxLength="15"
-                    className="  px-3 py-2 border rounded-l-md w-[90%] "
+                    // maxLength="20"
+                    className="px-3 py-2 border-none  rounded-l-md w-[90%] font-semibold focus:outline-none "
                   />
 
                   <button
                     id="togglePassword"
                     type="button"
-                    className="text-white rounded-r-sm p-2 w-[10%] relative bg-white"
+                    className="text-white rounded-r-sm p-2 w-[10%] relative bg-white focus:outline-none  "
                     onClick={togglePasswordVisibility}
                   >
                     {isPasswordVisible ? (
@@ -175,7 +194,7 @@ function SignUpPage() {
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-500 text-sm mt-1 font-bold"
                 />
               </div>
               <div className="mb-2 ">
@@ -187,7 +206,7 @@ function SignUpPage() {
                     className=" ml-5 mr-10 w-4 justify-start hover:cursor-pointer "
                   />
                   <span
-                    className="text-white justify-center"
+                    className="text-white justify-center font-semibold"
                     htmlFor="checkbox"
                   >
                     I agree to share my details.
@@ -197,14 +216,14 @@ function SignUpPage() {
                 <ErrorMessage
                   name="checkbox"
                   component="div"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-500 text-sm mt-1 font-bold"
                 />
               </div>
               <div className="mb-2">
                 <p className="text-red-700 text-sm">{detail}</p>
               </div>
               <button
-                className="w-32 bg-teal-500  hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="w-32 bg-orange-500  hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
                 Sign-Up
