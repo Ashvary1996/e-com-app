@@ -114,7 +114,10 @@ function UserOrder() {
                   <div key={item._id} className="flex items-center mb-2">
                     <Link
                       to={`/item/${item.productId}`}
-                      state={{ from: location.pathname }}
+                      state={{
+                        from: location.pathname,
+                        userID: orders[0].userId,
+                      }}
                     >
                       <img
                         src={item.image[0]}

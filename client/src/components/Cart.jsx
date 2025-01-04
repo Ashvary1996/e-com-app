@@ -7,7 +7,9 @@ function Cart() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const userID = location.state.userID;
   // console.log("location", location);
+  // console.log("userIdFromCart", userID);
 
   const [data, setData] = useState({
     items: [],
@@ -116,7 +118,7 @@ function Cart() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <ToastContainer closeOnClick />
+      <ToastContainer closeOnClick={true} pauseOnFocusLoss={false} />
       <div className="flex justify-between items-center">
         <button
           onClick={() => {
@@ -143,7 +145,7 @@ function Cart() {
               <div className="w-full sm:w-1/5">
                 <Link
                   to={`/item/${elem.product_id}`}
-                  state={{ from: location.pathname }}
+                  state={{ from: location.pathname, userID: userID }}
                 >
                   <img
                     src={elem.thumbnail}

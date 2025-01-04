@@ -55,6 +55,7 @@ function Header({
         {user && (
           <Link
             to="/cart"
+            state={{ userID: userData._id }}
             className="relative p-2 bg-white  rounded-full hover:bg-gray-100"
           >
             <FiShoppingCart size={24} className="text-gray-500" />
@@ -97,7 +98,7 @@ function Header({
                   }
                   className="block text-left hover:bg-gray-300 p-2 w-full"
                 >
-                 View Profile
+                  View Profile
                 </button>
                 <Link
                   to="/user/order"

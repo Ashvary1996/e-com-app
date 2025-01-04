@@ -41,7 +41,7 @@ function HomePage() {
     axios
       .get(`${process.env.REACT_APP_HOST_URL}/product/getallProducts`)
       .then((response) => {
-        console.log("Products Fetched");
+        // console.log("Products Fetched");
         setItems(response.data.items);
         setDisplayItems(response.data.items);
         setLoading(false);
@@ -171,7 +171,11 @@ function HomePage() {
         handleSearchChange={handleSearchChange}
         searchQuery={searchQuery}
       />
-      <ToastContainer closeOnClick id="myContainer" />
+      <ToastContainer
+        id="myContainer"
+        closeOnClick={true}
+        pauseOnFocusLoss={false}
+      />
 
       <div className="flex flex-wrap justify-end p-4 space-x-2">
         <select

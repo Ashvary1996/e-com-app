@@ -5,10 +5,7 @@
 Welcome to our E-commerce website! Our platform offers a seamless shopping experience for users to explore, purchase, and review products. Whether you're a customer looking for your favorite items or an admin managing the store, our website has you covered.
 
 ## WebSite Link 
-Front-End : https://ecom-app-by-ashvary.netlify.app/
-
-Back-End : https://e-com-app-19i5.onrender.com
-
+Front-End : https://ecom-app-by-ashvary.netlify.app/ 
 
 ## Key Features
 
@@ -111,8 +108,8 @@ For developers interested in integrating with our platform or building custom ap
 ## For Admin-Access
 
 use this
-mail : admin@gmail.com
-password : adminadmin
+email : user1234@gmail.com
+password : user1234
 
 ## Support
 
@@ -120,6 +117,4 @@ If you encounter any issues or have any questions, feel free to reach out to our
 
 ## Contributing
 
-We welcome contributions from the community! If you have any suggestions or would like to report a bug, please open an issue on our GitHub repository.
-
-Thank you for choosing our platform for your online shopping needs. Happy shopping! 🛒🎉
+We welcome contributions from the community! If you have any suggestions or would like to report a bug, please open an issue on our GitHub repository. 🛒 

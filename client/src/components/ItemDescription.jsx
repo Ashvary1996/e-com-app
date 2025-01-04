@@ -20,6 +20,7 @@ function ItemDescription() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const { userID = null } = location.state || {};
   const dataFromLocation = location.state;
+  // console.log("dataFromLocation", dataFromLocation);
   // console.log("userID", userID);
   // console.log("cartNumber", cartNumber);
   // console.log("item", item);
@@ -122,12 +123,16 @@ function ItemDescription() {
 
   return (
     <div className="bg-gray-100 p-5">
-      <ToastContainer />
+      <ToastContainer closeOnClick={true} pauseOnFocusLoss={false}  />
       <div className="flex justify-between">
         <button
           onClick={() => {
             const previousPath = location.state?.from || "/home";
-            navigate(previousPath);
+            navigate(previousPath, {
+              state: {
+                userID: userID,
+              },
+            });
           }}
         >
           <IoIosArrowRoundBack size={24} />
@@ -139,7 +144,11 @@ function ItemDescription() {
               return toast.info("You Need To Log in First", {
                 pauseOnFocusLoss: false,
               });
-            navigate("/cart");
+            navigate("/cart", {
+              state: {
+                userID: userID,
+              },
+            });
           }}
         >
           {dataFromLocation ? (

@@ -20,7 +20,7 @@ const addToCart = async (
         productId: itemId,
       }
     );
-    console.log(response.data);
+    console.log(response.status);
     if(fetchCartItems) {fetchCartItems()};
     toast.info(`${title} : Added to Cart`);
   } catch (error) {
