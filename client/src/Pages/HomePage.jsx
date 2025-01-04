@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Header from "../components/Header";
 import { ToastContainer, toast } from "react-toastify";
@@ -28,8 +28,9 @@ function HomePage() {
   const [dImgCurosol, setCurosol] = useState({ itemId: "", images: [] });
   // console.log("dImgCurosol", dImgCurosol);
   const dispatch = useDispatch();
-  console.log("items", items, displayItems);
+  // console.log("items", items, displayItems);
   const displayItemsRef = useRef(null);
+  const location = useLocation();
 
   const handleScrollToDisplayItems = () => {
     if (displayItemsRef.current) {
@@ -160,7 +161,7 @@ function HomePage() {
   }, [user]);
 
   return (
-    <div className="homePage">
+    <div className="homePage  ">
       <Header
         user={user}
         userData={userData}
@@ -295,7 +296,11 @@ function HomePage() {
               >
                 <Link
                   to={`/item/${elem._id}`}
-                  state={{ userID: userID, cartNumber: cartNumber }}
+                  state={{
+                    userID: userID,
+                    cartNumber: cartNumber,
+                    from: location.pathname,
+                  }}
                 >
                   <img
                     className="w-full h-48 object-cover rounded-lg mb-3 scale-100 hover:scale-105 transition-transform duration-300 ease-in-out"

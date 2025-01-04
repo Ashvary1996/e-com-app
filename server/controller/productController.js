@@ -51,7 +51,7 @@ const getSingleProduct = async (req, res) => {
       return res.json({ message: "Item not found" });
     }
 
-    res.json({ item: item });
+    res.json({ item: item, userID: "req.user" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 const EditProfile = () => {
@@ -82,11 +82,11 @@ const EditProfile = () => {
   return (
     <div className="max-w-md mx-auto bg-white p-8 border-2 border-gray-300 rounded-lg shadow-lg text-black">
       <ToastContainer />
-      <h2 className="text-xl font-semibold mb-4">Edit User</h2>
-      <i  >user_id : {userID}</i>
+      <h2 className="text-xl font-semibold mb-2">Edit User</h2>
+      <i className="mb-2" >" user_id : {userID}"</i>
       <br />
       <form onSubmit={handleFormSubmit}>
-        <div className="mb-4">
+        <div className="mb-4 mt-2">
           <label htmlFor="firstName" className="block text-gray-700">
             First Name
           </label>
@@ -138,7 +138,9 @@ const EditProfile = () => {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
           />
         </div>
-
+        <div className="block text-gray-700">
+          <Link to={"/forgot"}>Change Password</Link>
+        </div>
         <div className="flex justify-end">
           <button
             type="button"
@@ -156,6 +158,8 @@ const EditProfile = () => {
             Update
           </button>
         </div>
+
+        
       </form>
     </div>
   );

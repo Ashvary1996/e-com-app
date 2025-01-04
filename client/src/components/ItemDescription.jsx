@@ -10,18 +10,20 @@ import { CardRating } from "../lib/CardRating";
 
 function ItemDescription() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const { itemId } = useParams();
   const [item, setItem] = useState({});
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const { userID, cartNumber } = location.state;
-  console.log("userID", userID);
-  console.log("cartNumber", cartNumber);
-  console.log("item", item);
-
-  const navigate = useNavigate();
+  const { userID = null } = location.state || {};
+  const dataFromLocation = location.state;
+  // console.log("userID", userID);
+  // console.log("cartNumber", cartNumber);
+  // console.log("item", item);
+  // console.log("dataFromLocation", dataFromLocation);
 
   const openModal = (index) => {
     setIsModalOpen(true);
@@ -122,7 +124,12 @@ function ItemDescription() {
     <div className="bg-gray-100 p-5">
       <ToastContainer />
       <div className="flex justify-between">
-        <button onClick={() => navigate("/home")}>
+        <button
+          onClick={() => {
+            const previousPath = location.state?.from || "/home";
+            navigate(previousPath);
+          }}
+        >
           <IoIosArrowRoundBack size={24} />
         </button>
 
@@ -135,12 +142,15 @@ function ItemDescription() {
             navigate("/cart");
           }}
         >
-          <FiShoppingCart
-            className={`mr-1 sm:w-[40px] bg-white rounded-e-2xl ${
-              !userID ? "cursor-not-allowed" : ""
-            }`}
-            size={24}
-          />
+          {dataFromLocation ? (
+            <FiShoppingCart
+              className={`mr-1 sm:w-[40px] bg-white rounded-e-2xl ${
+                !userID ? "cursor-not-allowed" : ""
+              }`}
+              size={24}
+            />
+          ) : null}
+
           {/* <FiShoppingCart size={24} className="text-gray-500" />
           {cartNumber > 0 && (
             <span className=" top-10 right-10 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -193,24 +203,26 @@ function ItemDescription() {
             </div>
           )}
 
-          <div className="mt-4">
-            <button
-              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
-                !userID ? "cursor-not-allowed" : ""
-              }`}
-              onClick={() => {
-                if (!userID)
-                  return toast.info("You Need To Log in First", {
-                    pauseOnFocusLoss: false,
-                  });
-                const title = item.title;
-                addToCart(null, itemId, title, userID, null, null, toast);
-              }}
-              // disabled={!userID}
-            >
-              Add to Cart
-            </button>
-          </div>
+          {dataFromLocation ? (
+            <div className="mt-4">
+              <button
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+                  !userID ? "cursor-not-allowed" : ""
+                }`}
+                onClick={() => {
+                  if (!userID)
+                    return toast.info("You Need To Log in First", {
+                      pauseOnFocusLoss: false,
+                    });
+                  const title = item.title;
+                  addToCart(null, itemId, title, userID, null, null, toast);
+                }}
+                // disabled={!userID}
+              >
+                Add to Cart
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
 

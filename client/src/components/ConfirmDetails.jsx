@@ -9,7 +9,7 @@ function ConfirmDetails() {
   const navigate = useNavigate();
   const { contactInfo, shippingInfo } = useSelector(
     (state) => state.cartForPayment
-  ); 
+  );
   // console.log(contactInfo, shippingInfo);
   const [orderItems, setOrderItems] = useState([]);
   const [totalPayableAmount, setTotalPayableAmount] = useState(0);
@@ -176,24 +176,33 @@ function ConfirmDetails() {
   }, [orderItems, calculateTotalAmount, calculateTotalPayableAmount]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto px-4 py-8">
       <CheckOutSteps activeStep={3} />
 
-      <h2 className="text-2xl font-semibold text-center mt-2">
+      <h2 className="text-xl md:text-2xl font-semibold text-center mt-4">
         Confirm Details
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <div className="bg-white p-8 rounded-md shadow-md">
-            <h3 className="text-lg font-semibold mb-2">Contact Information:</h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        {/* Contact and Shipping Details */}
+        <div className="space-y-4">
+          {/* Contact Information */}
+          <div className="bg-white p-6 md:p-8 rounded-md shadow-md">
+            <h3 className="text-base md:text-lg font-semibold mb-2">
+              Contact Information:
+            </h3>
             <p>
               Name: {contactInfo.firstName} {contactInfo.lastName}
             </p>
             <p>Email: {contactInfo.email}</p>
             <p>Phone Number: {contactInfo.phoneNo}</p>
           </div>
-          <div className="bg-white p-8 rounded-md shadow-md mt-4">
-            <h3 className="text-lg font-semibold mb-2">Shipping Address:</h3>
+
+          {/* Shipping Address */}
+          <div className="bg-white p-6 md:p-8 rounded-md shadow-md">
+            <h3 className="text-base md:text-lg font-semibold mb-2">
+              Shipping Address:
+            </h3>
             <p>Address: {shippingInfo.address}</p>
             <p>City: {shippingInfo.city}</p>
             <p>Pin Code: {shippingInfo.pinCode}</p>
@@ -201,72 +210,78 @@ function ConfirmDetails() {
             <p>State: {shippingInfo.state}</p>
           </div>
         </div>
-        <div className="md:col-span-2 p-2">
-          <div className="bg-white p-8 rounded-md shadow-md">
-            <div className="mb-4 border-2">
-              <h3 className="text-lg font-semibold mb-2">Order Details:</h3>
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="py-2 text-left">Item</th>
-                    <th className="py-2 text-center">Price</th>
-                    <th className="py-2 text-center">Quantity</th>
-                    <th className="py-2 text-center">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderItems.items?.map((item) => {
-                    return (
-                      <tr key={item.cart_item_id}>
-                        <td className="py-2">{item.title}</td>
-                        <td className="py-2 text-center">
-                          ₹ {item.price.toFixed(2)}
-                        </td>
-                        <td className="py-2 text-center">{item.quantity}</td>
-                        <td className="py-2 text-center">
-                          ₹ {item.quantity * item.price.toFixed(2)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  <tr>
-                    <td colSpan="3" className="py-2 font-semibold text-right">
-                      Total :
-                    </td>
-                    <td className="py-2 font-semibold">
-                      ₹ {calculateTotalAmount().toFixed(2)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="3" className="py-2 font-semibold text-right">
-                      Delivery Charge :
-                    </td>
-                    <td className="py-2 font-semibold">{deliveryFee}</td>
-                  </tr>
 
-                  <tr>
-                    <td colSpan="3" className="py-2 font-semibold text-right">
-                      Discount :
+        {/* Order Details */}
+        <div className="md:col-span-2">
+          <div className="bg-white p-6 md:p-8 rounded-md shadow-md">
+            <h3 className="text-base md:text-lg font-semibold mb-4">
+              Order Details:
+            </h3>
+            <table className="w-full border-collapse border-spacing-0">
+              <thead>
+                <tr className="border-b">
+                  <th className="py-2 text-left text-sm md:text-base">Item</th>
+                  <th className="py-2  text-center text-sm md:text-base">
+                    Price
+                  </th>
+                  <th className="py-2 text-center text-sm md:text-base">
+                    Quantity
+                  </th>
+                  <th className="py-2 text-center text-sm md:text-base">
+                    Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderItems.items?.map((item) => (
+                  <tr key={item.cart_item_id} className="border-b">
+                    <td className="py-2 text-sm md:text-base">{item.title}</td>
+                    <td className="py-2 text-center text-sm md:text-base">
+                      ₹{item.price.toFixed(2)}
                     </td>
-                    <td className="py-2 font-semibold">
-                      ₹ {calculateDiscount().toFixed(2)}
+                    <td className="py-2 text-center text-sm md:text-base">
+                      {item.quantity}
+                    </td>
+                    <td className="py-2 text-center text-sm md:text-base">
+                      ₹{(item.quantity * item.price).toFixed(2)}
                     </td>
                   </tr>
-                  <tr>
-                    <td colSpan="3" className="py-2 font-semibold text-right">
-                      Total Payable Amount:
-                    </td>
-                    <td className="py-2 font-semibold">
-                      ₹ {totalPayableAmount}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                ))}
+                <tr className="border-t-4">
+                  <td colSpan="3" className="py-2 font-semibold text-left">
+                    Total:
+                  </td>
+                  <td className="py-2 max-w-full font-semibold">
+                  ₹{calculateTotalAmount().toFixed(2)}
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="3" className="py-2 font-semibold text-left">
+                    Delivery Charge:
+                  </td>
+                  <td className="py-2 font-semibold">{deliveryFee}</td>
+                </tr>
+                <tr>
+                  <td colSpan="3" className="py-2 font-semibold text-left">
+                    Discount:
+                  </td>
+                  <td className="py-2 font-semibold">
+                    ₹{calculateDiscount().toFixed(2)}
+                  </td>
+                </tr>
+                <tr className="bg-gray-200">
+                  <td colSpan="3" className="py-2 font-semibold text-left">
+                    Total Payable Amount:
+                  </td>
+                  <td className="py-2 font-semibold ">₹{totalPayableAmount}</td>
+                </tr>
+              </tbody>
+            </table>
+
             <div className="flex justify-end mt-4">
               <button
                 onClick={handlePayment}
-                className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition w-full md:w-auto"
               >
                 {loading ? "Processing..." : "Pay Now"}
               </button>
@@ -274,11 +289,19 @@ function ConfirmDetails() {
           </div>
         </div>
       </div>
-      <div className="flex justify-between mt-4">
-        <Link to="/contactInfo" className="text-indigo-600 hover:underline">
+
+      {/* Edit Links */}
+      <div className="flex flex-col md:flex-row justify-around items-center mt-6 space-y-4 md:space-y-0">
+        <Link
+          to="/contactInfo"
+          className="text-indigo-600 hover:underline text-sm md:text-base"
+        >
           Edit Contact Information
         </Link>
-        <Link to="/shippingDetails" className="text-indigo-600 hover:underline">
+        <Link
+          to="/shippingDetails"
+          className="text-indigo-600 hover:underline text-sm md:text-base"
+        >
           Edit Shipping Details
         </Link>
       </div>

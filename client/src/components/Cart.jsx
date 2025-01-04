@@ -1,14 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 
 function Cart() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // console.log("location", location);
+
   const [data, setData] = useState({
     items: [],
     totalItems: 0,
     uniqueItems: 0,
   });
+  // console.log("data", data);
 
   const [total, setTotal] = useState(0);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -108,13 +114,19 @@ function Cart() {
     }
   };
 
-  const navigate = useNavigate();
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
       <ToastContainer closeOnClick />
       <div className="flex justify-between items-center">
-        <button onClick={() => navigate("/home")} className="text-gray-500 text-2xl " >
-          &larr; 
+        <button
+          onClick={() => {
+            const previousPath = location.state?.from || "/home";
+            navigate(previousPath);
+            // console.log(previousPath);
+          }}
+          className="text-gray-500 text-2xl "
+        >
+          &larr;
         </button>
         <h3 className="text-lg font-semibold text-gray-800">
           Your Cart: {totalItemsCount} items
@@ -129,7 +141,10 @@ function Cart() {
             >
               <p className="text-2xl mr-2 font-medium">{i + 1}.</p>
               <div className="w-full sm:w-1/5">
-                <Link to={`/item/${elem.product_id}`}>
+                <Link
+                  to={`/item/${elem.product_id}`}
+                  state={{ from: location.pathname }}
+                >
                   <img
                     src={elem.thumbnail}
                     alt="product_img"

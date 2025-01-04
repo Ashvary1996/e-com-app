@@ -9,7 +9,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function LogInPage() {
   const [detail, setDetail] = useState("");
-  const [forgot, setForgot] = useState(false);
+  // const [forgot, setForgot] = useState(false);
   const signUpFormRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ function LogInPage() {
         initialValues={initialValues}
         validationSchema={logInValidation}
         onSubmit={(values, { resetForm }) => {
-          dispatch(logIn(values, navigate, setDetail, toast, setForgot));
+          dispatch(logIn(values, navigate, setDetail, toast ));
           // submitForm(values);
           //   resetForm({ values: "" })
         }}
@@ -95,12 +95,12 @@ function LogInPage() {
               </div>
               <p className="text-red-500 text-sm mt-1">{detail}</p>
 
-              <p className="text-orange-300 text-sm  hover:underline mt-1">
-                {forgot === true ? (
+              <p className="text-orange-300 text-sm  hover:underline mt-2">
+                {/* {forgot === true ? ( */}
                   <Link to={`/forgot/${values.email}`}>
-                    Forgot / Reset Password
+                    Forgot Password
                   </Link>
-                ) : null}
+                {/* ) : null} */}
               </p>
 
               <div className="">

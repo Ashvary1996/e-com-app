@@ -30,9 +30,9 @@ function Header({
       </div>
       {/* Search Bar */}
       <div className="order-last w-full mt-1 sm:mt-0 sm:order-none sm:w-auto sm:flex-1  sm:mx-4 ">
-        <div className="  mx-4   relative flex items-center  sm:mx-auto sm:max-w-md  focus-within:ring-1 focus-within:ring-orange-500   focus-within:rounded-lg">
+        <div className=" mt-1 relative flex items-center  sm:mx-auto sm:max-w-md  focus-within:ring-1 focus-within:ring-orange-500   focus-within:rounded-lg">
           <input
-            className="w-full h-10 px-4 rounded-l-lg    border-none outline-none"
+            className="w-full h-10 px-4 rounded-l-lg  border-none outline-none"
             type="text"
             placeholder="Search for Products/Brands"
             autoComplete="on"
@@ -97,7 +97,7 @@ function Header({
                   }
                   className="block text-left hover:bg-gray-300 p-2 w-full"
                 >
-                  View / Edit Profile
+                 View Profile
                 </button>
                 <Link
                   to="/user/order"

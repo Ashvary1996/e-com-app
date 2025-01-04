@@ -1,22 +1,21 @@
 import React from "react";
-
 import {
   Step,
   StepDescription,
   StepIcon,
   StepIndicator,
   StepNumber,
-  StepSeparator, 
-  StepStatus, 
-  StepTitle, 
+  StepSeparator,
+  StepStatus,
+  StepTitle,
   Stepper,
   useSteps,
   Box,
+  VStack,
+ 
 } from "@chakra-ui/react";
 
 function CheckOutSteps({ activeStep }) {
- 
-
   const steps = [
     { id: "contact-info", title: "First", description: "Contact Info" },
     { id: "shipping-Details", title: "Second", description: "Shipping-Details" },
@@ -30,30 +29,47 @@ function CheckOutSteps({ activeStep }) {
   });
 
   return (
-    <div>
-      <div>
-        <Stepper index={currentStep}>
-          {steps.map((step, index) => (
-            <Step key={step.id}>
-              <StepIndicator>
-                <StepStatus
-                  complete={<StepIcon />}
-                  active={<StepNumber />}
-                  incomplete={<StepNumber />}
-                />
-              </StepIndicator>
+    <Box
+      w="full"
+      px={{ base: 4, md: 8 }}
+      py={{ base: 4, md: 8 }}
+      maxW="container.md"
+      mx="auto"
+    >
+      <Stepper
+        index={currentStep}
+        orientation={{ base: "vertical", md: "horizontal" }}
+        size={{ base: "sm", md: "md" }}
+        gap={{ base: 4, md: 8 }}
+      >
+        {steps.map((step, index) => (
+          <Step key={step.id}>
+            <StepIndicator>
+              <StepStatus
+                complete={<StepIcon />}
+                active={<StepNumber />}
+                incomplete={<StepNumber />}
+              />
+            </StepIndicator>
 
-              <Box flexShrink="0">
-                <StepTitle>{step.title}</StepTitle>
-                <StepDescription>{step.description}</StepDescription>
-              </Box>
+            <VStack
+              align={{ base: "start", md: "center" }}
+              spacing={{ base: 1, md: 2 }}
+              flexShrink="0"
+            >
+              <StepTitle fontSize={{ base: "sm", md: "md" }}>
+                {step.title}
+              </StepTitle>
+              <StepDescription fontSize={{ base: "xs", md: "sm" }}>
+                {step.description}
+              </StepDescription>
+            </VStack>
 
-              <StepSeparator />
-            </Step>
-          ))}
-        </Stepper>
-      </div>
-    </div>
+            {index < steps.length - 1 && <StepSeparator />}
+          </Step>
+        ))}
+      </Stepper>
+    </Box>
   );
 }
 
