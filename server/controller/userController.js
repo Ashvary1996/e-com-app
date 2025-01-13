@@ -42,11 +42,15 @@ const signUpFn = async (req, res) => {
     /////////////////
     // res.cookie("signupTestCooki", "dummy data");
     sendToken(user, res, "User Saved");
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+    currentDate.setMinutes(currentDate.getMinutes() + 30);
+    const indiaTime = currentDate.toString();
 
     const subject = `Welcome ${user.firstName} to e-com website.`;
     const htmlContent = `<div>
         <h1>Hi Welcome to our Website</h1>
-        <h1>${Date()}</h1>
+        <h1>${indiaTime()}</h1>
         <p>this is system generated email please do not respond</p>
       </div>`;
 
@@ -179,7 +183,12 @@ const forgotPassFn = async (req, res) => {
         // const resetLink = `http://localhost:3000/reset/${token}`;
         const resetLink = `${process.env.CORS_ORIGIN}/reset/${token}`;
         // const resetLink = `${req.protocol}://${req.get("host")}/reset/${token}`;
-        const currentDate = new Date().toString();
+        // const currentDate = new Date().toString();
+
+        const currentDate = new Date(); 
+        currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+        currentDate.setMinutes(currentDate.getMinutes() + 30);
+        const indiaTime = currentDate.toString();
 
         const email = req.body.email;
         const subject = `Reset Your Password - Action Required`;
@@ -201,7 +210,7 @@ const forgotPassFn = async (req, res) => {
           <p>If you did not request a password reset, please ignore this email. If you believe this was done in error, please contact our support team immediately.</p>
           <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
           <p style="font-size: 14px; color: #666;">
-            <strong>Current Time:</strong> ${currentDate}<br>
+            <strong>Current Time:</strong> ${indiaTime}<br>
             If you encounter any issues, contact our support team at <a href="mailto:legion.ugc.lt@gmail.com" style="color: #0652DD;">legion.ugc.lt@gmail.com</a>.
           </p>
       </div>
@@ -258,13 +267,18 @@ const resetPassFn = async (req, res) => {
     // await user.save();
     await user.save({ validateBeforeSave: false });
 
-    const currentDate = new Date().toString();
+    // const currentDate = new Date().toString();
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+    currentDate.setMinutes(currentDate.getMinutes() + 30);
+    const indiaTime = currentDate.toString();
+
     const email = user.email;
     const subject = "Your Password Has Been Successfully Reset";
     const htmlContent = `
     <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.5;">
       <h2 style="color: #0652DD; margin-bottom: 16px;">Password Reset Successfully</h2>
-      <p>Your password has been successfully reset on <strong>${currentDate}</strong>. If you did not initiate this change, we recommend that you secure your account immediately.</p>
+      <p>Your password has been successfully reset on <strong>${indiaTime}</strong>. If you did not initiate this change, we recommend that you secure your account immediately.</p>
       
       <p>If this was you, no further action is needed. You can now <a href="${process.env.CORS_ORIGIN}/login/" style="color: #0652DD;">log in to your account</a> using your new password.</p>
     
@@ -344,13 +358,18 @@ const updatePassFn = async (req, res) => {
 
     await Usermodel.findByIdAndUpdate(user._id, { password: hash });
 
-    const currentDate = new Date().toISOString();
+    // const currentDate = new Date().toISOString();
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+    currentDate.setMinutes(currentDate.getMinutes() + 30);
+    const indiaTime = currentDate.toString();
+    
     const email = user.email;
     const subject = "Your Password Has Been Successfully Updated";
     const htmlContent = `
     <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.5;">
       <h2 style="color: #0652DD; margin-bottom: 16px;">Password Update Successfully</h2>
-      <p>Your password has been successfully updated on <strong>${currentDate}</strong>. If you did not initiate this change, we highly recommend that you secure your account immediately by updating your password and contacting support.</p>
+      <p>Your password has been successfully updated on <strong>${indiaTime}</strong>. If you did not initiate this change, we highly recommend that you secure your account immediately by updating your password and contacting support.</p>
       
       <p>If this was you, no further action is needed. You can now <a href="${
         req.protocol
