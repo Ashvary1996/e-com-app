@@ -43,10 +43,10 @@ const signUpFn = async (req, res) => {
     // res.cookie("signupTestCooki", "dummy data");
     sendToken(user, res, "User Saved");
     const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
-    currentDate.setMinutes(currentDate.getMinutes() + 30);
-    const indiaTime = currentDate.toString();
-
+    // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+    // currentDate.setMinutes(currentDate.getMinutes() + 30);
+    // const indiaTime = currentDate.toString();
+    const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
     const subject = `Welcome ${user.firstName} to e-com website.`;
     const htmlContent = `<div>
         <h1>Hi Welcome to our Website</h1>
@@ -186,9 +186,10 @@ const forgotPassFn = async (req, res) => {
         // const currentDate = new Date().toString();
 
         const currentDate = new Date(); 
-        currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
-        currentDate.setMinutes(currentDate.getMinutes() + 30);
-        const indiaTime = currentDate.toString();
+        // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+        // currentDate.setMinutes(currentDate.getMinutes() + 30);
+        // const indiaTime = currentDate.toString();
+        const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
 
         const email = req.body.email;
         const subject = `Reset Your Password - Action Required`;
@@ -269,10 +270,10 @@ const resetPassFn = async (req, res) => {
 
     // const currentDate = new Date().toString();
     const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
-    currentDate.setMinutes(currentDate.getMinutes() + 30);
-    const indiaTime = currentDate.toString();
-
+    // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+    // currentDate.setMinutes(currentDate.getMinutes() + 30);
+    // const indiaTime = currentDate.toString();
+    const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
     const email = user.email;
     const subject = "Your Password Has Been Successfully Reset";
     const htmlContent = `
@@ -360,9 +361,10 @@ const updatePassFn = async (req, res) => {
 
     // const currentDate = new Date().toISOString();
     const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
-    currentDate.setMinutes(currentDate.getMinutes() + 30);
-    const indiaTime = currentDate.toString();
+    // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
+    // currentDate.setMinutes(currentDate.getMinutes() + 30);
+    // const indiaTime = currentDate.toString();
+    const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
     
     const email = user.email;
     const subject = "Your Password Has Been Successfully Updated";
