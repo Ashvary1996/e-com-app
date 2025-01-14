@@ -41,18 +41,34 @@ const signUpFn = async (req, res) => {
     await user.save();
     /////////////////
     // res.cookie("signupTestCooki", "dummy data");
-    sendToken(user, res, "User Saved");
+    // sendToken(user, res, "User Saved");
+
     const currentDate = new Date();
     // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
     // currentDate.setMinutes(currentDate.getMinutes() + 30);
     // const indiaTime = currentDate.toString();
-    const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
-    const subject = `Welcome ${user.firstName} to e-com website.`;
-    const htmlContent = `<div>
-        <h1>Hi Welcome to our Website</h1>
-        <h1>${indiaTime()}</h1>
-        <p>this is system generated email please do not respond</p>
-      </div>`;
+    const indiaTime = currentDate.toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+    const subject = `Welcome ${user.firstName} to E-Com Website!`;
+    const htmlContent = `
+  <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5;">
+    <h1 style="color: #4CAF50;">Hello ${user.firstName},</h1>
+    <p>Welcome to <strong>E-Com Website</strong>! We're thrilled to have you on board. 🚀</p>
+    <p>Here’s a quick glimpse of what you can expect from us:</p>
+    <ul>
+      <li>A wide range of products to explore.</li>
+      <li>Exclusive discounts and offers.</li>
+      <li>24/7 customer support to assist you.</li>
+    </ul>
+    <p>Get started by visiting our <a href="${
+      process.env.CORS_ORIGIN
+    }" style="color: #4CAF50; text-decoration: none;">website</a>.</p>
+    <p><strong>Current time:</strong> ${indiaTime}</p>
+    <hr style="border: none; border-top: 1px solid #eee;" />
+    <p style="font-size: 0.9em; color: #777;">This is a system-generated email. Please do not reply.</p>
+    <p style="font-size: 0.9em; color: #777;">If you have any questions, feel free to reach out to our support team at <a href="mailto:support@ecomwebsite.com" style="color: #4CAF50; text-decoration: none;">support@ecomwebsite.com</a>.</p>
+  </div>`;
 
     sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
@@ -63,6 +79,11 @@ const signUpFn = async (req, res) => {
         }
       })
       .catch((error) => console.log("Error sending email: ", error));
+
+    res.status(200).json({
+      success: true,
+      message: "User Regitered Successfully",
+    });
   } catch (error) {
     res.json({ detail: "Internal Server Error", error: error.message });
   }
@@ -185,11 +206,13 @@ const forgotPassFn = async (req, res) => {
         // const resetLink = `${req.protocol}://${req.get("host")}/reset/${token}`;
         // const currentDate = new Date().toString();
 
-        const currentDate = new Date(); 
+        const currentDate = new Date();
         // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
         // currentDate.setMinutes(currentDate.getMinutes() + 30);
         // const indiaTime = currentDate.toString();
-        const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+        const indiaTime = currentDate.toLocaleString("en-US", {
+          timeZone: "Asia/Kolkata",
+        });
 
         const email = req.body.email;
         const subject = `Reset Your Password - Action Required`;
@@ -273,7 +296,9 @@ const resetPassFn = async (req, res) => {
     // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
     // currentDate.setMinutes(currentDate.getMinutes() + 30);
     // const indiaTime = currentDate.toString();
-    const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+    const indiaTime = currentDate.toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
     const email = user.email;
     const subject = "Your Password Has Been Successfully Reset";
     const htmlContent = `
@@ -364,8 +389,10 @@ const updatePassFn = async (req, res) => {
     // currentDate.setHours(currentDate.getHours() + 5);  // Convert to India Standard Time (UTC +5:30)
     // currentDate.setMinutes(currentDate.getMinutes() + 30);
     // const indiaTime = currentDate.toString();
-    const indiaTime = currentDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
-    
+    const indiaTime = currentDate.toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
     const email = user.email;
     const subject = "Your Password Has Been Successfully Updated";
     const htmlContent = `

@@ -5,7 +5,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     userId: "",
-    userName: "", 
+    userName: "",
     token: "",
     role: "",
     detail: "",
@@ -52,13 +52,17 @@ export const signUp =
       if (response.data.success === true) {
         setDetail("");
 
-        dispatch(userSlice.actions.setUserID(response.data.user._id));
-        toast.success("Sign Up Successful");
+        // dispatch(userSlice.actions.setUserID(response.data.user._id));
+        // alert("Sign Up Successful");
+        toast.success("Sign Up Successfully");
         // console.log("Successfully Registered: ", response.data.user);
-        navigate("/login");
+        setTimeout(() => {
+          navigate("/login");
+      }, 3000);
+        // navigate("/login");
       } else {
         dispatch(userSlice.actions.setDetail(response.data.detail));
-        console.log(response.data.detail);
+        console.log(response.data.detail, response.data.error);
         toast.warn(response.data.detail);
       }
     } catch (error) {

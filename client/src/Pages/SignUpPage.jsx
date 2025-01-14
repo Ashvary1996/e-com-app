@@ -68,7 +68,10 @@ function SignUpPage() {
               password: values.password,
               phoneNumber: values.phoneNumber,
             };
-            dispatch(signUp(userData, setDetail, toast, navigate));
+            // const rD =
+             dispatch(signUp(userData, setDetail, toast, navigate));
+            // console.log(rD);
+            
           }}
         >
           {({ values }) => (
