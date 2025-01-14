@@ -55,7 +55,7 @@ export const signUp =
         dispatch(userSlice.actions.setUserID(response.data.user._id));
         toast.success("Sign Up Successful");
         // console.log("Successfully Registered: ", response.data.user);
-        navigate("/home");
+        navigate("/login");
       } else {
         dispatch(userSlice.actions.setDetail(response.data.detail));
         console.log(response.data.detail);
