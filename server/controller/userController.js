@@ -61,16 +61,14 @@ const signUpFn = async (req, res) => {
       <li>Exclusive discounts and offers.</li>
       <li>24/7 customer support to assist you.</li>
     </ul>
-    <p>Get started by visiting our <a href="${
-      process.env.CORS_ORIGIN
-    }" style="color: #4CAF50; text-decoration: none;">website</a>.</p>
+    <p>Get started by visiting our <a href="${process.env.CORS_ORIGIN}" style="color: #4CAF50; text-decoration: none;">website</a>.</p>
     <p><strong>Current time:</strong> ${indiaTime}</p>
     <hr style="border: none; border-top: 1px solid #eee;" />
     <p style="font-size: 0.9em; color: #777;">This is a system-generated email. Please do not reply.</p>
     <p style="font-size: 0.9em; color: #777;">If you have any questions, feel free to reach out to our support team at <a href="mailto:support@ecomwebsite.com" style="color: #4CAF50; text-decoration: none;">support@ecomwebsite.com</a>.</p>
   </div>`;
 
-    sendEmail(email, subject, htmlContent)
+    await sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
         if (mailResponse.success) {
           console.log("Email sent successfully");
@@ -239,7 +237,7 @@ const forgotPassFn = async (req, res) => {
           </p>
       </div>
       `;
-        sendEmail(email, subject, htmlContent)
+        await sendEmail(email, subject, htmlContent)
           .then((mailResponse) => {
             if (mailResponse.success) {
               console.log("Email sent successfully");
@@ -321,7 +319,7 @@ const resetPassFn = async (req, res) => {
     </div>
     `;
 
-    sendEmail(email, subject, htmlContent)
+    await sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
         if (mailResponse.success) {
           console.log("Email sent successfully");
@@ -419,7 +417,7 @@ const updatePassFn = async (req, res) => {
     </div>
     `;
 
-    sendEmail(email, subject, htmlContent)
+    await sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
         if (mailResponse.success) {
           console.log("Email sent successfully");
