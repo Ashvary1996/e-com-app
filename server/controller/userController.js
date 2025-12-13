@@ -68,15 +68,15 @@ const signUpFn = async (req, res) => {
     <p style="font-size: 0.9em; color: #777;">If you have any questions, feel free to reach out to our support team at <a href="mailto:support@ecomwebsite.com" style="color: #4CAF50; text-decoration: none;">support@ecomwebsite.com</a>.</p>
   </div>`;
 
-    await sendEmail(email, subject, htmlContent)
+    sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
         if (mailResponse.success) {
-          console.log("Email sent successfully");
+          console.log("Welcome email sent successfully to:", email);
         } else {
-          console.log("Failed to send email");
+          console.log("Failed to send welcome email:", mailResponse.error);
         }
       })
-      .catch((error) => console.log("Error sending email: ", error));
+      .catch((error) => console.log("Error sending welcome email: ", error));
 
     res.status(200).json({
       success: true,
@@ -237,7 +237,7 @@ const forgotPassFn = async (req, res) => {
           </p>
       </div>
       `;
-        await sendEmail(email, subject, htmlContent)
+        sendEmail(email, subject, htmlContent)
           .then((mailResponse) => {
             if (mailResponse.success) {
               console.log("Email sent successfully");
@@ -319,7 +319,7 @@ const resetPassFn = async (req, res) => {
     </div>
     `;
 
-    await sendEmail(email, subject, htmlContent)
+    sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
         if (mailResponse.success) {
           console.log("Email sent successfully");
@@ -417,7 +417,7 @@ const updatePassFn = async (req, res) => {
     </div>
     `;
 
-    await sendEmail(email, subject, htmlContent)
+    sendEmail(email, subject, htmlContent)
       .then((mailResponse) => {
         if (mailResponse.success) {
           console.log("Email sent successfully");
