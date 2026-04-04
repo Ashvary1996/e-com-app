@@ -4,14 +4,14 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config({ path: "./config/.env" });
 const connectToDb = require("./dbConnector");
-const { sendToken } = require("./utils/jwtToken");
-
+// const { sendToken } = require("./utils/jwtToken");
+const dns = require('dns');
 ///////////////////////
 
 /////////////////////////
 const app = express();
 const port = process.env.PORT || 5000;
-
+dns.setDefaultResultOrder('ipv4first');
 // .................................................................
 const allowedOrigins = ["http://localhost:3000", process.env.CORS_ORIGIN];
 

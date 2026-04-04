@@ -233,7 +233,7 @@ const forgotPassFn = async (req, res) => {
           <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
           <p style="font-size: 14px; color: #666;">
             <strong>Current Time:</strong> ${indiaTime}<br>
-            If you encounter any issues, contact our support team at <a href="mailto:legion.ugc.lt@gmail.com" style="color: #0652DD;">legion.ugc.lt@gmail.com</a>.
+            If you encounter any issues, contact our support team at <a href="mailto:ashvary11@gmail.com" style="color: #0652DD;">ashvary11@gmail.com</a>.
           </p>
       </div>
       `;
@@ -308,7 +308,7 @@ const resetPassFn = async (req, res) => {
     
       <p>If you didn't request this reset, please <strong>change your password</strong> and contact our support team right away to ensure your account’s safety.</p>
     
-      <p>If you need any assistance, please do not hesitate to reach out to our support team at <a href="mailto:legion.ugc.lt@gmail.com" style="color: #0652DD;">legion.ugc.lt@gmail.com</a>.</p>
+      <p>If you need any assistance, please do not hesitate to reach out to our support team at <a href="mailto:ashvary11@gmail.com" style="color: #0652DD;">ashvary11@gmail.com</a>.</p>
       
       <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
       
@@ -406,7 +406,7 @@ const updatePassFn = async (req, res) => {
     
       <p>If you did not request this update or if you have any concerns, please <strong>change your password</strong> immediately and contact our support team to ensure your account’s security.</p>
     
-      <p>If you need assistance or have any questions, feel free to reach out to us at <a href="mailto:legion.ugc.lt@gmail.com" style="color: #0652DD;">legion.ugc.lt@gmail.com</a>.</p>
+      <p>If you need assistance or have any questions, feel free to reach out to us at <a href="mailto:ashvary11@gmail.com" style="color: #0652DD;">ashvary11@gmail.com</a>.</p>
       
       <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
       

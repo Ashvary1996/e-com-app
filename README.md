@@ -113,7 +113,7 @@ password : user1234
 
 ## Support
 
-If you encounter any issues or have any questions, feel free to reach out to our support team at [ashvarygidian@gmail.com](mailto:ashvarygidian@gmail.com).
+If you encounter any issues or have any questions, feel free to reach out to our support team at [ashvary11@gmail.com](mailto:ashvary11@gmail.com).
 
 ## Contributing
 
